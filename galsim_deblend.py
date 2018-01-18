@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
 
 
-def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale):
+def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf):
     """a quick example with two objects convolved by a point spread function """
     psf = galsim.Gaussian(half_light_radius = psf_hlr)
     gal1 = galsim.Gaussian(half_light_radius = gal1_hlr, flux=gal1_flux)
@@ -32,32 +32,29 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale):
     objs = galsim.Convolve(objs, psf)
     gsim = objs.drawImage(nx=dims[1], ny=dims[0], scale=scale)
     psf_gsim = psf.drawImage(scale=scale)
+    psf_im = psf_gsim.array
 
+    noise_psf = np.random.normal(scale=bg_rms_psf,size=psf_im.shape)
+    psf_im += noise_psf
+    
     # galsim numpy array is in the .array attrubute
     im = gsim.array
     
     #add noise
-    noise = np.random.normal(scale=scale,size=(dims[0],dims[1])) 
+    noise = np.random.normal(scale=bg_rms,size=(dims[0],dims[1])) 
     im += noise
 
-    m = im.mean()
-    s = im.std()
-    err = noise
+    #m = im.mean()
+    #s = im.std()
+    #err = noise
     #print("image err:", err)
     #print("image mean:",m)
     #print("image standard dev:",s)
 
     # add extra dimension for scarlet
     im = im.reshape( (1, dims[1], dims[0]) )
-    return im,m,s,err[0],coords,psf_gsim
+    return im,coords,psf_im
 
-def makeCatalog(img,error):
-    detect = img.mean(axis=0)
-    bkg = sep.Background(img.mean(axis=0))
-    bkg = sep.Background(img[0,:,:])
-    catalog = sep.extract(detect, 1.5,err=bkg.globalrms)
-    bg_rms = np.array([sep.Background(i).globalrms for i in img])
-    return catalog, bg_rms
 
 def make_model(img,bg_rms,B,coords):
     #constraints on morphology:
@@ -74,7 +71,7 @@ def make_model(img,bg_rms,B,coords):
     # will be adjusted as needed
     shape = (B, 15, 15)
     sources = [scarlet.Source(coord, shape, constraints=constraints) for coord in coords]
-    blend = scarlet.Blend(sources, img, bg_rms=bg_rms)
+    blend = scarlet.Blend(sources, img, bg_rms=[bg_rms])
     # if you have per-pixel weights:
     #weights = np.empty((B,Ny,Nx))
     #blend = scarlet.Blend(sources, img, bg_rms=bg_rms, weights=weights)
@@ -83,7 +80,7 @@ def make_model(img,bg_rms,B,coords):
     # Note: These need to be difference kernels to a common minimum
     #pdiff = [PSF[b] for b in range(B)]
     #psf = scarlet.transformations.GammaOp(shape, pdiff)
-    #blend = scarlet.Blend(sources, img, bg_rms=bg_rms)#, psf=psf)
+    #blend = scarlet.Blend(sources, img, bg_rms=bg_rms, psf=psf)
     # run the fitter for 200 steps (or until convergence)
 
     blend.fit(200)#, e_rel=1e-1)
@@ -92,7 +89,7 @@ def make_model(img,bg_rms,B,coords):
     mod2 = blend.get_model(m=1)
     return model,mod2
 
-def observation(image,sigma,row,col,scale,psf_gsim):
+def observation(image,sigma,row,col,psf_sigma,psf_im):
     # sigma is the standard deviation of the noise
     weight = image*0 + 1.0/sigma**2
 
@@ -100,10 +97,7 @@ def observation(image,sigma,row,col,scale,psf_gsim):
     # image, so we need to figure that out somehow
     jacob = ngmix.UnitJacobian(row=row, col=col)
 
-    # add a small amount of noise to the psf image also
-    psf_sigma = 0.0001
-    psf_im = psf_gsim.array
-    psf_im += np.random.normal(scale=psf_sigma, size=psf_im.shape)
+    ############Done above already, modify this
     psf_weight = psf_im*0 + 1.0/psf_sigma**2
     
     # psf should be centered
@@ -145,7 +139,7 @@ dt = [
     ('pars_2m','f8',6),
 ]
 
-ntrial = 10000
+ntrial = 1
 output = np.zeros(ntrial, dtype=dt)
 
 scale=1.0
@@ -155,8 +149,8 @@ gal2_hlr = 3.4
 gal1_flux = 6000.0
 gal2_flux = 8000.0
 dims = [50,50]
-
-
+bg_rms = 100
+bg_rms_psf = 0.0001
 psf_model = 'gauss'
 gal_model = 'gauss'
 
@@ -183,15 +177,14 @@ prior = get_prior()
 for j in range(ntrial):
     print(j)
     try:
-        img,m,s,err,coords,psf_gsim = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale)
+        img,coords,psf_im = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf)
         coord1,coord2 = coords[0],coords[1]
         B,Ny,Nx = img.shape
-        catalog,bg_rms = makeCatalog(img,err)
         model,mod2 = make_model(img,bg_rms,B,coords)
         cen_obj = img[0,:,:]-mod2[0,:,:]
 
         #create container
-        obs = observation(cen_obj,scale,int(coord1[0]),int(coord1[1]),scale,psf_gsim)
+        obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
         #fit
         boot = ngmix.bootstrap.MaxMetacalBootstrapper(obs)
         boot.fit_psfs(
@@ -211,7 +204,7 @@ for j in range(ntrial):
         output['pars_1m'][j] = res['1m']['pars']
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
-        """
+        
         #print("obects found:",len(model))
         mod_m = np.mean(model)
         mod_s = np.std(model)
@@ -253,12 +246,10 @@ for j in range(ntrial):
         #plt.savefig("/Users/lorena/git/test/blender/new/lam"+str(i)+"_"+str(j)+".png")
         plt.show()
         #plt.clf()
-        #j = j +1
-        """
     except (ValueError, np.linalg.linalg.LinAlgError):
         output['flags'][j] = 1
         print("flags: 1")
 
         
-filename = 'data.fits'
+filename = 'data2.fits'
 fitsio.write(filename, output, clobber=True)
