@@ -1,3 +1,4 @@
+from scipy.misc import imsave
 import fitsio
 import galsim
 import argparse
@@ -17,8 +18,8 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     dx1,dy1 = 0.0,0.0
     theta = 2*np.pi*np.random.random()
     dx2,dy2 = 12.0*np.cos(theta),12.0*np.sin(theta)
-    coord1 = (dx1+(dims[0]-1.)/2.,dy1+(dims[1]-1.)/2.)
-    coord2 = (dx2+(dims[0]-1.)/2.,dy2+(dims[1]-1.)/2.)
+    coord1 = (dy1+(dims[0]-1.)/2.,dx1+(dims[1]-1.)/2.)
+    coord2 = (dy2+(dims[0]-1.)/2.,dx2+(dims[1]-1.)/2.)
     coords = [coord1,coord2]
     gal1 = gal1.shift(dx=dx1, dy=dy1)
     gal2 = gal2.shift(dx=dx2, dy=dy2)
@@ -40,10 +41,12 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     # galsim numpy array is in the .array attrubute
     im = gsim.array
     
+    #np.savez('image_file.npz',image=im)
+    #imsave('linalg_image.png',im)
     #add noise
     noise = np.random.normal(scale=bg_rms,size=(dims[0],dims[1])) 
     im += noise
-
+    
     #m = im.mean()
     #s = im.std()
     #err = noise
@@ -61,10 +64,6 @@ def make_model(img,bg_rms,B,coords):
     # "S": symmetry
     # "m": monotonicity (with neighbor pixel weighting)
     # "+": non-negativity
-    #if len(catalog) <2:
-    #    print("cat wrong")
-    #    catalog = [catalog[0],catalog[0]]
-        #print(catalog)
     constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
 
     # initial size of the box around each object
@@ -139,7 +138,7 @@ dt = [
     ('pars_2m','f8',6),
 ]
 
-ntrial = 1
+ntrial = 10000
 output = np.zeros(ntrial, dtype=dt)
 
 scale=1.0
@@ -149,7 +148,7 @@ gal2_hlr = 3.4
 gal1_flux = 6000.0
 gal2_flux = 8000.0
 dims = [50,50]
-bg_rms = 100
+bg_rms = 10
 bg_rms_psf = 0.0001
 psf_model = 'gauss'
 gal_model = 'gauss'
@@ -182,7 +181,9 @@ for j in range(ntrial):
         B,Ny,Nx = img.shape
         model,mod2 = make_model(img,bg_rms,B,coords)
         cen_obj = img[0,:,:]-mod2[0,:,:]
-
+        #print(np.mean(mod2))
+        #if np.mean(mod2) == 0.:
+        #    k = k +1
         #create container
         obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
         #fit
@@ -206,31 +207,31 @@ for j in range(ntrial):
         output['pars_2m'][j] = res['2m']['pars']
         
         #print("obects found:",len(model))
-        mod_m = np.mean(model)
-        mod_s = np.std(model)
+        #mod_m = np.mean(model)
+        #mod_s = np.std(model)
         #print("model mean:",mod_m)
         #print("model stand dev:",mod_s)
         #print("coord1,coord2:",coord1,coord2)
         #print("Neighbor mean:",np.mean(mod2))
-        
+        """
         plt.figure(figsize=(11,8))
         plt.plot(2,3,5)
             
         plt.subplot(231)
         plt.imshow(img[0,:,:],interpolation='nearest', cmap='gray', vmin=np.min(img[0,:,:]), vmax = np.max(img[0,:,:]))
         plt.colorbar();
-        plt.title("Original Image (lambda ="+str(i)+")")
+        plt.title("Original Image")
 
         plt.subplot(232)
         plt.imshow(model[0,:,:],interpolation='nearest', cmap='gray', vmin=np.min(model[0,:,:]),vmax=np.max(model[0,:,:]))
-        plt.title("Model (lambda = " + str(i) + ")")
+        plt.title("Model")
         plt.colorbar();
 
         diff = img[0,:,:] - model[0,:,:]
         plt.subplot(233)
         plt.imshow(diff,interpolation='nearest', cmap='gray',vmin = np.min(diff),vmax = np.max(diff))
         plt.colorbar();
-        plt.title("Original - Model (lambda = "+str(i)+")")
+        plt.title("Original - Model")
 
         plt.subplot(234)
         plt.imshow(mod2[0,:,:],interpolation='nearest', cmap='gray',vmin = np.min(diff),vmax= np.max(diff))
@@ -246,10 +247,11 @@ for j in range(ntrial):
         #plt.savefig("/Users/lorena/git/test/blender/new/lam"+str(i)+"_"+str(j)+".png")
         plt.show()
         #plt.clf()
-    except (ValueError, np.linalg.linalg.LinAlgError):
+        """
+    except (np.linalg.linalg.LinAlgError,ValueError):
         output['flags'][j] = 1
         print("flags: 1")
 
-        
-filename = 'data2.fits'
+
+filename = 'data3.fits'
 fitsio.write(filename, output, clobber=True)
