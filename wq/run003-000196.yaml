@@ -1,0 +1,8 @@
+
+command: |
+    source ~/.bashrc
+    
+    /gpfs01/astro/workarea/lmezini/code/galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run003/run003-output-000196.fits 5000 14261
+
+job_name: "run003-000196"
+

@@ -1,0 +1,23 @@
+Universe        = vanilla
+
+Notification    = Never
+
+# Run this exe with these args
+Executable      = /gpfs01/astro/workarea/lmezini/code/galsim_deblend.py
+Image_Size       =  1000000
+
+GetEnv = True
+
+kill_sig        = SIGINT
+
+#requirements = (cpu_experiment == "star") || (cpu_experiment == "phenix")
+requirements = (cpu_experiment == "phenix")
+
++Experiment     = "astro"
+
+
++job_name = "run001-02151"
+
+#output_file ntrial seed
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run001/run001-output-002151.fits 10000 34132
+Queue

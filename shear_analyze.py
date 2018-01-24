@@ -1,12 +1,21 @@
-limport argparse
+from glob import glob
+import argparse
 import fitsio
 import numpy as np
+from glob import glob
+import esutil as eu
 
-parser = argparse.ArgumentParser()
-parser.add_argument("filename",help="filename")
-args = parser.parse_args()
+#parser = argparse.ArgumentParser()
+#parser.add_argument("filename",help="filename")
+#args = parser.parse_args()
 
-data = fitsio.read(args.filename)
+# this gets a list of all files that match the pattern
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run003/run003*.fits')
+
+# read each file and combine into one big array
+data = eu.io.read(flist)
+
+#data = fitsio.read(args.filename)
 w, = np.where(data['flags']==0)
 print("kept %d/%d" % (w.size, data.size))
 data = data[w]
