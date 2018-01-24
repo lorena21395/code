@@ -193,6 +193,7 @@ for j in range(ntrial):
         #model,mod2 = make_model(img,bg_rms,B,coords)
         cen_obj = img[0,:,:]#-mod2[0,:,:]
         plt.imshow(cen_obj)
+        plt.show()
 #print(np.mean(mod2))
         #if np.mean(mod2) == 0.:
         #    k = k +1
