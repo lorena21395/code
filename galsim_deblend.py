@@ -14,15 +14,17 @@ parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
 parser.add_argument("ntrials",help="Number of trials to be run",type = int)
 parser.add_argument("seed",help="Seed for random number generator",type = int)
+parser.add_argument("control",help="Specify whether or not to do a control run",default='no',type = str)
 args = parser.parse_args()
 
 outfile_name = args.outfile
 ntrial = args.ntrials
 seed = args.seed
+control = args.control
+np.random.seed(seed)
 
 def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed):
     """a quick example with two objects convolved by a point spread function """
-    np.random.seed(seed)
     psf = galsim.Gaussian(half_light_radius = psf_hlr)
     gal1 = galsim.Gaussian(half_light_radius = gal1_hlr, flux=gal1_flux)
     gal2 = galsim.Exponential(half_light_radius = gal2_hlr, flux=gal2_flux)
@@ -34,9 +36,12 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     coords = [coord1,coord2]
     gal1 = gal1.shift(dx=dx1, dy=dy1)
     gal2 = gal2.shift(dx=dx2, dy=dy2)
-    gals = [gal1, gal2]
-    objs = galsim.Add(gals)
-
+    if control == 'no':
+        gals = [gal1, gal2]
+        objs = galsim.Add(gals)
+    elif control == 'yes':
+        gals = [gal1]
+        objs = galsim.Add(gals)
     #Add shear
     shear1, shear2 = 0.02, 0.00
     objs  = objs.shear(g1=shear1, g2=shear2)    
@@ -190,9 +195,12 @@ for j in range(ntrial):
         img,coords,psf_im = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed)
         coord1,coord2 = coords[0],coords[1]
         B,Ny,Nx = img.shape
-        model,mod2 = make_model(img,bg_rms,B,coords)
-        cen_obj = img[0,:,:]-mod2[0,:,:]
-        #print(np.mean(mod2))
+        if control == 'no':
+            model,mod2 = make_model(img,bg_rms,B,coords)
+            cen_obj = img[0,:,:]-mod2[0,:,:]
+        elif control == 'yes':
+            cen_obj = img[0,:,:]
+#print(np.mean(mod2))
         #if np.mean(mod2) == 0.:
         #    k = k +1
         #create container

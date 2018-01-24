@@ -12,6 +12,6 @@ print('+Experiment     = "astro"')
 
 for i in range(1,201):
     seed = np.random.randint(0, 2**15)
-    print('+job_name = "run003-'+str(i).zfill(6)+'"')
-    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run003/run003-output-'+str(i).zfill(6)+'.fits 5000 '+str(seed))
+    print('+job_name = "run005-'+str(i).zfill(6)+'"')
+    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run005/run005-output-'+str(i).zfill(6)+'.fits 5000 '+str(seed)+' yes')
     print('Queue')
