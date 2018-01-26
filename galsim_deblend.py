@@ -74,8 +74,8 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     #print("image standard dev:",s)
 
     # add extra dimension for scarlet
-    if mode == 'scarlet' or mode == 'control':
-        im = im.reshape( (1, dims[1], dims[0]) )
+    #if mode == 'scarlet' or mode == 'control':
+    im = im.reshape( (1, dims[1], dims[0]) )
     return im,coords,psf_im
 
 
@@ -192,22 +192,20 @@ metacal_pars = {
 }
 
 prior = get_prior()
-if mode == 'minimof':        
-    allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
-    config = allconf['mof']
-
+allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
+config = allconf['mof']
 for j in range(ntrial):
     print(j)
     try:
         img,coords,psf_im = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed)
         coord1,coord2 = coords[0],coords[1]
-        B,Ny,Nx = img.shape
-
         if mode == 'minimof':
+            print('mini')
             all_obs = []
             for coord in coords:
-                row,col = coord[1],coord[0]
-                obs = observation(img,bg_rms,row,col,bg_rms_psf,psf_im)
+                row,col = coord
+                row,col = int(row),int(col)
+                obs = observation(img[0],bg_rms,row,col,bg_rms_psf,psf_im)
                 this_jacob = obs.jacobian.copy()
                 this_jacob.set_cen(row=row, col=col)
                 this_obs = ngmix.Observation(
@@ -217,7 +215,6 @@ for j in range(ntrial):
                     psf=obs.psf,
                     )
                 all_obs.append(this_obs)
-
             mm = minimof.MiniMOF(config, all_obs, rng = np.random.RandomState(seed=np.random.randint(0,2**30)))
             mm.go()
             res=mm.get_result()
@@ -225,7 +222,9 @@ for j in range(ntrial):
                 flag = 2
             else:
                 dobs = mm.get_corrected_obs(0)
+        
         elif mode == 'scarlet':
+            B,Ny,Nx = img.shape
             model,mod2 = make_model(img,bg_rms,B,coords)
             cen_obj = img[0,:,:]-mod2[0,:,:]
             dobs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
