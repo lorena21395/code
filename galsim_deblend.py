@@ -1,4 +1,6 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
+import yaml 
+from minimof import minimof
 from scipy.misc import imsave
 import fitsio
 import galsim
@@ -8,19 +10,20 @@ import ngmix
 import numpy as np
 import scarlet
 import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 from matplotlib.patches import Ellipse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
 parser.add_argument("ntrials",help="Number of trials to be run",type = int)
 parser.add_argument("seed",help="Seed for random number generator",type = int)
-parser.add_argument("control",help="Specify whether or not to do a control run",default='no',type = str)
+parser.add_argument("mode",help="Specify whether scarlet, minimof, or control",type = str)
 args = parser.parse_args()
 
 outfile_name = args.outfile
 ntrial = args.ntrials
 seed = args.seed
-control = args.control
+mode = args.mode
 np.random.seed(seed)
 
 def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed):
@@ -36,10 +39,10 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     coords = [coord1,coord2]
     gal1 = gal1.shift(dx=dx1, dy=dy1)
     gal2 = gal2.shift(dx=dx2, dy=dy2)
-    if control == 'no':
+    if mode == 'scarlet' or mode == 'minimof':
         gals = [gal1, gal2]
         objs = galsim.Add(gals)
-    elif control == 'yes':
+    elif mode == 'control':
         gals = [gal1]
         objs = galsim.Add(gals)
     #Add shear
@@ -71,7 +74,8 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     #print("image standard dev:",s)
 
     # add extra dimension for scarlet
-    im = im.reshape( (1, dims[1], dims[0]) )
+    if mode == 'scarlet' or mode == 'control':
+        im = im.reshape( (1, dims[1], dims[0]) )
     return im,coords,psf_im
 
 
@@ -164,7 +168,7 @@ gal2_hlr = 3.4
 gal1_flux = 6000.0
 gal2_flux = 8000.0
 dims = [50,50]
-bg_rms = 10
+bg_rms = 0.001
 bg_rms_psf = 0.0001
 psf_model = 'gauss'
 gal_model = 'gauss'
@@ -188,6 +192,9 @@ metacal_pars = {
 }
 
 prior = get_prior()
+if mode == 'minimof':        
+    allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
+    config = allconf['mof']
 
 for j in range(ntrial):
     print(j)
@@ -195,18 +202,41 @@ for j in range(ntrial):
         img,coords,psf_im = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed)
         coord1,coord2 = coords[0],coords[1]
         B,Ny,Nx = img.shape
-        if control == 'no':
+
+        if mode == 'minimof':
+            all_obs = []
+            for coord in coords:
+                row,col = coord[1],coord[0]
+                obs = observation(img,bg_rms,row,col,bg_rms_psf,psf_im)
+                this_jacob = obs.jacobian.copy()
+                this_jacob.set_cen(row=row, col=col)
+                this_obs = ngmix.Observation(
+                    obs.image.copy(),
+                    weight=obs.weight.copy(),
+                    jacobian=this_jacob,
+                    psf=obs.psf,
+                    )
+                all_obs.append(this_obs)
+
+            mm = minimof.MiniMOF(config, all_obs, rng = np.random.RandomState(seed=np.random.randint(0,2**30)))
+            mm.go()
+            res=mm.get_result()
+            if not res['converged']:
+                flag = 2
+            else:
+                dobs = mm.get_corrected_obs(0)
+        elif mode == 'scarlet':
             model,mod2 = make_model(img,bg_rms,B,coords)
             cen_obj = img[0,:,:]-mod2[0,:,:]
-        elif control == 'yes':
+            dobs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
+        elif mode == 'control':
             cen_obj = img[0,:,:]
-#print(np.mean(mod2))
-        #if np.mean(mod2) == 0.:
-        #    k = k +1
-        #create container
-        obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
+            dobs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
+
+        #Create container
+        #obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
         #fit
-        boot = ngmix.bootstrap.MaxMetacalBootstrapper(obs)
+        boot = ngmix.bootstrap.MaxMetacalBootstrapper(dobs)
         boot.fit_psfs(
                 psf_model,
                 psf_Tguess,
@@ -214,8 +244,7 @@ for j in range(ntrial):
                 fit_pars=max_pars['lm_pars'],
                 skip_already_done=False,
             )
-        boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,ntry=ntry,
-                         metacal_pars=metacal_pars,)
+        boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,ntry=ntry,metacal_pars=metacal_pars,)
         res = boot.get_metacal_result()
         print("flags:",res['mcal_flags'])
         output['flags'][j] = res['mcal_flags']
@@ -224,7 +253,7 @@ for j in range(ntrial):
         output['pars_1m'][j] = res['1m']['pars']
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
-        
+        """
         #print("obects found:",len(model))
         #mod_m = np.mean(model)
         #mod_s = np.std(model)
@@ -232,7 +261,6 @@ for j in range(ntrial):
         #print("model stand dev:",mod_s)
         #print("coord1,coord2:",coord1,coord2)
         #print("Neighbor mean:",np.mean(mod2))
-        """
         plt.figure(figsize=(11,8))
         plt.plot(2,3,5)
             
@@ -263,8 +291,8 @@ for j in range(ntrial):
         plt.title("Original - Model of Neighbor")
 
         plt.tight_layout()
-        #plt.savefig("/Users/lorena/git/test/blender/new/lam"+str(i)+"_"+str(j)+".png")
-        plt.show()
+        plt.savefig("/gpfs01/astro/workarea/lmezini/scarlet-tests/run007_"+str(j)+".png")
+        #plt.show()
         #plt.clf()
         """
     except (np.linalg.linalg.LinAlgError,ValueError):
