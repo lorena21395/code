@@ -1,0 +1,610 @@
+Universe        = vanilla
+Notification    = Never
+# Run this exe with these args
+Executable      = /gpfs01/astro/workarea/lmezini/code/galsim_deblend.py
+Image_Size       =  1000000
+GetEnv = True
+kill_sig        = SIGINT
+#requirements = (cpu_experiment == "star") || (cpu_experiment == "phenix")
+requirements = (cpu_experiment == "phenix")
++Experiment     = "astro"
++job_name = "run009-000001"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000001.fits 5000 26775 minimof
+Queue
++job_name = "run009-000002"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000002.fits 5000 12205 minimof
+Queue
++job_name = "run009-000003"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000003.fits 5000 10561 minimof
+Queue
++job_name = "run009-000004"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000004.fits 5000 13332 minimof
+Queue
++job_name = "run009-000005"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000005.fits 5000 28532 minimof
+Queue
++job_name = "run009-000006"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000006.fits 5000 26695 minimof
+Queue
++job_name = "run009-000007"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000007.fits 5000 9428 minimof
+Queue
++job_name = "run009-000008"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000008.fits 5000 23836 minimof
+Queue
++job_name = "run009-000009"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000009.fits 5000 11303 minimof
+Queue
++job_name = "run009-000010"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000010.fits 5000 21349 minimof
+Queue
++job_name = "run009-000011"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000011.fits 5000 2515 minimof
+Queue
++job_name = "run009-000012"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000012.fits 5000 15348 minimof
+Queue
++job_name = "run009-000013"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000013.fits 5000 20115 minimof
+Queue
++job_name = "run009-000014"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000014.fits 5000 21704 minimof
+Queue
++job_name = "run009-000015"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000015.fits 5000 16334 minimof
+Queue
++job_name = "run009-000016"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000016.fits 5000 16294 minimof
+Queue
++job_name = "run009-000017"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000017.fits 5000 32206 minimof
+Queue
++job_name = "run009-000018"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000018.fits 5000 6830 minimof
+Queue
++job_name = "run009-000019"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000019.fits 5000 9821 minimof
+Queue
++job_name = "run009-000020"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000020.fits 5000 4853 minimof
+Queue
++job_name = "run009-000021"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000021.fits 5000 11804 minimof
+Queue
++job_name = "run009-000022"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000022.fits 5000 10710 minimof
+Queue
++job_name = "run009-000023"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000023.fits 5000 14504 minimof
+Queue
++job_name = "run009-000024"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000024.fits 5000 5372 minimof
+Queue
++job_name = "run009-000025"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000025.fits 5000 1277 minimof
+Queue
++job_name = "run009-000026"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000026.fits 5000 2182 minimof
+Queue
++job_name = "run009-000027"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000027.fits 5000 16720 minimof
+Queue
++job_name = "run009-000028"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000028.fits 5000 3318 minimof
+Queue
++job_name = "run009-000029"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000029.fits 5000 10515 minimof
+Queue
++job_name = "run009-000030"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000030.fits 5000 6697 minimof
+Queue
++job_name = "run009-000031"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000031.fits 5000 2862 minimof
+Queue
++job_name = "run009-000032"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000032.fits 5000 265 minimof
+Queue
++job_name = "run009-000033"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000033.fits 5000 14063 minimof
+Queue
++job_name = "run009-000034"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000034.fits 5000 25748 minimof
+Queue
++job_name = "run009-000035"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000035.fits 5000 9132 minimof
+Queue
++job_name = "run009-000036"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000036.fits 5000 30394 minimof
+Queue
++job_name = "run009-000037"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000037.fits 5000 7134 minimof
+Queue
++job_name = "run009-000038"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000038.fits 5000 27940 minimof
+Queue
++job_name = "run009-000039"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000039.fits 5000 660 minimof
+Queue
++job_name = "run009-000040"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000040.fits 5000 4711 minimof
+Queue
++job_name = "run009-000041"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000041.fits 5000 5537 minimof
+Queue
++job_name = "run009-000042"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000042.fits 5000 23900 minimof
+Queue
++job_name = "run009-000043"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000043.fits 5000 24460 minimof
+Queue
++job_name = "run009-000044"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000044.fits 5000 7998 minimof
+Queue
++job_name = "run009-000045"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000045.fits 5000 4934 minimof
+Queue
++job_name = "run009-000046"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000046.fits 5000 21491 minimof
+Queue
++job_name = "run009-000047"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000047.fits 5000 15304 minimof
+Queue
++job_name = "run009-000048"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000048.fits 5000 19282 minimof
+Queue
++job_name = "run009-000049"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000049.fits 5000 3662 minimof
+Queue
++job_name = "run009-000050"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000050.fits 5000 16199 minimof
+Queue
++job_name = "run009-000051"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000051.fits 5000 30392 minimof
+Queue
++job_name = "run009-000052"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000052.fits 5000 10885 minimof
+Queue
++job_name = "run009-000053"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000053.fits 5000 19377 minimof
+Queue
++job_name = "run009-000054"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000054.fits 5000 15295 minimof
+Queue
++job_name = "run009-000055"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000055.fits 5000 18884 minimof
+Queue
++job_name = "run009-000056"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000056.fits 5000 4969 minimof
+Queue
++job_name = "run009-000057"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000057.fits 5000 10677 minimof
+Queue
++job_name = "run009-000058"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000058.fits 5000 12292 minimof
+Queue
++job_name = "run009-000059"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000059.fits 5000 13459 minimof
+Queue
++job_name = "run009-000060"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000060.fits 5000 25093 minimof
+Queue
++job_name = "run009-000061"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000061.fits 5000 21650 minimof
+Queue
++job_name = "run009-000062"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000062.fits 5000 17542 minimof
+Queue
++job_name = "run009-000063"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000063.fits 5000 30124 minimof
+Queue
++job_name = "run009-000064"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000064.fits 5000 7022 minimof
+Queue
++job_name = "run009-000065"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000065.fits 5000 32548 minimof
+Queue
++job_name = "run009-000066"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000066.fits 5000 11387 minimof
+Queue
++job_name = "run009-000067"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000067.fits 5000 4168 minimof
+Queue
++job_name = "run009-000068"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000068.fits 5000 9643 minimof
+Queue
++job_name = "run009-000069"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000069.fits 5000 21836 minimof
+Queue
++job_name = "run009-000070"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000070.fits 5000 12627 minimof
+Queue
++job_name = "run009-000071"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000071.fits 5000 6039 minimof
+Queue
++job_name = "run009-000072"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000072.fits 5000 16673 minimof
+Queue
++job_name = "run009-000073"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000073.fits 5000 8457 minimof
+Queue
++job_name = "run009-000074"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000074.fits 5000 15591 minimof
+Queue
++job_name = "run009-000075"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000075.fits 5000 29019 minimof
+Queue
++job_name = "run009-000076"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000076.fits 5000 4459 minimof
+Queue
++job_name = "run009-000077"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000077.fits 5000 28218 minimof
+Queue
++job_name = "run009-000078"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000078.fits 5000 11863 minimof
+Queue
++job_name = "run009-000079"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000079.fits 5000 4093 minimof
+Queue
++job_name = "run009-000080"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000080.fits 5000 20025 minimof
+Queue
++job_name = "run009-000081"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000081.fits 5000 28510 minimof
+Queue
++job_name = "run009-000082"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000082.fits 5000 9643 minimof
+Queue
++job_name = "run009-000083"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000083.fits 5000 18500 minimof
+Queue
++job_name = "run009-000084"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000084.fits 5000 4028 minimof
+Queue
++job_name = "run009-000085"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000085.fits 5000 3661 minimof
+Queue
++job_name = "run009-000086"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000086.fits 5000 18533 minimof
+Queue
++job_name = "run009-000087"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000087.fits 5000 7739 minimof
+Queue
++job_name = "run009-000088"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000088.fits 5000 20890 minimof
+Queue
++job_name = "run009-000089"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000089.fits 5000 32735 minimof
+Queue
++job_name = "run009-000090"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000090.fits 5000 28758 minimof
+Queue
++job_name = "run009-000091"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000091.fits 5000 32718 minimof
+Queue
++job_name = "run009-000092"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000092.fits 5000 442 minimof
+Queue
++job_name = "run009-000093"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000093.fits 5000 21822 minimof
+Queue
++job_name = "run009-000094"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000094.fits 5000 1915 minimof
+Queue
++job_name = "run009-000095"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000095.fits 5000 16376 minimof
+Queue
++job_name = "run009-000096"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000096.fits 5000 19276 minimof
+Queue
++job_name = "run009-000097"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000097.fits 5000 23558 minimof
+Queue
++job_name = "run009-000098"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000098.fits 5000 2628 minimof
+Queue
++job_name = "run009-000099"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000099.fits 5000 20207 minimof
+Queue
++job_name = "run009-000100"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000100.fits 5000 21373 minimof
+Queue
++job_name = "run009-000101"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000101.fits 5000 22305 minimof
+Queue
++job_name = "run009-000102"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000102.fits 5000 16780 minimof
+Queue
++job_name = "run009-000103"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000103.fits 5000 12371 minimof
+Queue
++job_name = "run009-000104"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000104.fits 5000 8033 minimof
+Queue
++job_name = "run009-000105"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000105.fits 5000 478 minimof
+Queue
++job_name = "run009-000106"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000106.fits 5000 27073 minimof
+Queue
++job_name = "run009-000107"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000107.fits 5000 2796 minimof
+Queue
++job_name = "run009-000108"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000108.fits 5000 4965 minimof
+Queue
++job_name = "run009-000109"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000109.fits 5000 31479 minimof
+Queue
++job_name = "run009-000110"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000110.fits 5000 3446 minimof
+Queue
++job_name = "run009-000111"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000111.fits 5000 3674 minimof
+Queue
++job_name = "run009-000112"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000112.fits 5000 22509 minimof
+Queue
++job_name = "run009-000113"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000113.fits 5000 9385 minimof
+Queue
++job_name = "run009-000114"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000114.fits 5000 24619 minimof
+Queue
++job_name = "run009-000115"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000115.fits 5000 25483 minimof
+Queue
++job_name = "run009-000116"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000116.fits 5000 31696 minimof
+Queue
++job_name = "run009-000117"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000117.fits 5000 25229 minimof
+Queue
++job_name = "run009-000118"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000118.fits 5000 20476 minimof
+Queue
++job_name = "run009-000119"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000119.fits 5000 264 minimof
+Queue
++job_name = "run009-000120"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000120.fits 5000 9419 minimof
+Queue
++job_name = "run009-000121"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000121.fits 5000 18741 minimof
+Queue
++job_name = "run009-000122"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000122.fits 5000 32587 minimof
+Queue
++job_name = "run009-000123"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000123.fits 5000 30214 minimof
+Queue
++job_name = "run009-000124"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000124.fits 5000 30748 minimof
+Queue
++job_name = "run009-000125"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000125.fits 5000 4080 minimof
+Queue
++job_name = "run009-000126"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000126.fits 5000 30359 minimof
+Queue
++job_name = "run009-000127"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000127.fits 5000 27540 minimof
+Queue
++job_name = "run009-000128"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000128.fits 5000 2205 minimof
+Queue
++job_name = "run009-000129"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000129.fits 5000 26003 minimof
+Queue
++job_name = "run009-000130"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000130.fits 5000 16502 minimof
+Queue
++job_name = "run009-000131"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000131.fits 5000 57 minimof
+Queue
++job_name = "run009-000132"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000132.fits 5000 6292 minimof
+Queue
++job_name = "run009-000133"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000133.fits 5000 0 minimof
+Queue
++job_name = "run009-000134"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000134.fits 5000 2590 minimof
+Queue
++job_name = "run009-000135"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000135.fits 5000 9870 minimof
+Queue
++job_name = "run009-000136"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000136.fits 5000 17294 minimof
+Queue
++job_name = "run009-000137"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000137.fits 5000 7235 minimof
+Queue
++job_name = "run009-000138"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000138.fits 5000 24157 minimof
+Queue
++job_name = "run009-000139"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000139.fits 5000 28241 minimof
+Queue
++job_name = "run009-000140"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000140.fits 5000 13733 minimof
+Queue
++job_name = "run009-000141"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000141.fits 5000 25792 minimof
+Queue
++job_name = "run009-000142"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000142.fits 5000 23695 minimof
+Queue
++job_name = "run009-000143"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000143.fits 5000 12167 minimof
+Queue
++job_name = "run009-000144"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000144.fits 5000 13665 minimof
+Queue
++job_name = "run009-000145"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000145.fits 5000 18377 minimof
+Queue
++job_name = "run009-000146"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000146.fits 5000 23803 minimof
+Queue
++job_name = "run009-000147"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000147.fits 5000 12646 minimof
+Queue
++job_name = "run009-000148"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000148.fits 5000 22696 minimof
+Queue
++job_name = "run009-000149"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000149.fits 5000 31251 minimof
+Queue
++job_name = "run009-000150"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000150.fits 5000 8049 minimof
+Queue
++job_name = "run009-000151"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000151.fits 5000 25541 minimof
+Queue
++job_name = "run009-000152"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000152.fits 5000 18000 minimof
+Queue
++job_name = "run009-000153"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000153.fits 5000 32724 minimof
+Queue
++job_name = "run009-000154"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000154.fits 5000 13551 minimof
+Queue
++job_name = "run009-000155"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000155.fits 5000 16847 minimof
+Queue
++job_name = "run009-000156"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000156.fits 5000 9010 minimof
+Queue
++job_name = "run009-000157"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000157.fits 5000 28857 minimof
+Queue
++job_name = "run009-000158"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000158.fits 5000 28896 minimof
+Queue
++job_name = "run009-000159"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000159.fits 5000 13369 minimof
+Queue
++job_name = "run009-000160"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000160.fits 5000 24735 minimof
+Queue
++job_name = "run009-000161"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000161.fits 5000 8725 minimof
+Queue
++job_name = "run009-000162"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000162.fits 5000 30732 minimof
+Queue
++job_name = "run009-000163"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000163.fits 5000 10674 minimof
+Queue
++job_name = "run009-000164"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000164.fits 5000 27511 minimof
+Queue
++job_name = "run009-000165"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000165.fits 5000 5596 minimof
+Queue
++job_name = "run009-000166"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000166.fits 5000 9694 minimof
+Queue
++job_name = "run009-000167"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000167.fits 5000 10192 minimof
+Queue
++job_name = "run009-000168"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000168.fits 5000 32031 minimof
+Queue
++job_name = "run009-000169"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000169.fits 5000 21495 minimof
+Queue
++job_name = "run009-000170"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000170.fits 5000 10335 minimof
+Queue
++job_name = "run009-000171"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000171.fits 5000 4781 minimof
+Queue
++job_name = "run009-000172"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000172.fits 5000 30523 minimof
+Queue
++job_name = "run009-000173"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000173.fits 5000 1598 minimof
+Queue
++job_name = "run009-000174"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000174.fits 5000 21829 minimof
+Queue
++job_name = "run009-000175"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000175.fits 5000 28594 minimof
+Queue
++job_name = "run009-000176"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000176.fits 5000 24687 minimof
+Queue
++job_name = "run009-000177"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000177.fits 5000 29962 minimof
+Queue
++job_name = "run009-000178"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000178.fits 5000 28933 minimof
+Queue
++job_name = "run009-000179"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000179.fits 5000 12799 minimof
+Queue
++job_name = "run009-000180"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000180.fits 5000 30765 minimof
+Queue
++job_name = "run009-000181"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000181.fits 5000 32239 minimof
+Queue
++job_name = "run009-000182"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000182.fits 5000 20304 minimof
+Queue
++job_name = "run009-000183"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000183.fits 5000 13231 minimof
+Queue
++job_name = "run009-000184"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000184.fits 5000 12001 minimof
+Queue
++job_name = "run009-000185"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000185.fits 5000 30881 minimof
+Queue
++job_name = "run009-000186"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000186.fits 5000 9335 minimof
+Queue
++job_name = "run009-000187"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000187.fits 5000 24416 minimof
+Queue
++job_name = "run009-000188"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000188.fits 5000 12344 minimof
+Queue
++job_name = "run009-000189"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000189.fits 5000 13587 minimof
+Queue
++job_name = "run009-000190"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000190.fits 5000 22172 minimof
+Queue
++job_name = "run009-000191"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000191.fits 5000 31248 minimof
+Queue
++job_name = "run009-000192"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000192.fits 5000 23084 minimof
+Queue
++job_name = "run009-000193"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000193.fits 5000 30499 minimof
+Queue
++job_name = "run009-000194"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000194.fits 5000 9290 minimof
+Queue
++job_name = "run009-000195"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000195.fits 5000 3985 minimof
+Queue
++job_name = "run009-000196"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000196.fits 5000 3338 minimof
+Queue
++job_name = "run009-000197"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000197.fits 5000 9797 minimof
+Queue
++job_name = "run009-000198"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000198.fits 5000 3118 minimof
+Queue
++job_name = "run009-000199"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000199.fits 5000 3165 minimof
+Queue
++job_name = "run009-000200"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run009/run009-output-000200.fits 5000 32630 minimof
+Queue

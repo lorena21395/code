@@ -25,6 +25,7 @@ ntrial = args.ntrials
 seed = args.seed
 mode = args.mode
 np.random.seed(seed)
+rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
 def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed):
     """a quick example with two objects convolved by a point spread function """
@@ -74,8 +75,8 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     #print("image standard dev:",s)
 
     # add extra dimension for scarlet
-    #if mode == 'scarlet' or mode == 'control':
-    im = im.reshape( (1, dims[1], dims[0]) )
+    if mode == 'scarlet' or mode == 'control':
+        im = im.reshape( (1, dims[1], dims[0]) )
     return im,coords,psf_im
 
 
@@ -85,7 +86,7 @@ def make_model(img,bg_rms,B,coords):
     # "m": monotonicity (with neighbor pixel weighting)
     # "+": non-negativity
     constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
-
+    constraints['l0'] = bg_rms
     # initial size of the box around each object
     # will be adjusted as needed
     shape = (B, 15, 15)
@@ -168,7 +169,7 @@ gal2_hlr = 3.4
 gal1_flux = 6000.0
 gal2_flux = 8000.0
 dims = [50,50]
-bg_rms = 0.001
+bg_rms = 10
 bg_rms_psf = 0.0001
 psf_model = 'gauss'
 gal_model = 'gauss'
@@ -192,8 +193,9 @@ metacal_pars = {
 }
 
 prior = get_prior()
-allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
-config = allconf['mof']
+#allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
+#config = allconf['mof']
+#config['psf_pars'] = {'model':'gauss','ntry':2}
 for j in range(ntrial):
     print(j)
     try:
@@ -201,11 +203,11 @@ for j in range(ntrial):
         coord1,coord2 = coords[0],coords[1]
         if mode == 'minimof':
             print('mini')
-            all_obs = []
+            allobs = []
             for coord in coords:
                 row,col = coord
-                row,col = int(row),int(col)
-                obs = observation(img[0],bg_rms,row,col,bg_rms_psf,psf_im)
+                #row,col = int(row),int(col)
+                obs = observation(img,bg_rms,row,col,bg_rms_psf,psf_im)
                 this_jacob = obs.jacobian.copy()
                 this_jacob.set_cen(row=row, col=col)
                 this_obs = ngmix.Observation(
@@ -214,12 +216,12 @@ for j in range(ntrial):
                     jacobian=this_jacob,
                     psf=obs.psf,
                     )
-                all_obs.append(this_obs)
-            mm = minimof.MiniMOF(config, all_obs, rng = np.random.RandomState(seed=np.random.randint(0,2**30)))
+                allobs.append(this_obs)
+            mm = minimof.MiniMOF(config, allobs, rng = rng)
             mm.go()
             res=mm.get_result()
             if not res['converged']:
-                flag = 2
+                output['flags'][j] = 2
             else:
                 dobs = mm.get_corrected_obs(0)
         
@@ -227,10 +229,10 @@ for j in range(ntrial):
             B,Ny,Nx = img.shape
             model,mod2 = make_model(img,bg_rms,B,coords)
             cen_obj = img[0,:,:]-mod2[0,:,:]
-            dobs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
+            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
         elif mode == 'control':
             cen_obj = img[0,:,:]
-            dobs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
+            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
         #Create container
         #obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
@@ -252,6 +254,7 @@ for j in range(ntrial):
         output['pars_1m'][j] = res['1m']['pars']
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
+        
         """
         #print("obects found:",len(model))
         #mod_m = np.mean(model)
@@ -260,6 +263,7 @@ for j in range(ntrial):
         #print("model stand dev:",mod_s)
         #print("coord1,coord2:",coord1,coord2)
         #print("Neighbor mean:",np.mean(mod2))
+    
         plt.figure(figsize=(11,8))
         plt.plot(2,3,5)
             
@@ -267,12 +271,12 @@ for j in range(ntrial):
         plt.imshow(img[0,:,:],interpolation='nearest', cmap='gray', vmin=np.min(img[0,:,:]), vmax = np.max(img[0,:,:]))
         plt.colorbar();
         plt.title("Original Image")
-
+        
         plt.subplot(232)
         plt.imshow(model[0,:,:],interpolation='nearest', cmap='gray', vmin=np.min(model[0,:,:]),vmax=np.max(model[0,:,:]))
         plt.title("Model")
         plt.colorbar();
-
+        
         diff = img[0,:,:] - model[0,:,:]
         plt.subplot(233)
         plt.imshow(diff,interpolation='nearest', cmap='gray',vmin = np.min(diff),vmax = np.max(diff))
@@ -290,7 +294,7 @@ for j in range(ntrial):
         plt.title("Original - Model of Neighbor")
 
         plt.tight_layout()
-        plt.savefig("/gpfs01/astro/workarea/lmezini/scarlet-tests/run007_"+str(j)+".png")
+        plt.savefig("/gpfs01/astro/workarea/lmezini/scarlet-tests/test_"+str(j)+".png")
         #plt.show()
         #plt.clf()
         """

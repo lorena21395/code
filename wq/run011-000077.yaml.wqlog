@@ -1,0 +1,6 @@
+executing on host: astro0044 with pid: 5160
+ssh_exchange_identification: Connection closed by remote host
+source ~/.bashrc
+bash; . ~/.bashrc
+/gpfs01/astro/workarea/lmezini/code/galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run011/run011-output-000077.fits 5000 5525 scarlet
+
