@@ -230,10 +230,10 @@ for j in range(ntrial):
             B,Ny,Nx = img.shape
             model,mod2,cen_obj_shape = make_model(img,bg_rms,B,coords)
             cen_obj = img[0,:,:]-mod2[0,:,:]
-            cen_obj_region = cen_obj[int(coord1[0]-(cen_obj_shape[1]/2)):int(coord1[0]+(cen_obj_shape[1]/2)),int(coord1[1]-(cen_obj_shape[2]/2)):int(coord1[1]+(cen_obj_shape[2]/2))]
-            plt.imshow(cen_obj_region)
-            plt.savefig("figure_1.png")
-            reg_std = np.std(cen_obj_region)
+            img_region = img[0:int(coord1[0]-(cen_obj_shape[1]/2)):int(coord1[0]+(cen_obj_shape[1]/2)),int(coord1[1]-(cen_obj_shape[2]/2)):int(coord1[1]+(cen_obj_shape[2]/2))]
+            #plt.imshow(img_region)
+            #plt.savefig("figure_1.png")
+            reg_std = np.std(img_region)
             print(reg_std)
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
         elif mode == 'control':
