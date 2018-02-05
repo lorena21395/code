@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<string>", line 1012, in <module>
+  File "<string>", line 973, in main
+  File "<string>", line 908, in get_command_obj
+  File "<string>", line 556, in __init__
+  File "<string>", line 587, in _process_args
+  File "<string>", line 636, in _process_job_file
+IOError: [Errno 2] No such file or directory: '^\\run011-0000.*yaml\n'

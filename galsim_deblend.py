@@ -86,7 +86,7 @@ def make_model(img,bg_rms,B,coords):
     # "m": monotonicity (with neighbor pixel weighting)
     # "+": non-negativity
     constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
-    constraints['l0'] = bg_rms
+    #constraints['l0'] = bg_rms
     # initial size of the box around each object
     # will be adjusted as needed
     shape = (B, 15, 15)
@@ -107,7 +107,8 @@ def make_model(img,bg_rms,B,coords):
     # render the multi-band model: has same shape as img
     model = blend.get_model()
     mod2 = blend.get_model(m=1)
-    return model,mod2
+    cen_obj_shape = sources[0].get_model().shape
+    return model,mod2,cen_obj_shape
 
 def observation(image,sigma,row,col,psf_sigma,psf_im):
     # sigma is the standard deviation of the noise
@@ -227,8 +228,13 @@ for j in range(ntrial):
         
         elif mode == 'scarlet':
             B,Ny,Nx = img.shape
-            model,mod2 = make_model(img,bg_rms,B,coords)
+            model,mod2,cen_obj_shape = make_model(img,bg_rms,B,coords)
             cen_obj = img[0,:,:]-mod2[0,:,:]
+            cen_obj_region = cen_obj[int(coord1[0]-(cen_obj_shape[1]/2)):int(coord1[0]+(cen_obj_shape[1]/2)),int(coord1[1]-(cen_obj_shape[2]/2)):int(coord1[1]+(cen_obj_shape[2]/2))]
+            plt.imshow(cen_obj_region)
+            plt.savefig("figure_1.png")
+            reg_std = np.std(cen_obj_region)
+            print(reg_std)
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
         elif mode == 'control':
             cen_obj = img[0,:,:]
