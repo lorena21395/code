@@ -107,8 +107,9 @@ def make_model(img,bg_rms,B,coords):
     # render the multi-band model: has same shape as img
     model = blend.get_model()
     mod2 = blend.get_model(m=1)
-    cen_obj_shape = sources[0].get_model().shape
-    return model,mod2,cen_obj_shape
+    cen_mod = sources[0].get_model()
+    neigh_mod = sources[1].get_model()
+    return model,mod2,cen_mod,neigh_mod
 
 def observation(image,sigma,row,col,psf_sigma,psf_im):
     # sigma is the standard deviation of the noise
@@ -158,6 +159,7 @@ dt = [
     ('pars_1m','f8',6),
     ('pars_2p','f8',6),
     ('pars_2m','f8',6),
+    ('noise_std','f8'),
 ]
 
 
@@ -197,6 +199,8 @@ prior = get_prior()
 #allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
 #config = allconf['mof']
 #config['psf_pars'] = {'model':'gauss','ntry':2}
+subtr_reg_stds = []
+
 for j in range(ntrial):
     print(j)
     try:
@@ -228,14 +232,50 @@ for j in range(ntrial):
         
         elif mode == 'scarlet':
             B,Ny,Nx = img.shape
-            model,mod2,cen_obj_shape = make_model(img,bg_rms,B,coords)
+            model,mod2,cen_mod,neigh_mod = make_model(img,bg_rms,B,coords)
+            
             cen_obj = img[0,:,:]-mod2[0,:,:]
-            img_region = img[0:int(coord1[0]-(cen_obj_shape[1]/2)):int(coord1[0]+(cen_obj_shape[1]/2)),int(coord1[1]-(cen_obj_shape[2]/2)):int(coord1[1]+(cen_obj_shape[2]/2))]
-            #plt.imshow(img_region)
-            #plt.savefig("figure_1.png")
-            reg_std = np.std(img_region)
-            print(reg_std)
+            
+            neigh_shape = neigh_mod.shape
+            region = cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)]
+            
+            plt.imshow(region[:,:])
+            plt.savefig("fig_1.png")
+            """
+            #subtract model from original image
+            orig_minus_model = img[0,:,:]-model[0,:,:]
+            
+            #find shape of central object model
+            cen_obj_shape = cen_mod.shape
+
+            #identify region where central object originally was
+            region = orig_minus_model[int(coord1[0]-(cen_obj_shape[1]/2)-1):int(coord1[0]+(cen_obj_shape[1]/2)-1),int(coord1[1]-(cen_obj_shape[2]/2)-1):int(coord1[1]+(cen_obj_shape[2]/2)-1)]
+            """
+
+            #calculate std of region
+            reg_std = np.std(region)
+            subtr_reg_stds.append(reg_std)
+
+            #calculate extra noise
+            extra_noise = np.sqrt(np.abs(bg_rms**2 - np.var(region)))
+            
+            """
+            #check if central object is symmetric, if not, make it
+            if cen_obj_shape[1] != cen_obj_shape[2]:
+                print('asym')
+                sym_cen_mod = np.zeros((max(cen_obj_shape),max(cen_obj_shape)))
+                sym_cen_mod[0:cen_obj_shape[1],0:cen_obj_shape[2]]=cen_mod[0,:,:]
+            elif cen_obj_shape[1] == cen_obj_shape[2]:
+                sym_cen_mod = cen_mod[0]
+            
+            """
+
+            print("extra noise: ",extra_noise)
+            cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
+            #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
+        
+
         elif mode == 'control':
             cen_obj = img[0,:,:]
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
@@ -260,7 +300,7 @@ for j in range(ntrial):
         output['pars_1m'][j] = res['1m']['pars']
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
-        
+        output['noise_std'][j] = reg_std
         """
         #print("obects found:",len(model))
         #mod_m = np.mean(model)
@@ -305,9 +345,13 @@ for j in range(ntrial):
         #plt.clf()
         """
     except (np.linalg.linalg.LinAlgError,ValueError):
-        output['flags'][j] = 1
+        output['flags'][j] = 2
         print("flags: 1")
 
 
+noise_mean = np.mean(subtr_reg_stds)
+std = np.std(subtr_reg_stds)
+avg_std_err = std/np.sqrt(len(subtr_reg_stds))
 
+print(noise_mean,avg_std_err)
 fitsio.write(outfile_name, output, clobber=True)

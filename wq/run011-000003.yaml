@@ -1,8 +1,0 @@
-
-command: |
-    source ~/.bashrc
-    export OMP_NUM_THREADS=1
-    /gpfs01/astro/workarea/lmezini/code/galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run011/run011-output-000003.fits 5000 17586 scarlet
-
-job_name: "run011-000003"
-
