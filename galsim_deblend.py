@@ -236,8 +236,9 @@ for j in range(ntrial):
             
             cen_obj = img[0,:,:]-mod2[0,:,:]
             
+            orig_minus_model = img[0,:,:]-model[0,:,:]
             neigh_shape = neigh_mod.shape
-            region = cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)]
+            region = orig_minus_model[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)]
             
             plt.imshow(region[:,:])
             plt.savefig("fig_1.png")
@@ -271,7 +272,9 @@ for j in range(ntrial):
             """
 
             print("extra noise: ",extra_noise)
+            print('mean before: ',np.mean(cen_obj))
             cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
+            print('mean after: ',np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
         
@@ -293,7 +296,7 @@ for j in range(ntrial):
             )
         boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,ntry=ntry,metacal_pars=metacal_pars,)
         res = boot.get_metacal_result()
-        print("flags:",res['mcal_flags'])
+        #print("flags:",res['mcal_flags'])
         output['flags'][j] = res['mcal_flags']
         output['pars'][j] = res['noshear']['pars']
         output['pars_1p'][j] = res['1p']['pars']
@@ -346,7 +349,7 @@ for j in range(ntrial):
         """
     except (np.linalg.linalg.LinAlgError,ValueError):
         output['flags'][j] = 2
-        print("flags: 1")
+        #print("flags: 1")
 
 
 noise_mean = np.mean(subtr_reg_stds)
