@@ -234,15 +234,20 @@ for j in range(ntrial):
             B,Ny,Nx = img.shape
             model,mod2,cen_mod,neigh_mod = make_model(img,bg_rms,B,coords)
             
+            #isolate central object
             cen_obj = img[0,:,:]-mod2[0,:,:]
             
+            #subtract full model from original image
             orig_minus_model = img[0,:,:]-model[0,:,:]
+            #find shape of neighbor object
             neigh_shape = neigh_mod.shape
+            #identify region in remainder image associated with neighbor
             region = orig_minus_model[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)]
             
+            """
             plt.imshow(region[:,:])
             plt.savefig("fig_1.png")
-            """
+
             #subtract model from original image
             orig_minus_model = img[0,:,:]-model[0,:,:]
             
@@ -271,10 +276,17 @@ for j in range(ntrial):
             
             """
 
-            print("extra noise: ",extra_noise)
-            print('mean before: ',np.mean(cen_obj))
+            plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))                                        
+            plt.colorbar();
+            plt.savefig('fig_before.png')
+            #print("extra noise: ",extra_noise)
+            #print("mean before: ",np.mean(cen_obj))
             cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
-            print('mean after: ',np.mean(cen_obj))
+            #plt.clf()
+            plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))
+            plt.colorbar();
+            plt.savefig("fig_after.png")
+            #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
         
