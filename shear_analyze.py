@@ -10,8 +10,8 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-#flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run014/run014*.fits')
-flist = glob('/gpfs01/astro/workarea/lmezini/code/test.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run016/run016*.fits')
+#flist = glob('/gpfs01/astro/workarea/lmezini/code/test.fits')
 # read each file and combine into one big array
 data = eu.io.read(flist)
 
@@ -20,8 +20,8 @@ w, = np.where(data['flags']==0)
 print("kept %d/%d" % (w.size, data.size))
 data = data[w]
 
-y, = np.where(data['flags']==1)
-print("metacal flag",y.size)
+#y, = np.where(data['flags']==1)
+#print("metacal flag",y.size)
 
 g = data['pars'][:, 2:2+2]
 g_1p = data['pars_1p'][:, 2:2+2]

@@ -1,0 +1,19 @@
+executing on host: astro0007 with pid: 12672
+tcgetattr: Inappropriate ioctl for device
+0
+1
+2
+3
+4
+     singular covariance
+    pars at singular:  1.7e-07  -2.11e-07  -4.46e-09  -8.52e-08      4.52         1 
+5
+     singular covariance
+    pars at singular: 1.92e-07  7.72e-07  -3.43e-09  3.92e-08      4.52         1 
+6
+7
+8
+9
+10
+11
+12
