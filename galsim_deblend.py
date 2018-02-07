@@ -241,10 +241,18 @@ for j in range(ntrial):
             orig_minus_model = img[0,:,:]-model[0,:,:]
             #find shape of neighbor object
             neigh_shape = neigh_mod.shape
+
+            #identify small region in remainder image associated with neighbor
+            region = orig_minus_model[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)-2),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)-2)]
+            plt.imshow(region)
+            plt.show()
+            plt.savefig("figure_1.png")
+
+            """
             #identify region in remainder image associated with neighbor
             region = orig_minus_model[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)]
             
-            """
+
             plt.imshow(region[:,:])
             plt.savefig("fig_1.png")
 
@@ -256,7 +264,6 @@ for j in range(ntrial):
 
             #identify region where central object originally was
             region = orig_minus_model[int(coord1[0]-(cen_obj_shape[1]/2)-1):int(coord1[0]+(cen_obj_shape[1]/2)-1),int(coord1[1]-(cen_obj_shape[2]/2)-1):int(coord1[1]+(cen_obj_shape[2]/2)-1)]
-            """
 
             #calculate std of region
             reg_std = np.std(region)
@@ -265,7 +272,6 @@ for j in range(ntrial):
             #calculate extra noise
             extra_noise = np.sqrt(np.abs(bg_rms**2 - np.var(region)))
             
-            """
             #check if central object is symmetric, if not, make it
             if cen_obj_shape[1] != cen_obj_shape[2]:
                 print('asym')
@@ -274,27 +280,33 @@ for j in range(ntrial):
             elif cen_obj_shape[1] == cen_obj_shape[2]:
                 sym_cen_mod = cen_mod[0]
             
-            """
-
-            plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))                                        
-            plt.colorbar();
-            plt.savefig('fig_before.png')
+            
+            
+            #plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))                                        
+            #plt.colorbar();
+            #plt.savefig('fig_before.png')
             #print("extra noise: ",extra_noise)
             #print("mean before: ",np.mean(cen_obj))
-            cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
-            plt.close()
-            plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))
-            plt.colorbar();
-            plt.savefig("fig_after.png")
-            plt.close()
+            
+            #cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
+            
+            #plt.close()
+            #plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))
+            #plt.colorbar();
+            #plt.savefig("fig_after.png")
+            #plt.close()
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
-        
+            """
+
+
 
         elif mode == 'control':
             cen_obj = img[0,:,:]
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
+
+        """
 
         #Create container
         #obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
@@ -317,7 +329,7 @@ for j in range(ntrial):
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
         output['noise_std'][j] = reg_std
-        """
+
         #print("obects found:",len(model))
         #mod_m = np.mean(model)
         #mod_s = np.std(model)
@@ -370,4 +382,4 @@ std = np.std(subtr_reg_stds)
 avg_std_err = std/np.sqrt(len(subtr_reg_stds))
 
 print(noise_mean,avg_std_err)
-fitsio.write(outfile_name, output, clobber=True)
+#fitsio.write(outfile_name, output, clobber=True)
