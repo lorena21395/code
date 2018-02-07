@@ -6563,3 +6563,253 @@ WARNING:proxmin:Solution did not converge
 4799
 4800
 4801
+4802
+4803
+4804
+4805
+4806
+4807
+4808
+4809
+4810
+     singular covariance
+    pars at singular: -1.76e-10  -9.92e-07  -8.26e-08  2.16e-07      4.36         1 
+4811
+4812
+4813
+4814
+     singular covariance
+    pars at singular: 1.32e-06  1.18e-09  6.98e-08  4.02e-08      4.51         1 
+4815
+4816
+4817
+4818
+4819
+4820
+4821
+4822
+4823
+4824
+4825
+4826
+     singular covariance
+    pars at singular: 8.65e-08   5.7e-06     1e-09  1.93e-07      4.52         1 
+4827
+4828
+4829
+4830
+4831
+4832
+4833
+4834
+4835
+4836
+4837
+4838
+4839
+4840
+4841
+4842
+4843
+4844
+4845
+4846
+     singular covariance
+    pars at singular: 1.51e-07  4.83e-07  -4.4e-09  -1.28e-08      4.52         1 
+4847
+4848
+4849
+4850
+     singular covariance
+    pars at singular: -1.56e-07     6e-09  8.63e-08  3.23e-08      4.52     0.999 
+     singular covariance
+    pars at singular: 2.22e-09  4.45e-08  1.49e-07  -6.76e-08      4.52     0.999 
+4851
+4852
+4853
+4854
+4855
+4856
+4857
+4858
+4859
+4860
+4861
+4862
+4863
+4864
+4865
+4866
+     singular covariance
+    pars at singular: -3.98e-07  -2.19e-07  -1.52e-09  -1.61e-07      4.52         1 
+4867
+4868
+4869
+4870
+4871
+4872
+4873
+4874
+4875
+4876
+4877
+4878
+4879
+4880
+4881
+4882
+4883
+4884
+4885
+4886
+4887
+4888
+4889
+4890
+     singular covariance
+    pars at singular: -1.74e-09  -2.71e-07  -8.08e-08  3.93e-07      4.53         1 
+4891
+4892
+     singular covariance
+    pars at singular: 1.91e-07  -4.05e-09  2.48e-07  2.72e-08      4.51     0.999 
+     singular covariance
+    pars at singular: -1.51e-06  7.44e-10  8.17e-08  -2.89e-08      4.51     0.999 
+4893
+4894
+4895
+4896
+4897
+4898
+4899
+4900
+     singular covariance
+    pars at singular:  8.8e-08  -2.25e-07  -4.54e-10  -1.36e-07      4.51         1 
+4901
+4902
+4903
+4904
+4905
+4906
+4907
+     singular covariance
+    pars at singular: -1.95e-06  7.47e-07  1.25e-10  7.14e-08      4.52     0.999 
+4908
+4909
+4910
+4911
+4912
+4913
+4914
+4915
+4916
+4917
+4918
+4919
+4920
+4921
+4922
+     singular covariance
+    pars at singular: 1.39e-06  2.41e-07  9.73e-10  2.93e-06      4.51         1 
+4923
+4924
+4925
+4926
+4927
+4928
+4929
+4930
+4931
+4932
+4933
+4934
+4935
+4936
+4937
+4938
+4939
+4940
+4941
+4942
+     singular covariance
+    pars at singular: 1.49e-06  4.32e-09  -4.88e-10  8.14e-07      4.52         1 
+4943
+4944
+4945
+4946
+4947
+     singular covariance
+    pars at singular: -3.4e-07  1.36e-09  3.74e-08  3.48e-08      4.53         1 
+4948
+4949
+     singular covariance
+    pars at singular: 4.57e-07  6.89e-08  -1.36e-09  -1.26e-08      4.51         1 
+4950
+4951
+     singular covariance
+    pars at singular: 3.55e-07    -1e-10  -1.51e-08  4.99e-07      4.51     0.999 
+4952
+4953
+4954
+     singular covariance
+    pars at singular: 2.45e-06  -6.57e-10  -1.46e-08  6.33e-08      4.52         1 
+4955
+4956
+4957
+4958
+4959
+4960
+4961
+4962
+     singular covariance
+    pars at singular: -1.88e-09  3.63e-07  -1.62e-07  -1.11e-07      4.51         1 
+4963
+4964
+4965
+4966
+4967
+4968
+     singular covariance
+    pars at singular: 2.73e-06  4.39e-08  -3.35e-10  -1.26e-07      4.35         1 
+4969
+4970
+4971
+4972
+4973
+4974
+4975
+4976
+4977
+4978
+4979
+4980
+     singular covariance
+    pars at singular: 1.95e-07   3.7e-07  -7.66e-10  -2.79e-08      4.51         1 
+4981
+4982
+4983
+4984
+     singular covariance
+    pars at singular: 9.25e-07   4.5e-06  1.85e-09  5.26e-07      4.55         1 
+4985
+4986
+4987
+     singular covariance
+    pars at singular: -1.28e-06  -2.27e-06  -4.11e-10   8.4e-08      4.51     0.999 
+4988
+4989
+4990
+4991
+4992
+4993
+4994
+4995
+4996
+4997
+4998
+4999
+8.29954787475 0.00653872847383
+Connection to astro0044 closed.
+source ~/.bashrc
+
+/gpfs01/astro/workarea/lmezini/code/galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run015/run015-output-000194.fits 5000 5377 scarlet
+
