@@ -238,7 +238,7 @@ for j in range(ntrial):
             model,mod2,cen_mod,neigh_mod = make_model(img,bg_rms,B,coords)
             
             #isolate central object
-            cen_obj = img[0,:,:]-mod2[0,:,:]
+            #cen_obj = img[0,:,:]-mod2[0,:,:]
             
             #subtract full model from original image
             orig_minus_model = img[0,:,:]-model[0,:,:]
@@ -246,11 +246,8 @@ for j in range(ntrial):
             #neigh_shape = neigh_mod.shape
 
             #identify small region in remainder image associated with neighbor
-            region = orig_minus_model[int(coord2[0]-reg_dims[0]/2):int(coord2[0]+reg_dims[0]/2),int(coord2[1]-reg_dims[1]/2):int(coord2[1]+reg_dims[1]/2)]
-            plt.imshow(img[0,:,:])
-            plt.show()
-            plt.savefig("fig_1.png")
-            
+            region = orig_minus_model[int(coord1[0]-reg_dims[0]/2.+1):int(coord1[0]+reg_dims[0]/2.+1),int(coord1[1]-reg_dims[1]/2.+1):int(coord1[1]+reg_dims[1]/2.+1)]
+
             region = region.flatten()
             for i in range(len(region)):
                 pixel_diffs[i].append(region[i])
@@ -390,12 +387,11 @@ for j in range(ntrial):
 #print(noise_mean,avg_std_err)
 #fitsio.write(outfile_name, output, clobber=True)
 pixel_stds = []
-print(pixel_diffs)
 for i in range(len(pixel_diffs)):
     pixel_stds.append(np.std(pixel_diffs[i]))
 pixel_std_array = np.array(pixel_stds).reshape(reg_dims)
-plt.imshow(pixel_std_array,interpolation='nearest', cmap='gray',vmin = np.min(pixel_std_array),vmax = np.max(pixel_std_array))
-plt.colorbar()                                                          
-plt.title("Orig-Mod Pix STD: (bgrms="+str(bg_rms))
-plt.show()
-plt.savefig("figure_1.png")
+#plt.imshow(pixel_std_array,interpolation='nearest', cmap='gray',vmin = np.min(pixel_std_array),vmax = np.max(pixel_std_array))
+#plt.colorbar()                                                          
+#plt.title("Orig-Mod Pix STD bgrms="+str(bg_rms))
+#plt.savefig("figure_1.png")
+fitsio.write(outfile_name, pixel_std_array, clobber=True)

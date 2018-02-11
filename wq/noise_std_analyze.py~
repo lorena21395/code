@@ -1,0 +1,18 @@
+from glob import glob
+import argparse
+import fitsio
+import numpy as np
+import esutil as eu
+
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run017/run017*.fits')
+#flist = glob('/gpfs01/astro/workarea/lmezini/code/test.fits')
+# read each file and combine into one big array
+print(flist)
+data = eu.io.read(flist)
+
+print(data)
+print("avg standard devs: %d%d" % (data,data.size))
+plt.imshow(data,interpolation='nearest', cmap='gray',vmin = np.min(data),vmax =np.max(data)) 
+plt.colorbar()
+plt.title("Avg Noise STD Bgrms=10")
+plt.savefig("avg_noise_std.png")

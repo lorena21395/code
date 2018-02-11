@@ -2,7 +2,6 @@ from glob import glob
 import argparse
 import fitsio
 import numpy as np
-from glob import glob
 import esutil as eu
 
 #parser = argparse.ArgumentParser()
@@ -19,7 +18,6 @@ data = eu.io.read(flist)
 w, = np.where(data['flags']==0)
 print("kept %d/%d" % (w.size, data.size))
 data = data[w]
-
 #y, = np.where(data['flags']==1)
 #print("metacal flag",y.size)
 
