@@ -25,7 +25,7 @@ ntrial = args.ntrials
 seed = args.seed
 mode = args.mode
 np.random.seed(seed)
-rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+#rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
 def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed):
     """a quick example with two objects convolved by a point spread function """
@@ -246,7 +246,7 @@ for j in range(ntrial):
             #neigh_shape = neigh_mod.shape
 
             #identify small region in remainder image associated with neighbor
-            region = orig_minus_model[int(coord1[0]-reg_dims[0]/2.+1):int(coord1[0]+reg_dims[0]/2.+1),int(coord1[1]-reg_dims[1]/2.+1):int(coord1[1]+reg_dims[1]/2.+1)]
+            region = orig_minus_model[int(coord2[0]-reg_dims[0]/2.+1):int(coord2[0]+reg_dims[0]/2.+1),int(coord2[1]-reg_dims[1]/2.+1):int(coord2[1]+reg_dims[1]/2.+1)]
 
             region = region.flatten()
             for i in range(len(region)):
