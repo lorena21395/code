@@ -25,7 +25,7 @@ ntrial = args.ntrials
 seed = args.seed
 mode = args.mode
 np.random.seed(seed)
-#rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
 def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed):
     """a quick example with two objects convolved by a point spread function """
