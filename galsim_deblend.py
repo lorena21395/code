@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+import warnings
 import yaml 
 from minimof import minimof
 from scipy.misc import imsave
+from glob import glob
+import esutil as eu
 import fitsio
 import galsim
 import argparse
@@ -25,16 +28,42 @@ ntrial = args.ntrials
 seed = args.seed
 mode = args.mode
 np.random.seed(seed)
-rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+#rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+"""
+f = glob('/gpfs01/astro/workarea/lmezini/code/code/avg_noise_std_neigh_bgrms10.fits')
+data = eu.io.read(f)
+r_0 = []
+r_1 = []
+r_2 = []
+r_3 = []
+r_4 = []
+rads = [0,1,2,3,4]
+for i in data[:]:
+    for j in data[i][:]:
+        r = int(np.sqrt((i-4)**2+(j-4)**2))
+        if r == 0:
+            r_0.append(data[i][j])
+        if r == 1:
+            r_1.append(data[i][j])
+        if r == 2:
+            r_2.append(data[i][j])
+        if r == 3:
+            r_3.append(data[i][j])
+        if r == 4:
+            r_4.append(data[i][j])
+"""
 
-def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed):
+
+def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf):
     """a quick example with two objects convolved by a point spread function """
     psf = galsim.Gaussian(half_light_radius = psf_hlr)
     gal1 = galsim.Gaussian(half_light_radius = gal1_hlr, flux=gal1_flux)
     gal2 = galsim.Exponential(half_light_radius = gal2_hlr, flux=gal2_flux)
-    dx1,dy1 = 0.0,0.0
+    subpixel_offset1 = np.random.uniform(low=-0.5, high=0.5, size=2)
+    subpixel_offset2 = np.random.uniform(low=-0.5, high=0.5, size=2)
+    dx1,dy1 = subpixel_offset1[0],subpixel_offset1[1]
     theta = 2*np.pi*np.random.random()
-    dx2,dy2 = 12.0*np.cos(theta),12.0*np.sin(theta)
+    dx2,dy2 = 12.0*np.cos(theta)+subpixel_offset2[0],12.0*np.sin(theta)+subpixel_offset2[1]
     coord1 = (dy1+(dims[0]-1.)/2.,dx1+(dims[1]-1.)/2.)
     coord2 = (dy2+(dims[0]-1.)/2.,dx2+(dims[1]-1.)/2.)
     coords = [coord1,coord2]
@@ -90,7 +119,8 @@ def make_model(img,bg_rms,B,coords):
     # initial size of the box around each object
     # will be adjusted as needed
     shape = (B, 15, 15)
-    sources = [scarlet.Source(coord, shape, constraints=constraints) for coord in coords]
+    sources = [scarlet.ExtendedSource(coord, img, [bg_rms]) for coord in coords]
+    #sources = [scarlet.Source(coord, shape, constraints=constraints) for coord in coords]
     blend = scarlet.Blend(sources, img, bg_rms=[bg_rms])
     # if you have per-pixel weights:
     #weights = np.empty((B,Ny,Nx))
@@ -103,7 +133,7 @@ def make_model(img,bg_rms,B,coords):
     #blend = scarlet.Blend(sources, img, bg_rms=bg_rms, psf=psf)
     # run the fitter for 200 steps (or until convergence)
 
-    blend.fit(200)#, e_rel=1e-1)
+    blend.fit(10000, e_rel=1e-5)
     # render the multi-band model: has same shape as img
     model = blend.get_model()
     mod2 = blend.get_model(m=1)
@@ -173,7 +203,7 @@ gal1_flux = 6000.0
 gal2_flux = 8000.0
 dims = [50,50]
 reg_dims = [8,8]
-bg_rms = 10
+bg_rms = 0.001
 bg_rms_psf = 0.0001
 psf_model = 'gauss'
 gal_model = 'gauss'
@@ -202,12 +232,14 @@ prior = get_prior()
 #config['psf_pars'] = {'model':'gauss','ntry':2}
 #subtr_reg_stds = []
 pixel_diffs = []
+pixel_diffs_2 = []
 for i in range(reg_dims[0]*reg_dims[1]):
     pixel_diffs.append([])
+    pixel_diffs_2.append([])
 for j in range(ntrial):
     print(j)
     try:
-        img,coords,psf_im = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf,seed)
+        img,coords,psf_im = make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf)
         coord1,coord2 = coords[0],coords[1]
         if mode == 'minimof':
             print('mini')
@@ -233,24 +265,28 @@ for j in range(ntrial):
             else:
                 dobs = mm.get_corrected_obs(0)
         
-        elif mode == 'scarlet':
+        elif mode == 'scarlet':        
             B,Ny,Nx = img.shape
             model,mod2,cen_mod,neigh_mod = make_model(img,bg_rms,B,coords)
-            
             #isolate central object
-            #cen_obj = img[0,:,:]-mod2[0,:,:]
+            cen_obj = img[0,:,:]-mod2[0,:,:]
             
             #subtract full model from original image
-            orig_minus_model = img[0,:,:]-model[0,:,:]
+            #orig_minus_model = img[0,:,:]-model[0,:,:]
             #find shape of neighbor object
             #neigh_shape = neigh_mod.shape
-
+            """
             #identify small region in remainder image associated with neighbor
             region = orig_minus_model[int(coord2[0]-reg_dims[0]/2.+1):int(coord2[0]+reg_dims[0]/2.+1),int(coord2[1]-reg_dims[1]/2.+1):int(coord2[1]+reg_dims[1]/2.+1)]
-
             region = region.flatten()
+            region_2 = orig_minus_model[int(coord1[0]-reg_dims[0]/2.+1):int(coord1[0]+reg_dims[0]/2.+1),int(coord1[1]-reg_dims[1]/2.+1):int(coord1[1]+reg_dims[1]/2.+1)]
+            region_2 = region_2.flatten()
+
+            i = 0
             for i in range(len(region)):
                 pixel_diffs[i].append(region[i])
+                pixel_diffs_2[i].append(region_2[i])
+            """
 
             """
             #identify region in remainder image associated with neighbor
@@ -301,17 +337,15 @@ for j in range(ntrial):
             #plt.close()
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
-            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
             """
-
+            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
 
         elif mode == 'control':
             cen_obj = img[0,:,:]
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
-        """
-
+        
         #Create container
         #obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
         #fit
@@ -332,7 +366,7 @@ for j in range(ntrial):
         output['pars_1m'][j] = res['1m']['pars']
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
-        output['noise_std'][j] = reg_std
+        #output['noise_std'][j] = reg_std
 
         #print("obects found:",len(model))
         #mod_m = np.mean(model)
@@ -341,7 +375,7 @@ for j in range(ntrial):
         #print("model stand dev:",mod_s)
         #print("coord1,coord2:",coord1,coord2)
         #print("Neighbor mean:",np.mean(mod2))
-    
+        """
         plt.figure(figsize=(11,8))
         plt.plot(2,3,5)
             
@@ -378,20 +412,28 @@ for j in range(ntrial):
         """
     except (np.linalg.linalg.LinAlgError,ValueError):
         output['flags'][j] = 2
-        #print("flags: 1")
+        #print("flags: 2")
 
 
 #noise_mean = np.mean(subtr_reg_stds)
 #std = np.std(subtr_reg_stds)
 #avg_std_err = std/np.sqrt(len(subtr_reg_stds))
 #print(noise_mean,avg_std_err)
-#fitsio.write(outfile_name, output, clobber=True)
+fitsio.write(outfile_name, output, clobber=True)
+"""
+i = 0
 pixel_stds = []
+pixel_stds_2 = []
 for i in range(len(pixel_diffs)):
     pixel_stds.append(np.std(pixel_diffs[i]))
-pixel_std_array = np.array(pixel_stds).reshape(reg_dims)
+    pixel_stds_2.append(np.std(pixel_diffs_2[i]))
+dt = [('cen_pix_noise_std','f8',(8,8)),('neigh_pix_noise_std','f8',(8,8))]
+output = np.zeros(1, dtype=dt)
+output['neigh_pix_noise_std'] = np.array(pixel_stds).reshape(reg_dims)
+output['cen_pix_noise_std'] = np.array(pixel_stds_2).reshape(reg_dims)
 #plt.imshow(pixel_std_array,interpolation='nearest', cmap='gray',vmin = np.min(pixel_std_array),vmax = np.max(pixel_std_array))
 #plt.colorbar()                                                          
 #plt.title("Orig-Mod Pix STD bgrms="+str(bg_rms))
 #plt.savefig("figure_1.png")
-fitsio.write(outfile_name, pixel_std_array, clobber=True)
+fitsio.write(outfile_name, output, clobber=True)
+"""
