@@ -63,7 +63,7 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     subpixel_offset2 = np.random.uniform(low=-0.5, high=0.5, size=2)
     dx1,dy1 = subpixel_offset1[0],subpixel_offset1[1]
     theta = 2*np.pi*np.random.random()
-    dx2,dy2 = 12.0*np.cos(theta)+subpixel_offset2[0],12.0*np.sin(theta)+subpixel_offset2[1]
+    dx2,dy2 = 18.0*np.cos(theta)+subpixel_offset2[0],18.0*np.sin(theta)+subpixel_offset2[1]
     coord1 = (dy1+(dims[0]-1.)/2.,dx1+(dims[1]-1.)/2.)
     coord2 = (dy2+(dims[0]-1.)/2.,dx2+(dims[1]-1.)/2.)
     coords = [coord1,coord2]
@@ -272,7 +272,7 @@ for j in range(ntrial):
             cen_obj = img[0,:,:]-mod2[0,:,:]
             
             #subtract full model from original image
-            #orig_minus_model = img[0,:,:]-model[0,:,:]
+            orig_minus_model = img[0,:,:]-model[0,:,:]
             #find shape of neighbor object
             #neigh_shape = neigh_mod.shape
             """
@@ -331,13 +331,14 @@ for j in range(ntrial):
             #cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
             
             #plt.close()
-            #plt.imshow(cen_obj,interpolation='nearest', cmap='gray', vmin=np.min(cen_obj), vmax = np.max(cen_obj))
-            #plt.colorbar();
-            #plt.savefig("fig_after.png")
+            """
+            plt.imshow(orig_minus_model,interpolation='nearest', cmap='gray', vmin=np.min(orig_minus_model), vmax = np.max(orig_minus_model))
+            plt.colorbar();
+            plt.savefig("test.png")
             #plt.close()
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
-            """
+
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
 

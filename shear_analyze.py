@@ -9,7 +9,7 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run027/run027*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run029/run029*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/code/code/test.fits')
 # read each file and combine into one big array
 data = eu.io.read(flist)
