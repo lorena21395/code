@@ -239,7 +239,6 @@ for i in range(reg_dims[0]*reg_dims[1]):
     pixel_diffs.append([])
     pixel_diffs_2.append([])
 """
-Steps_Used = []
 for j in range(ntrial):
     print(j)
     try:
@@ -272,9 +271,29 @@ for j in range(ntrial):
         elif mode == 'scarlet':        
             B,Ny,Nx = img.shape
             model,mod2,cen_mod,neigh_mod,steps_used = make_model(img,bg_rms,B,coords)
-            Steps_Used.append(steps_used)
+            steps_used_init = steps_used
+            steps_used_fin = steps_used
+            if steps_used == 10000:
+                print("first restart")
+                coords += np.random.uniform(low=-0.01, high=0.01, size=2)
+                model2,mod2,cen_mod,neigh_mod,steps_used = make_model(img,bg_rms,B,coords)
+                print(steps_used)
+                if steps_used == 10000:
+                    coords += np.random.uniform(low=-0.01, high=0.01, size=2)
+                    model2,mod2,cen_mod,neigh_mod,steps_used_fin = make_model(img,bg_rms,B,coords)
+                else:
+                    steps_used_fin = steps_used
+
+            """
+            mod_diff = model[0,:,:]-model2[0,:,:]
+            print(mod_diff)
+            for x in mod_diff.flatten():
+                if x != 0.0:
+                    print(x)
+            """
+            #Steps_Used.append(steps_used)
             #isolate central object
-            cen_obj = img[0,:,:]-mod2[0,:,:]
+            #cen_obj = img[0,:,:]-mod2[0,:,:]
             
             #subtract full model from original image
             #orig_minus_model = img[0,:,:]-model[0,:,:]
@@ -343,15 +362,15 @@ for j in range(ntrial):
             #plt.close()
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
-            """
-            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
+            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
+            """
 
         elif mode == 'control':
             cen_obj = img[0,:,:]
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
-        
+        """
         #Create container
         #obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
         #fit
@@ -381,7 +400,7 @@ for j in range(ntrial):
         #print("model stand dev:",mod_s)
         #print("coord1,coord2:",coord1,coord2)
         #print("Neighbor mean:",np.mean(mod2))
-        """
+        
         plt.figure(figsize=(11,8))
         plt.plot(2,3,5)
             
@@ -443,7 +462,12 @@ output['cen_pix_noise_std'] = np.array(pixel_stds_2).reshape(reg_dims)
 #plt.savefig("figure_1.png")
 fitsio.write(outfile_name, output, clobber=True)
 """
-fitsio.write(outfile_name, np.array(Steps_Used),clobber=True)
+dt = [('init_step','i4'),('final_step','i4')]
+output = np.zeros(1,dtype = dt)
+output['init_step'] = steps_used_init
+#output['mid_step'] = steps_used2
+output['final_step'] = steps_used_fin
+fitsio.write(outfile_name, output,clobber=True)
 #plt.hist(StepsUsed,histtype='step')
 #plt.title("Steps Used (erel=1e-2)")
 #plt.savefig("steps_used_erel002.png")
