@@ -59,11 +59,11 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
     psf = galsim.Gaussian(half_light_radius = psf_hlr)
     gal1 = galsim.Gaussian(half_light_radius = gal1_hlr, flux=gal1_flux)
     gal2 = galsim.Exponential(half_light_radius = gal2_hlr, flux=gal2_flux)
-    subpixel_offset1 = np.random.uniform(low=-0.5, high=0.5, size=2)
-    subpixel_offset2 = np.random.uniform(low=-0.5, high=0.5, size=2)
-    dx1,dy1 = subpixel_offset1[0],subpixel_offset1[1]
+    #subpixel_offset1 = np.random.uniform(low=-0.5, high=0.5, size=2)
+    #subpixel_offset2 = np.random.uniform(low=-0.5, high=0.5, size=2)
+    dx1,dy1 = 0.,0.#subpixel_offset1[0],subpixel_offset1[1]
     theta = 2*np.pi*np.random.random()
-    dx2,dy2 = 18.0*np.cos(theta)+subpixel_offset2[0],18.0*np.sin(theta)+subpixel_offset2[1]
+    dx2,dy2 = 12.*np.cos(theta),12.0*np.sin(theta)#18.0*np.cos(theta)+subpixel_offset2[0],18.0*np.sin(theta)+subpixel_offset2[1]
     coord1 = (dy1+(dims[0]-1.)/2.,dx1+(dims[1]-1.)/2.)
     coord2 = (dy2+(dims[0]-1.)/2.,dx2+(dims[1]-1.)/2.)
     coords = [coord1,coord2]
@@ -135,11 +135,12 @@ def make_model(img,bg_rms,B,coords):
 
     blend.fit(10000, e_rel=1e-5)
     # render the multi-band model: has same shape as img
+    steps_used = blend.it
     model = blend.get_model()
     mod2 = blend.get_model(m=1)
     cen_mod = sources[0].get_model()
     neigh_mod = sources[1].get_model()
-    return model,mod2,cen_mod,neigh_mod
+    return model,mod2,cen_mod,neigh_mod,steps_used
 
 def observation(image,sigma,row,col,psf_sigma,psf_im):
     # sigma is the standard deviation of the noise
@@ -203,7 +204,7 @@ gal1_flux = 6000.0
 gal2_flux = 8000.0
 dims = [50,50]
 reg_dims = [8,8]
-bg_rms = 0.001
+bg_rms = 10.
 bg_rms_psf = 0.0001
 psf_model = 'gauss'
 gal_model = 'gauss'
@@ -231,11 +232,14 @@ prior = get_prior()
 #config = allconf['mof']
 #config['psf_pars'] = {'model':'gauss','ntry':2}
 #subtr_reg_stds = []
+"""
 pixel_diffs = []
 pixel_diffs_2 = []
 for i in range(reg_dims[0]*reg_dims[1]):
     pixel_diffs.append([])
     pixel_diffs_2.append([])
+"""
+Steps_Used = []
 for j in range(ntrial):
     print(j)
     try:
@@ -267,12 +271,13 @@ for j in range(ntrial):
         
         elif mode == 'scarlet':        
             B,Ny,Nx = img.shape
-            model,mod2,cen_mod,neigh_mod = make_model(img,bg_rms,B,coords)
+            model,mod2,cen_mod,neigh_mod,steps_used = make_model(img,bg_rms,B,coords)
+            Steps_Used.append(steps_used)
             #isolate central object
             cen_obj = img[0,:,:]-mod2[0,:,:]
             
             #subtract full model from original image
-            orig_minus_model = img[0,:,:]-model[0,:,:]
+            #orig_minus_model = img[0,:,:]-model[0,:,:]
             #find shape of neighbor object
             #neigh_shape = neigh_mod.shape
             """
@@ -331,14 +336,14 @@ for j in range(ntrial):
             #cen_obj[int(coord2[0]-(neigh_shape[1]/2)-1):int(coord2[0]+(neigh_shape[1]/2)-1),int(coord2[1]-(neigh_shape[2]/2)-1):int(coord2[1]+(neigh_shape[2]/2)-1)] += rng.normal(scale=extra_noise)
             
             #plt.close()
-            """
+            
             plt.imshow(orig_minus_model,interpolation='nearest', cmap='gray', vmin=np.min(orig_minus_model), vmax = np.max(orig_minus_model))
             plt.colorbar();
             plt.savefig("test.png")
             #plt.close()
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
-
+            """
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
 
@@ -420,7 +425,7 @@ for j in range(ntrial):
 #std = np.std(subtr_reg_stds)
 #avg_std_err = std/np.sqrt(len(subtr_reg_stds))
 #print(noise_mean,avg_std_err)
-fitsio.write(outfile_name, output, clobber=True)
+#fitsio.write(outfile_name, output, clobber=True)
 """
 i = 0
 pixel_stds = []
@@ -438,3 +443,7 @@ output['cen_pix_noise_std'] = np.array(pixel_stds_2).reshape(reg_dims)
 #plt.savefig("figure_1.png")
 fitsio.write(outfile_name, output, clobber=True)
 """
+fitsio.write(outfile_name, np.array(Steps_Used),clobber=True)
+#plt.hist(StepsUsed,histtype='step')
+#plt.title("Steps Used (erel=1e-2)")
+#plt.savefig("steps_used_erel002.png")

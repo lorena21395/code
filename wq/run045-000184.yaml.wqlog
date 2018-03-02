@@ -1,0 +1,897 @@
+waiting: Not enough free cores.
+ok
+executing on host: astro0027 with pid: 13478
+tcgetattr: Inappropriate ioctl for device
+0
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -4.28e-08  -3.03e-09  -1.98e-08  3.02e-08      4.51         1 
+1
+2
+3
+WARNING:proxmin:Solution did not converge
+4
+WARNING:proxmin:Solution did not converge
+5
+6
+WARNING:proxmin:Solution did not converge
+7
+8
+WARNING:proxmin:Solution did not converge
+9
+10
+WARNING:proxmin:Solution did not converge
+11
+12
+13
+WARNING:proxmin:Solution did not converge
+14
+15
+WARNING:proxmin:Solution did not converge
+16
+17
+WARNING:proxmin:Solution did not converge
+18
+19
+WARNING:proxmin:Solution did not converge
+20
+21
+WARNING:proxmin:Solution did not converge
+22
+23
+WARNING:proxmin:Solution did not converge
+24
+25
+WARNING:proxmin:Solution did not converge
+26
+27
+WARNING:proxmin:Solution did not converge
+28
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 1.16e-10  -7.38e-08  1.46e-07  -7.2e-08      4.52         1 
+29
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -3.88e-07  -5.36e-07  -1.69e-09  -3.22e-08      4.52         1 
+30
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -1.82e-08  -2.84e-09  2.09e-07  1.38e-07      4.51         1 
+31
+32
+WARNING:proxmin:Solution did not converge
+33
+34
+     singular covariance
+    pars at singular: 9.42e-10  5.22e-06  2.04e-07  1.97e-07      4.52         1 
+35
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 4.83e-07   2.1e-06  -1.47e-09  1.87e-07      4.53         1 
+36
+     singular covariance
+    pars at singular: -9.86e-08  -3.55e-09  -4.08e-08  -7.07e-08      4.53         1 
+     singular covariance
+    pars at singular:  1.8e-06  -3.21e-07  3.85e-09  1.58e-07      4.53         1 
+     singular covariance
+    pars at singular: -1.84e-06  9.63e-07  -8.32e-10  -6.57e-07      4.53         1 
+37
+38
+WARNING:proxmin:Solution did not converge
+39
+40
+41
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 2.94e-07  -8.08e-10  1.77e-09  5.23e-09      4.52         1 
+42
+WARNING:proxmin:Solution did not converge
+43
+WARNING:proxmin:Solution did not converge
+44
+WARNING:proxmin:Solution did not converge
+45
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 5.08e-07  -4.24e-07  -1.61e-09  2.71e-08      4.53         1 
+46
+47
+48
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -1.08e-09  -1.85e-06  6.19e-08  1.36e-07      4.52         1 
+49
+WARNING:proxmin:Solution did not converge
+50
+51
+WARNING:proxmin:Solution did not converge
+52
+53
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -1.96e-07  2.09e-10  2.34e-07  -9.57e-09      4.51     0.999 
+54
+55
+56
+57
+WARNING:proxmin:Solution did not converge
+58
+59
+60
+61
+62
+WARNING:proxmin:Solution did not converge
+63
+     singular covariance
+    pars at singular: 1.17e-08  2.43e-07  -1.4e-07  2.42e-11      4.52         1 
+64
+     singular covariance
+    pars at singular: 6.78e-08  4.07e-08  2.54e-09  -4.59e-08      4.51         1 
+65
+66
+WARNING:proxmin:Solution did not converge
+67
+WARNING:proxmin:Solution did not converge
+68
+WARNING:proxmin:Solution did not converge
+69
+70
+WARNING:proxmin:Solution did not converge
+71
+WARNING:proxmin:Solution did not converge
+72
+73
+     singular covariance
+    pars at singular: -1.41e-07  -1.68e-06  -9.95e-11  -1.39e-07      4.35         1 
+74
+WARNING:proxmin:Solution did not converge
+75
+WARNING:proxmin:Solution did not converge
+76
+WARNING:proxmin:Solution did not converge
+77
+     singular covariance
+    pars at singular: 3.74e-07  3.91e-09  -2.43e-07  -6.03e-07      4.36         1 
+78
+WARNING:proxmin:Solution did not converge
+79
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 2.58e-07  -2.53e-07  -3.38e-09  -1.23e-07      4.35         1 
+80
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 1.21e-07  4.67e-07  9.08e-10  -4.82e-07      4.52         1 
+81
+82
+     singular covariance
+    pars at singular: -2.01e-10  1.61e-07  -1.84e-07  -3.65e-07      4.52     0.999 
+83
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -9.12e-08  -6.5e-08  -1.51e-09  3.13e-07      4.51         1 
+84
+     singular covariance
+    pars at singular: 2.33e-06     8e-07  1.03e-09  -1.6e-06      4.52         1 
+85
+WARNING:proxmin:Solution did not converge
+86
+87
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 2.83e-06  -1.88e-06  1.55e-10  1.76e-07      4.52         1 
+88
+WARNING:proxmin:Solution did not converge
+89
+WARNING:proxmin:Solution did not converge
+90
+WARNING:proxmin:Solution did not converge
+91
+WARNING:proxmin:Solution did not converge
+92
+93
+94
+WARNING:proxmin:Solution did not converge
+95
+WARNING:proxmin:Solution did not converge
+96
+97
+98
+WARNING:proxmin:Solution did not converge
+99
+WARNING:proxmin:Solution did not converge
+100
+101
+102
+103
+     singular covariance
+    pars at singular: 8.41e-10   2.2e-06    -2e-07  -2.87e-07      4.52         1 
+104
+WARNING:proxmin:Solution did not converge
+105
+106
+WARNING:proxmin:Solution did not converge
+107
+WARNING:proxmin:Solution did not converge
+108
+WARNING:proxmin:Solution did not converge
+109
+     singular covariance
+    pars at singular:  1.5e-06  7.28e-07  1.51e-09  -7.05e-09      4.51         1 
+     singular covariance
+    pars at singular: 1.33e-06     4e-08  1.63e-09  -2.69e-07      4.51         1 
+110
+111
+112
+WARNING:proxmin:Solution did not converge
+113
+114
+115
+116
+WARNING:proxmin:Solution did not converge
+117
+118
+119
+120
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -1.96e-08  -1.99e-07  4.14e-10  6.65e-07      4.53         1 
+121
+WARNING:proxmin:Solution did not converge
+122
+WARNING:proxmin:Solution did not converge
+123
+WARNING:proxmin:Solution did not converge
+124
+125
+126
+127
+128
+WARNING:proxmin:Solution did not converge
+129
+WARNING:proxmin:Solution did not converge
+130
+     singular covariance
+    pars at singular: 2.67e-06    -1e-06  -1.01e-09  2.48e-07      4.51         1 
+     singular covariance
+    pars at singular: -6.01e-07  1.76e-07  1.65e-09  -5.15e-08      4.51         1 
+131
+132
+133
+134
+WARNING:proxmin:Solution did not converge
+135
+136
+137
+138
+139
+WARNING:proxmin:Solution did not converge
+140
+WARNING:proxmin:Solution did not converge
+141
+142
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular:  1.7e-09  -1.92e-07  -1.94e-07  3.04e-08      4.52         1 
+143
+144
+145
+146
+147
+WARNING:proxmin:Solution did not converge
+148
+149
+WARNING:proxmin:Solution did not converge
+150
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular:  5.6e-07  -1.07e-06  2.72e-10  1.98e-07      4.51         1 
+151
+WARNING:proxmin:Solution did not converge
+152
+WARNING:proxmin:Solution did not converge
+153
+154
+155
+156
+157
+158
+159
+160
+WARNING:proxmin:Solution did not converge
+161
+162
+163
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 4.53e-07  -7.96e-07  3.17e-09  5.58e-07      4.52         1 
+164
+WARNING:proxmin:Solution did not converge
+165
+166
+167
+     singular covariance
+    pars at singular: -6.47e-10  -1.49e-06  4.49e-08  3.79e-08      4.52         1 
+168
+     singular covariance
+    pars at singular: -2.67e-07  1.69e-07  -2.41e-10  -3.74e-07      4.35     0.998 
+169
+WARNING:proxmin:Solution did not converge
+170
+WARNING:proxmin:Solution did not converge
+171
+172
+WARNING:proxmin:Solution did not converge
+173
+WARNING:proxmin:Solution did not converge
+174
+175
+176
+177
+178
+179
+WARNING:proxmin:Solution did not converge
+180
+WARNING:proxmin:Solution did not converge
+181
+182
+183
+WARNING:proxmin:Solution did not converge
+184
+WARNING:proxmin:Solution did not converge
+185
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 1.53e-07  7.73e-07  2.89e-09  -1.73e-06      4.51         1 
+186
+187
+WARNING:proxmin:Solution did not converge
+188
+189
+190
+191
+192
+WARNING:proxmin:Solution did not converge
+193
+194
+195
+196
+197
+WARNING:proxmin:Solution did not converge
+198
+WARNING:proxmin:Solution did not converge
+199
+WARNING:proxmin:Solution did not converge
+200
+WARNING:proxmin:Solution did not converge
+201
+202
+WARNING:proxmin:Solution did not converge
+203
+WARNING:proxmin:Solution did not converge
+204
+WARNING:proxmin:Solution did not converge
+205
+WARNING:proxmin:Solution did not converge
+206
+WARNING:proxmin:Solution did not converge
+207
+WARNING:proxmin:Solution did not converge
+208
+209
+WARNING:proxmin:Solution did not converge
+210
+211
+WARNING:proxmin:Solution did not converge
+212
+213
+     singular covariance
+    pars at singular: 4.29e-08  -1.76e-07  -2.31e-11     8e-08      4.53         1 
+214
+215
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -4.94e-07  8.71e-07  -3.26e-09  1.19e-07      4.52         1 
+     singular covariance
+    pars at singular: 1.58e-06   2.2e-06  2.96e-09  1.03e-06      4.35         1 
+216
+217
+218
+219
+220
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -3.03e-06  -6.44e-07  -9.6e-10  -2.46e-07      4.34         1 
+221
+WARNING:proxmin:Solution did not converge
+222
+WARNING:proxmin:Solution did not converge
+223
+224
+WARNING:proxmin:Solution did not converge
+225
+     singular covariance
+    pars at singular: -1.02e-07  2.16e-09  -2.09e-07  7.29e-07      4.53         1 
+     singular covariance
+    pars at singular: -6.89e-10  6.17e-07  3.46e-07  -1.05e-07      4.53         1 
+226
+227
+WARNING:proxmin:Solution did not converge
+228
+     singular covariance
+    pars at singular: -8.46e-07  -1.47e-09  -4.16e-07  -6.5e-07      4.35         1 
+229
+230
+231
+WARNING:proxmin:Solution did not converge
+232
+WARNING:proxmin:Solution did not converge
+233
+234
+WARNING:proxmin:Solution did not converge
+235
+236
+237
+WARNING:proxmin:Solution did not converge
+238
+239
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 7.26e-08  -4.15e-09  1.01e-07  5.76e-09      4.51     0.999 
+240
+WARNING:proxmin:Solution did not converge
+241
+WARNING:proxmin:Solution did not converge
+242
+243
+WARNING:proxmin:Solution did not converge
+244
+245
+WARNING:proxmin:Solution did not converge
+246
+WARNING:proxmin:Solution did not converge
+247
+     singular covariance
+    pars at singular: 1.12e-06  -2.38e-09  9.72e-08  1.08e-08      4.52         1 
+     singular covariance
+    pars at singular: 1.53e-07  2.17e-09  -5.78e-08  -4.45e-08      4.52         1 
+248
+249
+250
+WARNING:proxmin:Solution did not converge
+251
+252
+253
+254
+255
+WARNING:proxmin:Solution did not converge
+256
+257
+258
+WARNING:proxmin:Solution did not converge
+259
+WARNING:proxmin:Solution did not converge
+260
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -7.52e-08  5.17e-07  -4.96e-10   1.1e-07       4.5     0.999 
+261
+WARNING:proxmin:Solution did not converge
+262
+WARNING:proxmin:Solution did not converge
+263
+264
+265
+WARNING:proxmin:Solution did not converge
+266
+WARNING:proxmin:Solution did not converge
+267
+WARNING:proxmin:Solution did not converge
+268
+269
+270
+WARNING:proxmin:Solution did not converge
+271
+272
+273
+WARNING:proxmin:Solution did not converge
+274
+275
+276
+     singular covariance
+    pars at singular: 1.74e-08  1.67e-07  -9.1e-10  2.23e-08      4.51         1 
+277
+     singular covariance
+    pars at singular: -5.94e-07  1.05e-06  -1.12e-09  3.99e-07      4.53         1 
+278
+     singular covariance
+    pars at singular: 1.35e-07  -3.21e-10  -6.34e-08  4.52e-09      4.54         1 
+279
+280
+281
+WARNING:proxmin:Solution did not converge
+282
+     singular covariance
+    pars at singular: 4.92e-07  -1.21e-08  1.85e-09  2.94e-07      4.53         1 
+283
+284
+285
+286
+WARNING:proxmin:Solution did not converge
+287
+288
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 2.05e-07  -8.38e-07  -1.28e-09  7.23e-07      4.52         1 
+289
+WARNING:proxmin:Solution did not converge
+290
+291
+292
+293
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 1.48e-06  -1.2e-06  -1.63e-09  -1.11e-06      4.51         1 
+     singular covariance
+    pars at singular: 2.01e-07  -4.37e-07  1.69e-09  -6.96e-08      4.51         1 
+294
+295
+WARNING:proxmin:Solution did not converge
+296
+WARNING:proxmin:Solution did not converge
+297
+WARNING:proxmin:Solution did not converge
+298
+WARNING:proxmin:Solution did not converge
+299
+WARNING:proxmin:Solution did not converge
+300
+301
+302
+WARNING:proxmin:Solution did not converge
+303
+304
+WARNING:proxmin:Solution did not converge
+305
+306
+307
+308
+309
+310
+WARNING:proxmin:Solution did not converge
+311
+312
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular:  1.1e-06  -8.06e-09  6.81e-08  -2.04e-08      4.52         1 
+313
+WARNING:proxmin:Solution did not converge
+314
+WARNING:proxmin:Solution did not converge
+315
+316
+317
+WARNING:proxmin:Solution did not converge
+318
+319
+320
+WARNING:proxmin:Solution did not converge
+321
+322
+WARNING:proxmin:Solution did not converge
+323
+324
+325
+     singular covariance
+    pars at singular: 6.44e-10  -2.41e-07   5.8e-08  8.53e-08      4.51         1 
+326
+WARNING:proxmin:Solution did not converge
+327
+328
+329
+WARNING:proxmin:Solution did not converge
+330
+331
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 2.59e-06  3.58e-06  -3.21e-10  -3.87e-07      4.35         1 
+332
+     singular covariance
+    pars at singular: -3.01e-09  2.44e-06  1.62e-07  -6.37e-08      4.52         1 
+333
+WARNING:proxmin:Solution did not converge
+334
+335
+WARNING:proxmin:Solution did not converge
+336
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 4.59e-07  4.08e-07  -2.03e-09  8.36e-09      4.53         1 
+337
+WARNING:proxmin:Solution did not converge
+338
+339
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 1.17e-06  1.95e-06  -1.76e-09  7.43e-08      4.51         1 
+340
+     singular covariance
+    pars at singular: 2.19e-06  2.16e-10  -4.22e-07  -2.68e-07      4.52         1 
+341
+342
+     singular covariance
+    pars at singular: -7.2e-10  9.09e-07  -3.61e-07  -8.57e-07      4.51         1 
+343
+WARNING:proxmin:Solution did not converge
+344
+     singular covariance
+    pars at singular: 9.75e-07  -2.72e-07  -7.27e-10  -1.02e-07      4.35         1 
+345
+346
+347
+WARNING:proxmin:Solution did not converge
+348
+349
+350
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -6.46e-09  -4.14e-07  -3.93e-08  -1.29e-07      4.52         1 
+351
+WARNING:proxmin:Solution did not converge
+352
+WARNING:proxmin:Solution did not converge
+353
+WARNING:proxmin:Solution did not converge
+354
+355
+356
+WARNING:proxmin:Solution did not converge
+357
+358
+359
+WARNING:proxmin:Solution did not converge
+360
+WARNING:proxmin:Solution did not converge
+361
+WARNING:proxmin:Solution did not converge
+362
+363
+WARNING:proxmin:Solution did not converge
+364
+WARNING:proxmin:Solution did not converge
+365
+WARNING:proxmin:Solution did not converge
+366
+367
+WARNING:proxmin:Solution did not converge
+368
+WARNING:proxmin:Solution did not converge
+369
+370
+371
+372
+373
+374
+375
+WARNING:proxmin:Solution did not converge
+376
+WARNING:proxmin:Solution did not converge
+377
+378
+379
+380
+381
+WARNING:proxmin:Solution did not converge
+382
+383
+WARNING:proxmin:Solution did not converge
+384
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -2.14e-06  -9.57e-10  1.82e-08  -8.95e-08      4.34     0.999 
+385
+386
+387
+     singular covariance
+    pars at singular: 4.62e-09  6.55e-07  -4.74e-09  1.87e-07      4.53         1 
+388
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 2.98e-07  4.71e-09   9.2e-08  7.54e-08      4.51         1 
+389
+     singular covariance
+    pars at singular:   -5e-07  -4.65e-07  2.69e-09  1.97e-07      4.51         1 
+390
+WARNING:proxmin:Solution did not converge
+391
+WARNING:proxmin:Solution did not converge
+392
+WARNING:proxmin:Solution did not converge
+393
+394
+395
+396
+397
+398
+WARNING:proxmin:Solution did not converge
+399
+400
+WARNING:proxmin:Solution did not converge
+401
+WARNING:proxmin:Solution did not converge
+402
+403
+WARNING:proxmin:Solution did not converge
+404
+     singular covariance
+    pars at singular: -8.73e-07  5.52e-07  6.59e-10  -1.27e-07      4.53         1 
+405
+406
+407
+408
+WARNING:proxmin:Solution did not converge
+409
+WARNING:proxmin:Solution did not converge
+410
+WARNING:proxmin:Solution did not converge
+411
+     singular covariance
+    pars at singular:  3.2e-10  1.05e-06  -3.28e-08  -1.6e-07      4.35         1 
+412
+WARNING:proxmin:Solution did not converge
+413
+WARNING:proxmin:Solution did not converge
+414
+WARNING:proxmin:Solution did not converge
+415
+     singular covariance
+    pars at singular: -4.97e-10  -4.12e-09  -3.43e-07  5.13e-07      4.51     0.999 
+416
+WARNING:proxmin:Solution did not converge
+417
+WARNING:proxmin:Solution did not converge
+418
+419
+420
+421
+WARNING:proxmin:Solution did not converge
+422
+423
+424
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: 3.25e-09  6.18e-08  6.51e-08     1e-08      4.54         1 
+425
+426
+WARNING:proxmin:Solution did not converge
+427
+WARNING:proxmin:Solution did not converge
+428
+429
+WARNING:proxmin:Solution did not converge
+430
+     singular covariance
+    pars at singular: -2.38e-07  1.63e-09  8.93e-08  4.37e-07      4.52         1 
+431
+432
+433
+WARNING:proxmin:Solution did not converge
+434
+     singular covariance
+    pars at singular:  8.6e-07  1.38e-10  5.08e-08  -1.98e-08      4.51         1 
+435
+436
+437
+     singular covariance
+    pars at singular: -7.89e-09  1.83e-07  -3.57e-10  -3.79e-08      4.51         1 
+438
+     singular covariance
+    pars at singular: -1.55e-07  4.49e-07  -3.08e-09  2.31e-07      4.52         1 
+439
+440
+441
+WARNING:proxmin:Solution did not converge
+442
+WARNING:proxmin:Solution did not converge
+443
+     singular covariance
+    pars at singular: 1.03e-06  -6.22e-06  1.66e-09  3.57e-10      4.53         1 
+444
+445
+WARNING:proxmin:Solution did not converge
+446
+WARNING:proxmin:Solution did not converge
+447
+448
+WARNING:proxmin:Solution did not converge
+449
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -9.36e-07  8.08e-10  6.57e-07  -7.53e-07      4.53         1 
+450
+451
+452
+453
+454
+455
+WARNING:proxmin:Solution did not converge
+456
+457
+WARNING:proxmin:Solution did not converge
+458
+WARNING:proxmin:Solution did not converge
+459
+WARNING:proxmin:Solution did not converge
+460
+WARNING:proxmin:Solution did not converge
+461
+462
+463
+WARNING:proxmin:Solution did not converge
+464
+465
+WARNING:proxmin:Solution did not converge
+466
+WARNING:proxmin:Solution did not converge
+467
+WARNING:proxmin:Solution did not converge
+468
+WARNING:proxmin:Solution did not converge
+469
+WARNING:proxmin:Solution did not converge
+470
+471
+     singular covariance
+    pars at singular: -3.58e-07  -1.34e-07  -2.83e-09  3.97e-08      4.51         1 
+472
+473
+WARNING:proxmin:Solution did not converge
+474
+475
+WARNING:proxmin:Solution did not converge
+476
+477
+478
+479
+     singular covariance
+    pars at singular: 4.57e-08  1.95e-07  -7.55e-10  -2.12e-08      4.35         1 
+480
+WARNING:proxmin:Solution did not converge
+481
+WARNING:proxmin:Solution did not converge
+482
+483
+484
+WARNING:proxmin:Solution did not converge
+485
+486
+WARNING:proxmin:Solution did not converge
+487
+WARNING:proxmin:Solution did not converge
+488
+489
+490
+WARNING:proxmin:Solution did not converge
+491
+WARNING:proxmin:Solution did not converge
+492
+WARNING:proxmin:Solution did not converge
+493
+WARNING:proxmin:Solution did not converge
+494
+495
+WARNING:proxmin:Solution did not converge
+496
+WARNING:proxmin:Solution did not converge
+     singular covariance
+    pars at singular: -1.81e-06  2.01e-07   1.1e-09  -5.61e-08      4.35     0.999 
+497
+498
+499
+WARNING:proxmin:Solution did not converge
+Connection to astro0027 closed.
+source ~/.bashrc
+
+/gpfs01/astro/workarea/lmezini/deblender_tests/code/galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run045/run045-output-000184.fits 500 7322 scarlet
+
