@@ -9,17 +9,16 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run024/run*.fits')
-flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run03*/run*.fits'))
-flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run04*/run*.fits'))
-flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
-flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run06*/run*.fits'))
-flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run07*/run*.fits'))
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run089/run*.fits')
+#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run080/run*.fits'))
+#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run04*/run*.fits'))
+#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
+#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run06*/run*.fits'))
+#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run07*/run*.fits'))
 #flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run029/run029*.fits')
-#flist = glob('/gpfs01/astro/workarea/lmezini/code/code/test.fits')
+#flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test.fits')
 # read each file and combine into one big array
 data = eu.io.read(flist)
-
 #data = fitsio.read(args.filename)
 w, = np.where(data['flags']==0)
 print("kept %d/%d" % (w.size, data.size))

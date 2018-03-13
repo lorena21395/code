@@ -133,7 +133,7 @@ def make_model(img,bg_rms,B,coords):
     #blend = scarlet.Blend(sources, img, bg_rms=bg_rms, psf=psf)
     # run the fitter for 200 steps (or until convergence)
 
-    blend.fit(10000, e_rel=1e-5)
+    blend.fit(10000, e_rel=1e-1)
     # render the multi-band model: has same shape as img
     steps_used = blend.it
     model = blend.get_model()
@@ -271,29 +271,28 @@ for j in range(ntrial):
         elif mode == 'scarlet':        
             B,Ny,Nx = img.shape
             model,mod2,cen_mod,neigh_mod,steps_used = make_model(img,bg_rms,B,coords)
+            """
             steps_used_init = steps_used
             steps_used_fin = steps_used
-            if steps_used == 10000:
-                print("first restart")
+            if steps_used == 5000:
                 coords += np.random.uniform(low=-0.01, high=0.01, size=2)
                 model2,mod2,cen_mod,neigh_mod,steps_used = make_model(img,bg_rms,B,coords)
-                print(steps_used)
-                if steps_used == 10000:
+                print(np.mean(model[0,:,:]-model2[0,:,:]))
+                if steps_used == 5000:
                     coords += np.random.uniform(low=-0.01, high=0.01, size=2)
                     model2,mod2,cen_mod,neigh_mod,steps_used_fin = make_model(img,bg_rms,B,coords)
                 else:
                     steps_used_fin = steps_used
-
-            """
+                print(np.mean(model[0,:,:]-model2[0,:,:]))
+            
             mod_diff = model[0,:,:]-model2[0,:,:]
             print(mod_diff)
             for x in mod_diff.flatten():
                 if x != 0.0:
                     print(x)
             """
-            #Steps_Used.append(steps_used)
             #isolate central object
-            #cen_obj = img[0,:,:]-mod2[0,:,:]
+            cen_obj = img[0,:,:]-mod2[0,:,:]
             
             #subtract full model from original image
             #orig_minus_model = img[0,:,:]-model[0,:,:]
@@ -362,15 +361,14 @@ for j in range(ntrial):
             #plt.close()
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
-
-            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
             """
+            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
         elif mode == 'control':
             cen_obj = img[0,:,:]
             dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
 
-        """
+
         #Create container
         #obs = observation(cen_obj,bg_rms,int(coord1[0]),int(coord1[1]),bg_rms_psf,psf_im)
         #fit
@@ -392,7 +390,7 @@ for j in range(ntrial):
         output['pars_2p'][j] = res['2p']['pars']
         output['pars_2m'][j] = res['2m']['pars']
         #output['noise_std'][j] = reg_std
-
+        """
         #print("obects found:",len(model))
         #mod_m = np.mean(model)
         #mod_s = np.std(model)
@@ -444,7 +442,7 @@ for j in range(ntrial):
 #std = np.std(subtr_reg_stds)
 #avg_std_err = std/np.sqrt(len(subtr_reg_stds))
 #print(noise_mean,avg_std_err)
-#fitsio.write(outfile_name, output, clobber=True)
+fitsio.write(outfile_name, output, clobber=True)
 """
 i = 0
 pixel_stds = []
@@ -461,7 +459,7 @@ output['cen_pix_noise_std'] = np.array(pixel_stds_2).reshape(reg_dims)
 #plt.title("Orig-Mod Pix STD bgrms="+str(bg_rms))
 #plt.savefig("figure_1.png")
 fitsio.write(outfile_name, output, clobber=True)
-"""
+
 dt = [('init_step','i4'),('final_step','i4')]
 output = np.zeros(1,dtype = dt)
 output['init_step'] = steps_used_init
@@ -471,3 +469,4 @@ fitsio.write(outfile_name, output,clobber=True)
 #plt.hist(StepsUsed,histtype='step')
 #plt.title("Steps Used (erel=1e-2)")
 #plt.savefig("steps_used_erel002.png")
+"""
