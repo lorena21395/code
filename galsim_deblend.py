@@ -362,7 +362,7 @@ for j in range(ntrial):
 #print("mean after: ",np.mean(cen_obj))
             #new_coords = (sym_cen_mod.shape[0]/2-1,sym_cen_mod.shape[1]/2-1)
             """
-            dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],bg_rms_psf,psf_im)
+            dobs = observation(cen_obj,bg_rms,coord1[1],coord1[0],bg_rms_psf,psf_im)
 
         elif mode == 'control':
             cen_obj = img[0,:,:]
@@ -380,7 +380,8 @@ for j in range(ntrial):
                 fit_pars=max_pars['lm_pars'],
                 skip_already_done=False,
             )
-        boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,ntry=ntry,metacal_pars=metacal_pars,)
+        boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,
+                         ntry=ntry,metacal_pars=metacal_pars,)
         res = boot.get_metacal_result()
         #print("flags:",res['mcal_flags'])
         output['flags'][j] = res['mcal_flags']
