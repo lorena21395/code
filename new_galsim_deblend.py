@@ -36,7 +36,7 @@ Sim_specs = {'Cen': {'Type':'Gaussian','hlr':1.7,'Flux':6000.,'Pos':'Fixed','dx'
 class Simulation(dict):
     """Simulate galaxy images with noise and psf"""
 
-    def __init__(self,specs,mode,rng):
+    def __init__(self,specs,mode):
         self.update(specs)
         self.mode = mode
 
@@ -52,7 +52,7 @@ class Simulation(dict):
 
     def _get_gals(self):
         Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
-        Neigh = galsim.Gaussian(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
+        Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
 
         if self['Cen']['Pos'] == 'Fixed':
             dx1,dy1 = self['Cen']['dx'],self['Cen']['dy']
@@ -65,16 +65,15 @@ class Simulation(dict):
             theta = 2.*np.pi*np.random.random()
             dx2,dy2 = self['Neigh']['dx']*np.cos(theta),self['Neigh']['dy']*np.sin(theta)
 
-        Cen.shift(dx=dx1, dy=dy1)
-        Neigh.shift(dx=dx2, dy=dy2)
-
+        Cen = Cen.shift(dx=dx1, dy=dy1)
+        Neigh = Neigh.shift(dx=dx2, dy=dy2)
         if mode == 'scarlet' or mode == 'minimof':
             gals = [Cen, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             gals = [Cen]
             objs = galsim.Add(gals)
-        
+
         shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
         objs = objs.shear(g1=shear1, g2=shear2)
 
@@ -96,7 +95,6 @@ class Simulation(dict):
         psf, psf_im = self._get_psf_img()
         objs,coords = self._get_gals()
         objs = galsim.Convolve(objs, psf)
-        
         gsim = objs.drawImage(nx=dims[1], ny=dims[0], scale=self['Image']['Scale'])
         im = gsim.array
         noise = self._get_noise()
@@ -109,12 +107,10 @@ class Simulation(dict):
 class Model(Simulation):
     
     def __init__(self):
-        Simulation.__init__(self,Sim_specs,scarlet,rng)
-        #im,psf_im,coords = Simulation.__call__(self)
+        Simulation.__init__(self,Sim_specs,mode)
     
     def _get_model(self):
         im,psf_im,coords = Simulation.__call__(self)
-        print(im,coords)
         bg_rms = self['Image']['Bgrms']
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
@@ -126,11 +122,120 @@ class Model(Simulation):
             cen_mod = sources[0].get_model()
             neigh_mod = sources[1].get_model()
             steps_used = blend.it
-        
-            return model,mod2,cen_mod,neigh_mod,steps_used
+        return im,psf_im,model,mod2,cen_mod,neigh_mod,steps_used,coords
+    
+    #def _rob_deblend(self,mod2):
+    #    C = 
 
+def observation(image,sigma,row,col,psf_sigma,psf_im):
+    # sigma is the standard deviation of the noise
+    weight = image*0 + 1.0/sigma**2
+    # row,col are the center of the object in the model
+    # image, so we need to figure that out somehow
+    jacob = ngmix.UnitJacobian(row=row, col=col)
+    psf_weight = psf_im*0 + 1.0/psf_sigma**2
+    # psf should be centered
+    cen = [(np.array(psf_im.shape[0]) - 1.0)/2.0,(np.array(psf_im.shape[1]) - 1.0)/2.0]
+    psf_jacob = ngmix.UnitJacobian(row=cen[0], col=cen[1])
+    psf_obs = ngmix.Observation(psf_im, weight=psf_weight, jacobian=psf_jacob)
+    obs = ngmix.Observation(image,weight=weight,jacobian=jacob,psf=psf_obs)
 
-Mod = Model()
-model = Mod._get_model()
-print(model)
+    return obs
 
+def get_prior():
+    cen_sigma = 1.0
+    cen_prior = ngmix.priors.CenPrior(
+        0.0, 0.0,
+        cen_sigma,
+        cen_sigma,
+    )
+    g_prior = ngmix.priors.GPriorBA(0.2)
+
+    T_pars =  [-10.0, 0.03, 1.0e+06, 1.0e+05]
+    T_prior = ngmix.priors.TwoSidedErf(*T_pars)
+
+    flux_pars = [-1.0e+04, 1.0, 1.0e+09, 0.25e+08]
+    flux_prior = ngmix.priors.TwoSidedErf(*flux_pars)
+
+    prior = ngmix.joint_prior.PriorSimpleSep(
+        cen_prior,
+        g_prior,
+        T_prior,
+        flux_prior,
+    )
+    return prior
+
+def norm_test():
+    Mod = Model()
+    im,psf_im,model,mod2,cen_mod,neigh_mod,steps_used,coords = Mod._get_model()
+    cen_obj = im[0,:,:] - mod2[0,:,:]
+    dobs = observation(cen_obj,Mod['Image']['Bgrms'],coords[0][1],
+                       coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
+    return dobs
+
+def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
+                         ntry,metacal_pars,output,dobs):
+    boot = ngmix.bootstrap.MaxMetacalBootstrapper(dobs)
+    boot.fit_psfs(
+            psf_model,
+            psf_Tguess,
+            ntry=ntry,
+            fit_pars=max_pars['lm_pars'],
+            skip_already_done=False,
+         )
+    boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,
+                     ntry=ntry,metacal_pars=metacal_pars,)
+    res = boot.get_metacal_result()
+    #print("flags:",res['mcal_flags'])                                      
+    output['flags'][j] = res['mcal_flags']
+    output['pars'][j] = res['noshear']['pars']
+    output['pars_1p'][j] = res['1p']['pars']
+    output['pars_1m'][j] = res['1m']['pars']
+    output['pars_2p'][j] = res['2p']['pars']
+    output['pars_2m'][j] = res['2m']['pars']
+    #output['noise_std'][j] = reg_std
+
+    return output
+
+dt = [
+    ('flags','i4'),
+    ('pars','f8',6),
+    ('pars_1p','f8',6),
+    ('pars_1m','f8',6),
+    ('pars_2p','f8',6),
+    ('pars_2m','f8',6),
+    ('noise_std','f8'),
+]
+
+psf_model = 'gauss'
+gal_model = 'gauss'
+psf_Tguess = 4.0
+psf_fit_pars = {'maxfev': 2000}
+ntry=2
+max_pars = {
+    'method': 'lm',
+    'lm_pars': {
+        'maxfev': 2000,
+        'xtol': 5.0e-5,
+        'ftol': 5.0e-5,
+    }
+}
+
+metacal_pars = {
+    'symmetrize_psf': True,
+    'types': ['noshear','1p','1m','2p','2m'],
+}
+prior = get_prior()
+output = np.zeros(ntrial, dtype=dt)
+
+for j in range(ntrial):
+    print(j)
+    try:
+        dobs = norm_test()
+        output = do_metacal(psf_model,gal_model,max_pars,
+                         psf_Tguess,prior,ntry,
+                         metacal_pars,output,dobs)
+    except (np.linalg.linalg.LinAlgError,ValueError):
+        output['flags'][j] = 2
+
+fitsio.write(outfile_name, output, clobber=True)
