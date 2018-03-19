@@ -24,7 +24,7 @@ ntrial = args.ntrials
 seed = args.seed
 mode = args.mode
 np.random.seed(seed)
-#rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
 Sim_specs = {'Cen': {'Type':'Gaussian','hlr':1.7,'Flux':6000.,'Pos':'Fixed','dx':0.,'dy':0.},
             'Neigh':{'Type':'Exponential','hlr':3.4,'Flux':8000.,'Pos':'Rand_circle','dx':12.,'dy':12.},
@@ -143,8 +143,10 @@ class Model(Simulation):
         neigh_shape = neigh_mod.shape
         coord2 = coords[1]
         bg_rms = self['Image']['Bgrms']
-        cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)] += np.random.normal(scale=bg_rms,size=neigh_shape)[0]#rng.normal(scale=bg_rms)
-        print(np.random.normal(scale=bg_rms,size=neigh_shape)[0])
+        region = cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)]
+        extra_noise = np.sqrt(bg_rms**2 - np.var(region))
+        cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)] += rng.normal(scale=extra_noise)
+        
         return cen_obj
 
 def observation(image,sigma,row,col,psf_sigma,psf_im):
@@ -191,8 +193,9 @@ def norm_test():
     C = Mod._rob_deblend(im,model,mod1,mod2)
     cen_obj = im[0,:,:] - C[1][0,:,:]#mod2[0,:,:]
     cen_obj = Mod._readd_noise(coords,neigh_mod,cen_obj)
-    plt.imshow(cen_obj)
-    plt.savefig("test_5.png")
+    plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
+    plt.colorbar()
+    plt.savefig("test_4.png")
     dobs = observation(cen_obj,Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     return dobs
