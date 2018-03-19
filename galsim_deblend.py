@@ -57,6 +57,11 @@ for i in data[:]:
 def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,bg_rms_psf):
     """a quick example with two objects convolved by a point spread function """
     psf = galsim.Gaussian(half_light_radius = psf_hlr)
+    psf_gsim = psf.drawImage(scale=scale)
+    psf_im = psf_gsim.array
+    noise_psf = np.random.normal(scale=bg_rms_psf,size=psf_im.shape)
+    psf_im += noise_psf
+
     gal1 = galsim.Gaussian(half_light_radius = gal1_hlr, flux=gal1_flux)
     gal2 = galsim.Exponential(half_light_radius = gal2_hlr, flux=gal2_flux)
     #subpixel_offset1 = np.random.uniform(low=-0.5, high=0.5, size=2)
@@ -81,11 +86,6 @@ def make_image(gal1_flux,gal2_flux,gal1_hlr,gal2_hlr,psf_hlr,dims,scale,bg_rms,b
 
     objs = galsim.Convolve(objs, psf)
     gsim = objs.drawImage(nx=dims[1], ny=dims[0], scale=scale)
-    psf_gsim = psf.drawImage(scale=scale)
-    psf_im = psf_gsim.array
-
-    noise_psf = np.random.normal(scale=bg_rms_psf,size=psf_im.shape)
-    psf_im += noise_psf
     
     # galsim numpy array is in the .array attrubute
     im = gsim.array

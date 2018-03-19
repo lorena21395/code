@@ -24,7 +24,7 @@ ntrial = args.ntrials
 seed = args.seed
 mode = args.mode
 np.random.seed(seed)
-rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+#rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
 Sim_specs = {'Cen': {'Type':'Gaussian','hlr':1.7,'Flux':6000.,'Pos':'Fixed','dx':0.,'dy':0.},
             'Neigh':{'Type':'Exponential','hlr':3.4,'Flux':8000.,'Pos':'Rand_circle','dx':12.,'dy':12.},
@@ -118,14 +118,34 @@ class Model(Simulation):
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])
             blend.fit(10000, e_rel=1e-1)
             model = blend.get_model()
+            mod1 = blend.get_model(m=0)
             mod2 = blend.get_model(m=1)
             cen_mod = sources[0].get_model()
             neigh_mod = sources[1].get_model()
             steps_used = blend.it
-        return im,psf_im,model,mod2,cen_mod,neigh_mod,steps_used,coords
+        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords
     
-    #def _rob_deblend(self,mod2):
-    #    C = 
+    def _rob_deblend(self,im,model,mod1,mod2):
+        C = [np.zeros([50,50]),np.zeros([50,50])]
+        I = im
+        w = np.array([model[0,:,:],model[0,:,:]])
+        T = np.array([mod1[0,:,:],mod2[0,:,:]])
+        mod_sum = np.zeros([50,50])
+        for r in range(2):
+            mod_sum += w[r]*T[r]
+        mod_sum += 0.000001
+        for r in range(2):
+            C[r] = I*np.divide(w[r]*T[r],mod_sum)
+            #print(np.linalg.inv(mod_sum))
+        return C
+    
+    def _readd_noise(self,coords,neigh_mod,cen_obj):
+        neigh_shape = neigh_mod.shape
+        coord2 = coords[1]
+        bg_rms = self['Image']['Bgrms']
+        cen_obj[int(coord2[1]-(neigh_shape[1]/2)-1):int(coord2[1]+(neigh_shape[1]/2)-1),int(coord2[0]-(neigh_shape[2]/2)-1):int(coord2[0]+(neigh_shape[2]/2)-1)] += np.random.normal(scale=bg_rms,size=neigh_shape)[0]#rng.normal(scale=bg_rms)
+        print(np.random.normal(scale=bg_rms,size=neigh_shape)[0])
+        return cen_obj
 
 def observation(image,sigma,row,col,psf_sigma,psf_im):
     # sigma is the standard deviation of the noise
@@ -167,8 +187,12 @@ def get_prior():
 
 def norm_test():
     Mod = Model()
-    im,psf_im,model,mod2,cen_mod,neigh_mod,steps_used,coords = Mod._get_model()
-    cen_obj = im[0,:,:] - mod2[0,:,:]
+    im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords = Mod._get_model()
+    C = Mod._rob_deblend(im,model,mod1,mod2)
+    cen_obj = im[0,:,:] - C[1][0,:,:]#mod2[0,:,:]
+    cen_obj = Mod._readd_noise(coords,neigh_mod,cen_obj)
+    plt.imshow(cen_obj)
+    plt.savefig("test_2.png")
     dobs = observation(cen_obj,Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     return dobs
@@ -236,6 +260,7 @@ for j in range(ntrial):
                          psf_Tguess,prior,ntry,
                          metacal_pars,output,dobs)
     except (np.linalg.linalg.LinAlgError,ValueError):
+        print("error")
         output['flags'][j] = 2
 
 fitsio.write(outfile_name, output, clobber=True)
