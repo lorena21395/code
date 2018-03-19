@@ -145,6 +145,7 @@ class Model(Simulation):
         bg_rms = self['Image']['Bgrms']
         region = cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)]
         extra_noise = np.sqrt(bg_rms**2 - np.var(region))
+        print(extra_noise)
         cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)] += rng.normal(scale=extra_noise)
         
         return cen_obj
