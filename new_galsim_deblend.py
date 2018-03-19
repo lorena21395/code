@@ -143,7 +143,7 @@ class Model(Simulation):
         neigh_shape = neigh_mod.shape
         coord2 = coords[1]
         bg_rms = self['Image']['Bgrms']
-        cen_obj[int(coord2[1]-(neigh_shape[1]/2)-1):int(coord2[1]+(neigh_shape[1]/2)-1),int(coord2[0]-(neigh_shape[2]/2)-1):int(coord2[0]+(neigh_shape[2]/2)-1)] += np.random.normal(scale=bg_rms,size=neigh_shape)[0]#rng.normal(scale=bg_rms)
+        cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)] += np.random.normal(scale=bg_rms,size=neigh_shape)[0]#rng.normal(scale=bg_rms)
         print(np.random.normal(scale=bg_rms,size=neigh_shape)[0])
         return cen_obj
 
@@ -192,7 +192,7 @@ def norm_test():
     cen_obj = im[0,:,:] - C[1][0,:,:]#mod2[0,:,:]
     cen_obj = Mod._readd_noise(coords,neigh_mod,cen_obj)
     plt.imshow(cen_obj)
-    plt.savefig("test_2.png")
+    plt.savefig("test_5.png")
     dobs = observation(cen_obj,Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     return dobs
