@@ -26,8 +26,8 @@ mode = args.mode
 np.random.seed(seed)
 rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
-Sim_specs = {'Cen': {'Type':'Gaussian','hlr':1.7,'Flux':6000.,'Pos':'Fixed','dx':0.,'dy':0.},
-            'Neigh':{'Type':'Exponential','hlr':3.4,'Flux':8000.,'Pos':'Rand_circle','dx':12.,'dy':12.},
+Sim_specs = {'Cen': {'Type':'Gaussian','hlr':1.7,'Flux':6000.,'Pos':'Fixed','dx':0.,'dy':0.,'r':0.},
+            'Neigh':{'Type':'Exponential','hlr':3.4,'Flux':8000.,'Pos':'Rand_circle','dx':9.,'dy':9.,'r':9.},
             'Image':{'Dims':[50,50],'Bgrms':10.,'Scale':1.},
             'Psf':{'Psf_hlr':1.7,'Scale':1.,'Bgrms_psf':0.0001},
             'Shear':{'Shear1':0.02,'Shear2':0.00}
@@ -58,12 +58,12 @@ class Simulation(dict):
             dx1,dy1 = self['Cen']['dx'],self['Cen']['dy']
         elif self['Cen']['Pos'] == 'Rand_Circle':
             theta = 2.*np.pi*np.random.random()
-            dx1,dy1 = self['Cen']['dx']*np.cos(theta),self['Cen']['dy']*np.sin(theta)
+            dx1,dy1 = self['Cen']['r']*np.cos(theta),self['Cen']['r']*np.sin(theta)
         if self['Neigh']['Pos'] == 'Fixed':
             dx2,dy2 = self['Neigh']['dx'],self['Neigh']['dy']
         elif self['Neigh']['Pos'] == 'Rand_circle':
             theta = 2.*np.pi*np.random.random()
-            dx2,dy2 = self['Neigh']['dx']*np.cos(theta),self['Neigh']['dy']*np.sin(theta)
+            dx2,dy2 = self['Neigh']['r']*np.cos(theta),self['Neigh']['r']*np.sin(theta)
 
         Cen = Cen.shift(dx=dx1, dy=dy1)
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
@@ -116,7 +116,7 @@ class Model(Simulation):
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])
-            blend.fit(10000, e_rel=1e-1)
+            blend.fit(10000, e_rel=1e-3)
             model = blend.get_model()
             mod1 = blend.get_model(m=0)
             mod2 = blend.get_model(m=1)
@@ -126,28 +126,37 @@ class Model(Simulation):
         return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords
     
     def _rob_deblend(self,im,model,mod1,mod2):
-        C = [np.zeros([50,50]),np.zeros([50,50])]
+        C = np.zeros((50,)*3)#,np.zeros([50,50]))
+        W = np.zeros((50,)*3)#,np.zeros([50,50]))
         I = im
         w = np.array([model[0,:,:],model[0,:,:]])
         T = np.array([mod1[0,:,:],mod2[0,:,:]])
         mod_sum = np.zeros([50,50])
         for r in range(2):
-            mod_sum += w[r]*T[r]
-        mod_sum += 0.000001
+            mod_sum += w[r]*T[r] 
+        zeros = np.where(mod_sum == 0.)
+        mod_sum[zeros] += 0.000001
         for r in range(2):
+            W[r] = np.divide(w[r]*T[r],mod_sum)
             C[r] = I*np.divide(w[r]*T[r],mod_sum)
-            #print(np.linalg.inv(mod_sum))
-        return C
-    
-    def _readd_noise(self,coords,neigh_mod,cen_obj):
-        neigh_shape = neigh_mod.shape
-        coord2 = coords[1]
+        return C,W
+
+    def _readd_noise(self,cen_obj,W):
+        #neigh_shape = neigh_mod.shape
+        #coord2 = coords[1]
         bg_rms = self['Image']['Bgrms']
-        region = cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)]
-        extra_noise = np.sqrt(bg_rms**2 - np.var(region))
-        print(extra_noise)
-        cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)] += rng.normal(scale=extra_noise)
-        
+        #orig_minus_model = im[0,:,:]-model[0,:,:]
+        #region = cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)]
+        #plt.imshow(orig_minus_model,interpolation='nearest',cmap='gray',vmin = np.min(orig_minus_model),vmax= np.max(orig_minus_model))
+        #plt.colorbar()
+        #plt.savefig("test_4.png")
+        extra_noise = np.sqrt((bg_rms**2)*(1 - W**2))
+        #cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)] += extra_noise[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)]
+        cen_obj += extra_noise*rng.normal(size=cen_obj.shape)
+        #plt.imshow(orig_minus_model,interpolation='nearest',cmap='gray',vmin =np.min(orig_minus_model),vmax= np.max(orig_minus_model)
+        #plt.colorbar()
+        #plt.savefig("cen_plus_noise.png")
+        #reg = cen_obj[int(coord2[0]-(neigh_shape[1]/2)+1):int(coord2[0]+(neigh_shape[1]/2)+1),int(coord2[1]-(neigh_shape[2]/2)+1):int(coord2[1]+(neigh_shape[2]/2)+1)]
         return cen_obj
 
 def observation(image,sigma,row,col,psf_sigma,psf_im):
@@ -191,14 +200,44 @@ def get_prior():
 def norm_test():
     Mod = Model()
     im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords = Mod._get_model()
-    C = Mod._rob_deblend(im,model,mod1,mod2)
-    cen_obj = im[0,:,:] - C[1][0,:,:]#mod2[0,:,:]
-    cen_obj = Mod._readd_noise(coords,neigh_mod,cen_obj)
-    plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-    plt.colorbar()
-    plt.savefig("test_4.png")
-    dobs = observation(cen_obj,Mod['Image']['Bgrms'],coords[0][1],
-                       coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
+    cen_shape =cen_mod.shape
+    coord1 = coords[0]
+    C,W = Mod._rob_deblend(im,model,mod1,mod2)
+    cen_obj = C[0]
+    if cen_shape[1] != cen_shape[2]:
+        cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
+        cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[0,int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
+    else:
+         cen_obj = C[0,int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
+    zeros = np.where(W[0] == 0.0)
+    W[0][zeros] += 0.000001
+    W=W[0,int(coord1[0]-(cen_obj.shape[0]/2)+1):int(coord1[0]+(cen_obj.shape[0]/2)+1),int(coord1[1]-(cen_obj.shape[1]/2)+1):int(coord1[1]+(cen_obj.shape[1]/2)+1)]
+    """
+    plt.figure(figsize=(8,4))
+    plt.plot(1,2,2)
+    plt.subplot(121)
+    plt.imshow(C[0],interpolation='nearest', cmap='gray',vmin = np.min(im),vmax= np.max(im))
+    plt.colorbar();
+    plt.title("Deblended Center")
+    plt.subplot(122)
+    """
+    cen_obj = Mod._readd_noise(cen_obj,W)
+    """
+    plt.imshow(C[1],interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
+    plt.title("Deblended Neigh")
+    plt.colorbar();
+    plt.tight_layout()
+    plt.savefig("new_cen_neigh_close.png")
+    """
+#sigma = W[0]*Mod['Image']['Bgrms']
+    #sigma = sigma[int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
+    #plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
+    #plt.colorbar()
+    #plt.savefig("test_5.png")
+
+    new_coords = (0.0+(cen_obj.shape[0]-1.)/2.,0.0+(cen_obj.shape[1]-1.)/2.)
+    dobs = observation(cen_obj,Mod['Image']['Bgrms'],new_coords[1],
+                       new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
     return dobs
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
