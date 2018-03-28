@@ -17,28 +17,30 @@ parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
 parser.add_argument("ntrials",help="Number of trials to be run",type = int)
 parser.add_argument("seed",help="Seed for random number generator",type = int)
-parser.add_argument("mode",help="Specify whether scarlet, minimof, or control",type = str)
+parser.add_argument("config",help="Configuration for the simulation")
+
 args = parser.parse_args()
 outfile_name = args.outfile
 ntrial = args.ntrials
 seed = args.seed
-mode = args.mode
+config_file = args.config
+
 np.random.seed(seed)
 rng = np.random.RandomState(seed=np.random.randint(0,2**30))
 
-Sim_specs = {'Cen': {'Type':'Gaussian','hlr':1.7,'Flux':6000.,'Pos':'Fixed','dx':0.,'dy':0.,'r':0.},
-            'Neigh':{'Type':'Exponential','hlr':3.4,'Flux':8000.,'Pos':'Rand_circle','dx':9.,'dy':9.,'r':9.},
-            'Image':{'Dims':[50,50],'Bgrms':10.,'Scale':1.},
-            'Psf':{'Psf_hlr':1.7,'Scale':1.,'Bgrms_psf':0.0001},
-            'Shear':{'Shear1':0.02,'Shear2':0.00}
-             }
+with open(config_file) as fobj:
+    Sim_specs =yaml.load(fobj)
+
 
 class Simulation(dict):
     """Simulate galaxy images with noise and psf"""
 
-    def __init__(self,specs,mode):
+    def __init__(self,specs):
         self.update(specs)
-        self.mode = mode
+    
+    def _get_mode(self):
+        mode = self['Mode']
+        return mode
 
     def _get_psf_img(self):
         psf_hlr = self['Psf']['Psf_hlr']
@@ -51,6 +53,7 @@ class Simulation(dict):
         return psf,psf_im
 
     def _get_gals(self):
+        mode = self['Mode']
         Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
         Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
 
@@ -65,6 +68,11 @@ class Simulation(dict):
             theta = 2.*np.pi*np.random.random()
             dx2,dy2 = self['Neigh']['r']*np.cos(theta),self['Neigh']['r']*np.sin(theta)
 
+        dx1 +=np.random.uniform(low=-0.5, high=0.5)
+        dy1 +=np.random.uniform(low=-0.5, high=0.5)
+        dx2 +=np.random.uniform(low=-0.5, high=0.5)
+        dy2 +=np.random.uniform(low=-0.5, high=0.5)
+        
         Cen = Cen.shift(dx=dx1, dy=dy1)
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
         if mode == 'scarlet' or mode == 'minimof':
@@ -76,41 +84,40 @@ class Simulation(dict):
 
         shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
         objs = objs.shear(g1=shear1, g2=shear2)
-
-        dims = self['Image']['Dims']
-        coord1 = (dy1+(dims[0]-1.)/2.,dx1+(dims[1]-1.)/2.)
-        coord2 = (dy2+(dims[0]-1.)/2.,dx2+(dims[1]-1.)/2.)
-        coords = [coord1,coord2]
         
-        return objs,coords
+        return objs,dx1,dy1,dx2,dy2
 
-    def _get_noise(self):
-        dims = self['Image']['Dims']
+    def _get_noise(self,dims):
         noise = np.random.normal(scale=self['Image']['Bgrms'],size=(dims[0],dims[1]))
         return noise
 
     def __call__(self):
-        dims = self['Image']['Dims']
+        mode = self['Mode']
         bg_rms = self['Image']['Bgrms']
         psf, psf_im = self._get_psf_img()
-        objs,coords = self._get_gals()
+        objs,dx1,dy1,dx2,dy2 = self._get_gals()
         objs = galsim.Convolve(objs, psf)
-        gsim = objs.drawImage(nx=dims[1], ny=dims[0], scale=self['Image']['Scale'])
+        gsim = objs.drawImage(scale=self['Image']['Scale'])
         im = gsim.array
-        noise = self._get_noise()
+        dims = np.shape(im)
+        cen =  (np.array(im.shape) - 1.0)/2.0
+        coord1 = (dy1+cen[1],dx1+cen[0])
+        coord2 = (dy2+cen[1],dx2+cen[0])
+        coords = [coord1,coord2]
+        noise = self._get_noise(dims)
         im += noise
 
         if mode ==  'scarlet' or mode == 'control':
-            im = im.reshape( (1, dims[1], dims[0]) )
-        return im,psf_im,coords
+            im = im.reshape( (1, dims[0], dims[1]) )
+        return im,psf_im,coords,dims,mode
 
 class Model(Simulation):
     
     def __init__(self):
-        Simulation.__init__(self,Sim_specs,mode)
+        Simulation.__init__(self,Sim_specs)
     
     def _get_model(self):
-        im,psf_im,coords = Simulation.__call__(self)
+        im,psf_im,coords,dims,mode = Simulation.__call__(self)
         bg_rms = self['Image']['Bgrms']
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
@@ -123,22 +130,23 @@ class Model(Simulation):
             cen_mod = sources[0].get_model()
             neigh_mod = sources[1].get_model()
             steps_used = blend.it
+
         return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords
     
-    def _rob_deblend(self,im,model,mod1,mod2):
-        C = np.zeros((50,)*3)#,np.zeros([50,50]))
-        W = np.zeros((50,)*3)#,np.zeros([50,50]))
+    def _rob_deblend(self,im,model,mod1,mod2,dims):
+        C = np.zeros((dims[0],dims[1],2))#,np.zeros([50,50]))
+        W = np.zeros((dims[0],dims[1],2))#,np.zeros([50,50]))
         I = im
         w = np.array([model[0,:,:],model[0,:,:]])
         T = np.array([mod1[0,:,:],mod2[0,:,:]])
-        mod_sum = np.zeros([50,50])
+        mod_sum = np.zeros(dims)
         for r in range(2):
             mod_sum += w[r]*T[r] 
         zeros = np.where(mod_sum == 0.)
         mod_sum[zeros] += 0.000001
         for r in range(2):
-            W[r] = np.divide(w[r]*T[r],mod_sum)
-            C[r] = I*np.divide(w[r]*T[r],mod_sum)
+            W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
+            C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
         return C,W
 
     def _readd_noise(self,cen_obj,W):
@@ -199,44 +207,53 @@ def get_prior():
 
 def norm_test():
     Mod = Model()
-    im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords = Mod._get_model()
-    cen_shape =cen_mod.shape
-    coord1 = coords[0]
-    C,W = Mod._rob_deblend(im,model,mod1,mod2)
-    cen_obj = C[0]
-    if cen_shape[1] != cen_shape[2]:
-        cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
-        cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[0,int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
-    else:
-         cen_obj = C[0,int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
-    zeros = np.where(W[0] == 0.0)
-    W[0][zeros] += 0.000001
-    W=W[0,int(coord1[0]-(cen_obj.shape[0]/2)+1):int(coord1[0]+(cen_obj.shape[0]/2)+1),int(coord1[1]-(cen_obj.shape[1]/2)+1):int(coord1[1]+(cen_obj.shape[1]/2)+1)]
-    """
-    plt.figure(figsize=(8,4))
-    plt.plot(1,2,2)
-    plt.subplot(121)
-    plt.imshow(C[0],interpolation='nearest', cmap='gray',vmin = np.min(im),vmax= np.max(im))
-    plt.colorbar();
-    plt.title("Deblended Center")
-    plt.subplot(122)
-    """
-    cen_obj = Mod._readd_noise(cen_obj,W)
-    """
-    plt.imshow(C[1],interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-    plt.title("Deblended Neigh")
-    plt.colorbar();
-    plt.tight_layout()
-    plt.savefig("new_cen_neigh_close.png")
-    """
-#sigma = W[0]*Mod['Image']['Bgrms']
+    mode = Mod._get_mode()
+    if mode == 'scarlet':
+        im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,steps_used,coords = Mod._get_model()
+        cen_shape =cen_mod.shape
+        coord1 = coords[0]
+        dims = [np.shape(im)[1],np.shape(im)[2]]
+        C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
+        cen_obj = C[:,:,0]
+        if cen_shape[1] != cen_shape[2]:
+            cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
+            cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[0,int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
+        else:
+            cen_obj = C[int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1),0]
+        zeros = np.where(W[:,:,0] == 0.0)
+        W[:,:,0][zeros] += 0.000001
+        W=W[int(coord1[0]-(cen_obj.shape[0]/2)+1):int(coord1[0]+(cen_obj.shape[0]/2)+1),int(coord1[1]-(cen_obj.shape[1]/2)+1):int(coord1[1]+(cen_obj.shape[1]/2)+1),0]
+        """
+        plt.figure(figsize=(8,4))
+        plt.plot(1,2,2)
+        plt.subplot(121)
+        plt.imshow(C[:,:,0],interpolation='nearest', cmap='gray',vmin = np.min(C[:,:,0]),vmax= np.max(C[:,:,0]))
+        plt.colorbar();
+        plt.title("Deblended Center")
+        plt.subplot(122)
+        plt.savefig("r_7.png")
+        """
+        cen_obj = Mod._readd_noise(cen_obj,W)
+        output['dims'][j] = np.array(dims)
+        """
+        plt.imshow(C[:,:,1],interpolation='nearest', cmap='gray',vmin = np.min(C[:,:,1]),vmax= np.max(C[:,:,0]))
+        plt.title("Deblended Neigh")
+        plt.colorbar();
+        plt.tight_layout()
+        plt.savefig("new_cen_neigh_close.png")
+        """
+    #sigma = W[0]*Mod['Image']['Bgrms']
     #sigma = sigma[int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
     #plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
     #plt.colorbar()
     #plt.savefig("test_5.png")
 
-    new_coords = (0.0+(cen_obj.shape[0]-1.)/2.,0.0+(cen_obj.shape[1]-1.)/2.)
-    dobs = observation(cen_obj,Mod['Image']['Bgrms'],new_coords[1],
+        new_coords = (0.0+(cen_obj.shape[0]-1.)/2.,0.0+(cen_obj.shape[1]-1.)/2.)
+        dobs = observation(cen_obj,Mod['Image']['Bgrms'],new_coords[1],
+                       new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
+    elif mode == 'control':
+        im,psf_im,coords,dims = Mod.__call__()
+        dobs = observation(cen_obj,Mod['Image']['Bgrms'],new_coords[1],
                        new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
     return dobs
 
@@ -260,7 +277,6 @@ def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
     output['pars_1m'][j] = res['1m']['pars']
     output['pars_2p'][j] = res['2p']['pars']
     output['pars_2m'][j] = res['2m']['pars']
-    #output['noise_std'][j] = reg_std
 
     return output
 
@@ -271,7 +287,7 @@ dt = [
     ('pars_1m','f8',6),
     ('pars_2p','f8',6),
     ('pars_2m','f8',6),
-    ('noise_std','f8'),
+    ('dims','f8',2),
 ]
 
 psf_model = 'gauss'
@@ -302,7 +318,7 @@ for j in range(ntrial):
         output = do_metacal(psf_model,gal_model,max_pars,
                          psf_Tguess,prior,ntry,
                          metacal_pars,output,dobs)
-    except (np.linalg.linalg.LinAlgError,ValueError):
+    except ():#np.linalg.linalg.LinAlgError,ValueError):
         print("error")
         output['flags'][j] = 2
 
