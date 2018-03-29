@@ -17,7 +17,7 @@ Neigh:
     r: 17.
 
 Image:
-    Bgrms: 10.
+    Bgrms: 0.001
     Scale: 1
 
 Psf:

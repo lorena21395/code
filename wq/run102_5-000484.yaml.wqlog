@@ -1,0 +1,2709 @@
+executing on host: astro0027 with pid: 10994
+tcgetattr: Inappropriate ioctl for device
+0
+1
+     singular covariance
+    pars at singular: -4.56e-07   4.7e-09  6.05e-07  3.05e-08      4.52         1 
+2
+3
+4
+5
+6
+7
+8
+     singular covariance
+    pars at singular: -1.55e-07  -2.05e-07  6.61e-10  -3.79e-07      4.36         1 
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+     singular covariance
+    pars at singular: -2.79e-07  -2.83e-07  4.57e-09  2.76e-08      4.53         1 
+22
+23
+24
+     singular covariance
+    pars at singular: -1.68e-06  -6.42e-06  -1.3e-09  3.15e-07      4.52         1 
+25
+26
+27
+28
+     singular covariance
+    pars at singular: 4.21e-07  -6.36e-07  -1.13e-09  5.85e-07      4.53         1 
+29
+30
+31
+32
+33
+34
+     singular covariance
+    pars at singular: 6.55e-08  -9.26e-07  -3.73e-10  -1.33e-07      4.52         1 
+35
+     singular covariance
+    pars at singular: -1.77e-06  -5.86e-09  -2.37e-07  -7.25e-08      4.53         1 
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+     singular covariance
+    pars at singular: 8.49e-10  1.21e-06  8.85e-08  7.53e-07      4.52         1 
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+     singular covariance
+    pars at singular: -5.68e-07  -5.57e-08  -2.87e-09  1.85e-07      4.34         1 
+58
+59
+60
+61
+62
+63
+     singular covariance
+    pars at singular: -1.46e-09  8.69e-08  -1.01e-07  4.84e-07      4.51         1 
+64
+65
+     singular covariance
+    pars at singular: -4.25e-06  1.02e-06  -5.93e-10  1.34e-06      4.52         1 
+66
+     singular covariance
+    pars at singular: -1.83e-09  8.75e-07   4.9e-08  6.28e-08      4.52         1 
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+     singular covariance
+    pars at singular:  5.7e-09  -1.01e-07  -2.54e-08  1.14e-08      4.52         1 
+     singular covariance
+    pars at singular: -2.31e-09  3.71e-08  1.13e-08  5.07e-08      4.52         1 
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+     singular covariance
+    pars at singular:  7.3e-07  -1.13e-09  -5.4e-09  -8.07e-08      4.51         1 
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+     singular covariance
+    pars at singular: -3.44e-08  -1.41e-07  -2.05e-09  2.41e-08      4.36         1 
+117
+118
+     singular covariance
+    pars at singular: -1.55e-07  1.97e-07  -1.5e-09  -9.16e-08      4.52         1 
+     singular covariance
+    pars at singular: 5.73e-07  3.38e-07  -1.95e-08  -1.51e-10      4.35         1 
+119
+120
+121
+     singular covariance
+    pars at singular: 2.37e-09  -7.86e-07  -6.29e-09  -1.56e-07      4.53         1 
+122
+123
+     singular covariance
+    pars at singular: -1.19e-09  -3.59e-06  -9.57e-10  -4.71e-07      4.52         1 
+124
+     singular covariance
+    pars at singular: 4.12e-06  5.15e-07  1.24e-09  1.26e-06      4.53         1 
+     singular covariance
+    pars at singular: 1.06e-08  -2.58e-08  -8.37e-08  1.08e-10      4.53         1 
+125
+126
+127
+128
+129
+     singular covariance
+    pars at singular: -3.26e-07  3.24e-07  -6.96e-10  -2.11e-07      4.35         1 
+130
+131
+132
+     singular covariance
+    pars at singular: 7.52e-08  9.43e-09  1.69e-09  -5.48e-08      4.53         1 
+133
+134
+     singular covariance
+    pars at singular: -1.87e-07  -6.07e-08  -1.1e-09  2.27e-08      4.52         1 
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+     singular covariance
+    pars at singular: 2.13e-08  -1.22e-09  -9.43e-08  -1.28e-07      4.53         1 
+147
+148
+149
+150
+     singular covariance
+    pars at singular: -1.45e-06  8.67e-07  -1.37e-09  8.81e-07      4.53         1 
+151
+152
+153
+154
+155
+156
+     singular covariance
+    pars at singular: -3.01e-07  5.07e-09  4.84e-07  2.01e-07      4.51         1 
+157
+158
+159
+160
+161
+     singular covariance
+    pars at singular: -8.14e-09  -3.18e-08  -9.37e-10  2.06e-08      4.52         1 
+     singular covariance
+    pars at singular: 2.15e-07  2.76e-07  1.75e-10  -3.84e-07      4.35         1 
+     singular covariance
+    pars at singular:  1.1e-09  2.15e-07  -8.87e-08  3.62e-08      4.52         1 
+162
+163
+     singular covariance
+    pars at singular:  6.4e-10  2.75e-07  1.26e-07  -3.85e-08      4.53         1 
+164
+165
+166
+167
+168
+     singular covariance
+    pars at singular: -6.19e-08  -3.97e-10  2.43e-08  -2.7e-08      4.52         1 
+169
+170
+171
+172
+173
+174
+     singular covariance
+    pars at singular: -2.99e-09  1.14e-06  1.07e-07  -2.07e-07      4.53         1 
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+     singular covariance
+    pars at singular: -3.52e-09  -7.65e-07   2.2e-07  -1.4e-07      4.52         1 
+188
+189
+190
+191
+192
+193
+194
+195
+     singular covariance
+    pars at singular: -3.01e-06  -1.84e-06  -1.79e-09  -2.11e-07      4.55         1 
+196
+     singular covariance
+    pars at singular: -3.48e-07  4.27e-08  1.01e-09  -5.97e-08      4.53         1 
+197
+     singular covariance
+    pars at singular: -5.76e-07  -8.41e-07  -7.96e-10  7.55e-07      4.51         1 
+198
+199
+200
+     singular covariance
+    pars at singular: 2.14e-12  7.79e-08  -5.33e-07  3.98e-07      4.53         1 
+201
+202
+203
+204
+205
+     singular covariance
+    pars at singular: -1.28e-06  -8.4e-07  3.62e-09  -7.04e-08      4.52         1 
+206
+207
+     singular covariance
+    pars at singular: -6.88e-08  -1.88e-07  -6.47e-10  1.11e-07      4.52         1 
+208
+209
+210
+     singular covariance
+    pars at singular: 2.66e-06  2.01e-06  3.42e-10   6.1e-07      4.51         1 
+211
+212
+213
+214
+215
+216
+     singular covariance
+    pars at singular: 3.76e-07  1.12e-07   1.2e-09  -3.62e-09      4.34         1 
+217
+218
+219
+220
+221
+222
+     singular covariance
+    pars at singular: 5.01e-07  -1.16e-07  2.49e-09  7.41e-07      4.34         1 
+223
+     singular covariance
+    pars at singular: 1.22e-09  4.48e-08  -8.43e-08  1.09e-07      4.53         1 
+224
+225
+226
+227
+228
+     singular covariance
+    pars at singular: 3.69e-06  -1.45e-09  -8.76e-08  -3.55e-08      4.51         1 
+229
+230
+231
+232
+233
+234
+     singular covariance
+    pars at singular:  1.5e-09  5.67e-08  -1.89e-07  -1.23e-08      4.52         1 
+235
+236
+237
+238
+239
+240
+241
+242
+     singular covariance
+    pars at singular: 2.76e-06   7.4e-07  2.26e-10  -3.39e-07      4.53         1 
+243
+244
+     singular covariance
+    pars at singular:  3.3e-07  -9.26e-08  1.22e-09  2.38e-08      4.53         1 
+245
+     singular covariance
+    pars at singular: 2.98e-07  1.18e-06  -1.16e-09  -1.94e-08      4.52         1 
+246
+247
+248
+249
+250
+251
+252
+     singular covariance
+    pars at singular: 5.21e-10  3.04e-07  -1.26e-07  2.27e-08      4.52         1 
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+     singular covariance
+    pars at singular: -5.05e-10  -1.95e-07  1.83e-07  5.68e-09      4.35         1 
+265
+266
+     singular covariance
+    pars at singular: -9.53e-10  -2.45e-07  -1.47e-07  8.39e-08      4.52         1 
+267
+268
+269
+270
+271
+272
+     singular covariance
+    pars at singular: 8.99e-07  1.48e-06  1.33e-09  -1.11e-06      4.51         1 
+273
+274
+275
+     singular covariance
+    pars at singular: -4.6e-07  4.75e-07  9.42e-10  8.58e-08      4.52         1 
+276
+     singular covariance
+    pars at singular: 4.61e-07  3.79e-07  -1.81e-09  -1.53e-08      4.52         1 
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+     singular covariance
+    pars at singular: -2.37e-06  3.26e-06  4.95e-09   2.6e-07      4.53         1 
+296
+297
+     singular covariance
+    pars at singular: 4.49e-07  4.38e-07  -1.48e-09   1.1e-08      4.52         1 
+298
+299
+300
+301
+302
+303
+304
+305
+     singular covariance
+    pars at singular: 6.98e-10  2.38e-07  -5.06e-08  -4.09e-08      4.36         1 
+306
+307
+308
+309
+310
+311
+312
+313
+314
+     singular covariance
+    pars at singular: -1.75e-09  6.81e-07  5.15e-07  1.91e-07      4.52         1 
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+     singular covariance
+    pars at singular: 2.43e-07  9.73e-08  2.85e-09  -1.93e-08      4.52         1 
+331
+     singular covariance
+    pars at singular: 6.65e-08  -5.76e-07  -1.98e-09   6.2e-08      4.52         1 
+     singular covariance
+    pars at singular: 1.81e-07  4.41e-09  -9.4e-09  1.48e-10      4.52         1 
+     singular covariance
+    pars at singular: 1.86e-07  1.78e-07  -3.45e-09  3.23e-08      4.35         1 
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+     singular covariance
+    pars at singular: 1.89e-06  -2.91e-07  2.74e-09  -3.79e-07      4.52         1 
+343
+     singular covariance
+    pars at singular: -9.67e-08  5.92e-08  -8.88e-10  -8.15e-08      4.52         1 
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+     singular covariance
+    pars at singular: 4.07e-07  4.75e-07  1.83e-10  1.31e-07      4.51         1 
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+     singular covariance
+    pars at singular: 1.51e-09  -4.12e-07   1.4e-09  -2.15e-07      4.53         1 
+366
+367
+368
+369
+     singular covariance
+    pars at singular: 3.96e-09  5.66e-07  1.08e-08  5.37e-07      4.52         1 
+370
+371
+372
+     singular covariance
+    pars at singular: 8.09e-08  1.09e-07   1.8e-09  1.19e-07      4.37         1 
+373
+374
+     singular covariance
+    pars at singular: 6.06e-10  8.67e-07  -2.2e-08  6.91e-08      4.52         1 
+375
+376
+377
+     singular covariance
+    pars at singular: 4.36e-07  -5.82e-07  -1.11e-09  -2.51e-08      4.53         1 
+378
+379
+     singular covariance
+    pars at singular: -4.63e-06  -6.09e-10  4.63e-07  -1.92e-08      4.36         1 
+     singular covariance
+    pars at singular: -1.03e-09   2.2e-06  -1.28e-06  -2.03e-06      4.36         1 
+380
+381
+382
+383
+     singular covariance
+    pars at singular: 6.77e-08  2.58e-06  -1.48e-09  4.98e-07      4.52         1 
+384
+385
+     singular covariance
+    pars at singular: -1.29e-07  3.12e-07  -2.67e-10  -9.65e-08      4.52         1 
+386
+387
+     singular covariance
+    pars at singular: 1.27e-06  -5.71e-07  -5.83e-10  -7.33e-07      4.54         1 
+388
+389
+390
+     singular covariance
+    pars at singular: -8.7e-07  1.84e-06  -4.23e-10   8.7e-07      4.52         1 
+391
+392
+393
+     singular covariance
+    pars at singular: -3.23e-06  3.04e-06  2.04e-09  -3.89e-07      4.54         1 
+     singular covariance
+    pars at singular: 4.57e-07  1.99e-06  -2.35e-10  -4.93e-07      4.54         1 
+394
+395
+396
+397
+     singular covariance
+    pars at singular: -8.63e-07  1.05e-11  -7.8e-07  3.62e-07      4.53         1 
+398
+399
+     singular covariance
+    pars at singular: 4.92e-08  3.59e-08  -5.65e-10  2.24e-08      4.34         1 
+400
+401
+402
+403
+     singular covariance
+    pars at singular: -3.5e-07  9.92e-10  -1.02e-07  -5.32e-07      4.52         1 
+404
+     singular covariance
+    pars at singular: 2.48e-06  1.54e-07  9.69e-11  -2.41e-08      4.52         1 
+     singular covariance
+    pars at singular: 1.54e-07  2.07e-09  1.25e-08  -2.11e-08      4.52         1 
+405
+406
+407
+     singular covariance
+    pars at singular: -2.29e-06  -9.24e-08  4.36e-09  1.09e-06      4.52         1 
+408
+409
+410
+411
+412
+     singular covariance
+    pars at singular: 1.99e-07  4.67e-08  -1.72e-09  -8.64e-08      4.52         1 
+413
+414
+415
+416
+     singular covariance
+    pars at singular: -2.79e-07  -1.18e-09  -2.06e-07  3.93e-08      4.52         1 
+     singular covariance
+    pars at singular: -8.06e-07  -1.57e-06  -2.7e-09  -1.55e-06      4.52         1 
+     singular covariance
+    pars at singular: -8.47e-07  -4.29e-10  -1.31e-06  -5.59e-07      4.52         1 
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+     singular covariance
+    pars at singular: -2.6e-07   4.7e-11  2.96e-07   3.3e-07      4.35         1 
+434
+435
+     singular covariance
+    pars at singular: 1.86e-06  2.05e-09  -3.5e-08  1.07e-06      4.52         1 
+436
+437
+438
+439
+440
+441
+442
+     singular covariance
+    pars at singular: -4.95e-07  -2.41e-07  2.97e-11  -1.12e-09      4.37         1 
+443
+444
+445
+     singular covariance
+    pars at singular: 2.88e-06  -1.89e-09  -3.43e-08  3.99e-08      4.52         1 
+     singular covariance
+    pars at singular: 1.01e-06  1.12e-07  -2.99e-09  -5.84e-07      4.52         1 
+446
+447
+448
+449
+450
+451
+452
+453
+     singular covariance
+    pars at singular: -1.71e-07  1.65e-07  -3.05e-11  -2.72e-07      4.52         1 
+454
+     singular covariance
+    pars at singular: -3.29e-10  -1.69e-07  -2.26e-08  8.82e-08      4.52         1 
+455
+456
+457
+     singular covariance
+    pars at singular: -8.61e-09  6.16e-07  1.06e-08  -1.68e-07      4.51         1 
+458
+459
+460
+461
+462
+     singular covariance
+    pars at singular: 1.87e-07  1.81e-07  2.13e-10  -1.95e-08      4.35         1 
+463
+464
+     singular covariance
+    pars at singular: -4.82e-07  1.03e-06  -1.66e-09  -3.79e-08      4.52         1 
+465
+466
+467
+     singular covariance
+    pars at singular: -1.43e-07  2.58e-07  4.29e-10  2.64e-07      4.52         1 
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+     singular covariance
+    pars at singular: -3.81e-07  -6.47e-07  -2.19e-10  -4.32e-08      4.35         1 
+482
+483
+484
+485
+486
+     singular covariance
+    pars at singular:  7.5e-07  1.95e-07  4.01e-09  -1.76e-08      4.51     0.999 
+487
+488
+489
+     singular covariance
+    pars at singular: 1.85e-07  -4.63e-07  2.46e-09  -2.01e-08      4.53         1 
+490
+491
+492
+     singular covariance
+    pars at singular: 4.18e-07  -6.49e-07  1.03e-09  -2.59e-07      4.52         1 
+493
+494
+495
+     singular covariance
+    pars at singular: 1.79e-07  -2.62e-07  1.27e-09  -1.4e-07      4.52         1 
+496
+497
+498
+499
+500
+501
+502
+     singular covariance
+    pars at singular: -1.9e-07  3.22e-07  -9.23e-11  3.26e-07      4.53         1 
+     singular covariance
+    pars at singular: -1.3e-07  3.34e-06  -1.22e-09  -3.75e-07      4.53         1 
+503
+     singular covariance
+    pars at singular: -9.2e-07   2.8e-07  2.27e-10  -4.22e-08      4.36         1 
+504
+505
+506
+507
+     singular covariance
+    pars at singular: -1.98e-11  -6.13e-07  -2.13e-08  3.71e-08      4.52         1 
+508
+     singular covariance
+    pars at singular: -1.07e-06  3.19e-07  3.87e-09  -8.31e-07      4.54         1 
+509
+510
+511
+512
+513
+514
+515
+516
+517
+     singular covariance
+    pars at singular: 1.36e-09  -3.78e-07  -3.58e-07  7.83e-08      4.52         1 
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+     singular covariance
+    pars at singular: -1.63e-08  -2.81e-07   3.8e-09  -6.84e-08      4.52         1 
+529
+     singular covariance
+    pars at singular: 3.97e-07  -4.96e-07  -1.41e-10  4.29e-07      4.53         1 
+530
+531
+     singular covariance
+    pars at singular: 2.79e-09  -8.16e-08  1.74e-07  -5.96e-08      4.52         1 
+532
+533
+534
+     singular covariance
+    pars at singular: -2.34e-06  -1.67e-06  -1.36e-09  2.74e-06      4.52         1 
+535
+536
+537
+538
+539
+     singular covariance
+    pars at singular: -8.62e-09  1.07e-06  4.69e-08  -1.25e-10      4.52         1 
+540
+541
+542
+543
+544
+545
+546
+547
+548
+     singular covariance
+    pars at singular: -3.64e-07  -1.5e-06  1.63e-09  1.78e-08      4.53         1 
+549
+     singular covariance
+    pars at singular: 2.64e-07  1.43e-07  1.04e-09  -1.07e-07      4.51         1 
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+     singular covariance
+    pars at singular: -5.34e-09  2.92e-07  -2.98e-08  6.55e-08      4.52         1 
+     singular covariance
+    pars at singular: -4.22e-07  -2.93e-10  3.75e-08  4.82e-07      4.52         1 
+561
+562
+     singular covariance
+    pars at singular: -2.77e-07  -2.95e-07  4.21e-09  2.59e-08      4.52         1 
+563
+564
+565
+     singular covariance
+    pars at singular: -1.06e-08  1.45e-09  8.54e-08  -9.28e-08      4.52         1 
+566
+567
+568
+     singular covariance
+    pars at singular: 5.18e-07  9.34e-09  -2.42e-07  -5.82e-08      4.53         1 
+569
+570
+571
+     singular covariance
+    pars at singular: -2.42e-06  -9.36e-10  -1.22e-08  -2.4e-08      4.52         1 
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+     singular covariance
+    pars at singular:  2.6e-07  -1.03e-09  4.77e-08  -7.94e-08      4.52         1 
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+     singular covariance
+    pars at singular: -4.17e-07  -1.33e-09  -4.25e-07  1.22e-07      4.52         1 
+     singular covariance
+    pars at singular: 5.52e-09   3.9e-06  1.15e-09  1.61e-06      4.52         1 
+601
+602
+     singular covariance
+    pars at singular: -4.13e-08  -1.48e-08  1.84e-09  5.72e-09      4.52         1 
+603
+604
+     singular covariance
+    pars at singular: -9.62e-08  9.59e-09  3.37e-08  -1.4e-07      4.53         1 
+605
+606
+607
+608
+609
+610
+     singular covariance
+    pars at singular: 3.79e-07  1.27e-07  -1.57e-09  -3.67e-08      4.52         1 
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+     singular covariance
+    pars at singular:   -2e-06  -1.33e-09  -9.17e-08  -9.69e-09      4.52         1 
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+     singular covariance
+    pars at singular: -1.35e-06  -1.15e-06   2.6e-11  -4.22e-07      4.35         1 
+647
+648
+649
+650
+651
+652
+653
+     singular covariance
+    pars at singular: -4.1e-06  -3.41e-09  -2.27e-06  -1.6e-07      4.52         1 
+654
+655
+     singular covariance
+    pars at singular: -1.75e-06  4.49e-07  -4.29e-10  1.53e-07      4.53         1 
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+     singular covariance
+    pars at singular: 1.22e-06  -4.03e-10  5.54e-08  -3.98e-08      4.36         1 
+668
+669
+670
+671
+     singular covariance
+    pars at singular: -2.02e-06  2.09e-07  2.08e-09  1.62e-07      4.53         1 
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+     singular covariance
+    pars at singular: -5.42e-06  -7.98e-08  2.44e-09  -5.76e-07      4.36         1 
+682
+683
+     singular covariance
+    pars at singular:  4.9e-07  -2.16e-08  1.28e-10  4.54e-08      4.52         1 
+684
+685
+686
+687
+688
+689
+690
+691
+692
+     singular covariance
+    pars at singular: -1.93e-09  2.68e-06  -1.14e-06   2.6e-08      4.52         1 
+693
+694
+     singular covariance
+    pars at singular:  1.2e-05  1.57e-06  2.83e-09  5.85e-08      4.52         1 
+695
+696
+697
+698
+699
+700
+701
+     singular covariance
+    pars at singular: 2.95e-07  -1.38e-07  -2.01e-09  3.83e-08      4.52         1 
+702
+703
+     singular covariance
+    pars at singular: 9.53e-07  -9.49e-10  -9.76e-08  -7.92e-07      4.37         1 
+704
+705
+706
+707
+708
+709
+     singular covariance
+    pars at singular: 6.03e-07  1.11e-06  -5.7e-10  4.82e-11      4.52         1 
+710
+711
+712
+713
+     singular covariance
+    pars at singular: 1.76e-06  1.73e-06  1.04e-09  3.25e-07      4.53         1 
+714
+715
+     singular covariance
+    pars at singular: 7.89e-08  8.73e-11  1.12e-09  -3.66e-08      4.52         1 
+716
+717
+718
+719
+720
+     singular covariance
+    pars at singular: -4.08e-09  3.26e-07  -1.76e-08  -5.53e-08      4.52         1 
+721
+722
+723
+724
+725
+726
+727
+728
+     singular covariance
+    pars at singular: -9.43e-08  2.19e-07  -1.56e-09  -8.52e-08      4.35         1 
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+     singular covariance
+    pars at singular: -2.93e-10  2.07e-06  -1.13e-06  -1.88e-07      4.54         1 
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+     singular covariance
+    pars at singular:  5.6e-09  5.83e-06  -5.21e-07  -3.66e-07      4.51         1 
+753
+754
+755
+756
+757
+758
+759
+     singular covariance
+    pars at singular: 1.54e-07  -1.72e-07  -1.31e-09  9.91e-08      4.54         1 
+760
+761
+762
+763
+764
+     singular covariance
+    pars at singular: -4.72e-07  -9.98e-07  2.43e-10  3.33e-08      4.52         1 
+     singular covariance
+    pars at singular: 1.96e-07  5.74e-07  -3.55e-09  1.13e-07      4.52         1 
+765
+766
+     singular covariance
+    pars at singular: 2.75e-07  1.68e-07  -2.43e-10  -2.15e-07      4.53         1 
+767
+768
+769
+770
+771
+772
+     singular covariance
+    pars at singular: 1.45e-09  7.79e-08  1.68e-07  -3.73e-08      4.53         1 
+773
+     singular covariance
+    pars at singular: -3.09e-07  -5.98e-07  -1.46e-10  1.08e-07      4.51         1 
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+     singular covariance
+    pars at singular: 3.09e-07  -6.12e-07  1.41e-09  1.17e-07      4.53         1 
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+     singular covariance
+    pars at singular: 5.69e-07  -3.05e-07  -1.22e-09  1.61e-07      4.53         1 
+797
+798
+799
+800
+801
+802
+     singular covariance
+    pars at singular: -4.06e-10  -2.3e-07  -2.18e-08   2.3e-08      4.52         1 
+803
+804
+805
+806
+807
+     singular covariance
+    pars at singular: 6.82e-09  3.69e-11  2.19e-08   1.6e-09      4.53         1 
+     singular covariance
+    pars at singular: -4.75e-10   7.8e-08  4.94e-07  -4.97e-08      4.53         1 
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+     singular covariance
+    pars at singular: 6.14e-06  -1.17e-08  5.15e-09  -3.91e-08      4.51         1 
+821
+822
+823
+824
+825
+     singular covariance
+    pars at singular: 7.66e-07  5.77e-07  -3.63e-09  1.27e-07      4.52         1 
+826
+827
+828
+829
+830
+831
+832
+     singular covariance
+    pars at singular: 4.66e-09  -6.28e-08  -3.61e-07  -6.09e-08      4.52         1 
+833
+834
+835
+836
+837
+     singular covariance
+    pars at singular: 5.47e-07  8.69e-07   4.2e-09  2.86e-07      4.52         1 
+838
+839
+840
+841
+842
+843
+844
+845
+846
+     singular covariance
+    pars at singular: 8.61e-09  -2.56e-07   1.7e-10  3.66e-08      4.52         1 
+847
+848
+     singular covariance
+    pars at singular: -8.56e-08  8.42e-10  2.01e-08  1.48e-07      4.54         1 
+849
+850
+     singular covariance
+    pars at singular: 5.53e-10  -2.17e-09  1.28e-06  -1.24e-07      4.53         1 
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+     singular covariance
+    pars at singular: -1.7e-06  2.71e-09  7.06e-07  -1.39e-07      4.52         1 
+869
+870
+     singular covariance
+    pars at singular: -1.05e-09  -3.77e-07  9.72e-08  1.09e-08      4.52         1 
+871
+     singular covariance
+    pars at singular: -1.41e-06  1.01e-06  -1.2e-09  -2.3e-07      4.37         1 
+872
+873
+874
+875
+876
+     singular covariance
+    pars at singular: -5.61e-07  4.73e-07  -3.44e-09  3.56e-07      4.51         1 
+877
+878
+879
+880
+881
+882
+     singular covariance
+    pars at singular: -2.15e-07  -1.75e-06  -1.29e-09  -1.27e-06      4.52         1 
+883
+884
+885
+886
+887
+     singular covariance
+    pars at singular: 3.52e-07  8.36e-10  8.76e-08  2.69e-09      4.52         1 
+888
+889
+890
+891
+892
+     singular covariance
+    pars at singular: 2.17e-07  -1.54e-06  2.42e-09  2.35e-07      4.53         1 
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+     singular covariance
+    pars at singular: -1.83e-09  6.94e-08  -4.29e-08  3.57e-10      4.51         1 
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+     singular covariance
+    pars at singular: 4.93e-07  -1.37e-08  -2.34e-09  -1.69e-07      4.36         1 
+921
+922
+     singular covariance
+    pars at singular: -4.08e-09  8.03e-07  -7.61e-08  5.32e-07      4.51         1 
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+     singular covariance
+    pars at singular: -1.16e-10  -2.93e-07  7.64e-08  -1.14e-07      4.36         1 
+     singular covariance
+    pars at singular: -1.74e-06   2.3e-06  9.93e-10  -1.13e-06      4.53         1 
+940
+941
+942
+943
+944
+945
+     singular covariance
+    pars at singular:  7.3e-07  7.17e-07  -6.17e-10  5.37e-09      4.35         1 
+946
+     singular covariance
+    pars at singular: -3.09e-09  2.83e-07  -2.13e-07  -6.74e-08      4.51         1 
+947
+948
+949
+950
+     singular covariance
+    pars at singular: 5.11e-09  2.26e-07  4.69e-07  3.25e-08      4.53         1 
+951
+     singular covariance
+    pars at singular: 4.69e-07  4.55e-08  -2.21e-09  -9.53e-09      4.36         1 
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+     singular covariance
+    pars at singular: 1.29e-06  5.85e-10  -6.18e-07  7.27e-08      4.36         1 
+962
+     singular covariance
+    pars at singular: 2.02e-06  1.36e-06  7.07e-10  1.62e-07      4.53         1 
+     singular covariance
+    pars at singular: 2.63e-07  5.77e-07  -3.89e-10  -2.94e-07      4.36         1 
+963
+     singular covariance
+    pars at singular:  5.1e-06  7.15e-07  -7.89e-10   1.2e-06      4.52         1 
+964
+965
+966
+967
+968
+969
+     singular covariance
+    pars at singular: -6.76e-08  4.48e-07  -3.34e-09  -2.34e-08      4.52         1 
+970
+971
+972
+     singular covariance
+    pars at singular: -3.51e-07  5.59e-10   1.7e-07  -1.02e-07      4.52         1 
+973
+974
+975
+976
+977
+978
+     singular covariance
+    pars at singular: 6.51e-07  -2.32e-07  -1.21e-09  2.54e-08      4.52         1 
+979
+980
+981
+982
+983
+984
+985
+986
+     singular covariance
+    pars at singular: -7.85e-09  -3.25e-07  -1.48e-09  4.98e-08      4.52         1 
+987
+988
+989
+990
+     singular covariance
+    pars at singular: 1.93e-07  3.22e-09    -3e-07  1.43e-07      4.35         1 
+991
+992
+993
+     singular covariance
+    pars at singular: 3.77e-10  3.57e-07  -1.78e-06  -1.25e-07      4.51         1 
+994
+995
+996
+997
+998
+     singular covariance
+    pars at singular: -2.16e-06  1.24e-09  2.02e-07  -3.06e-07      4.38         1 
+999
+1000
+1001
+     singular covariance
+    pars at singular: -2.81e-07  -2.13e-07  -3.41e-09  -1.1e-07      4.52         1 
+1002
+1003
+1004
+     singular covariance
+    pars at singular: 2.68e-09  -1.77e-06  -3.39e-07  9.87e-07      4.52         1 
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+     singular covariance
+    pars at singular: 4.26e-08  -3.49e-09  -6.45e-10   3.3e-08      4.53         1 
+1023
+     singular covariance
+    pars at singular: -9.75e-10  1.62e-07  8.76e-08  2.75e-08      4.52         1 
+1024
+1025
+1026
+     singular covariance
+    pars at singular: -3.99e-07  4.36e-07   3.8e-09  -4.36e-09      4.53         1 
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+     singular covariance
+    pars at singular: 6.82e-07  9.03e-08  -3.47e-10  -3.09e-07      4.53         1 
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+     singular covariance
+    pars at singular: 2.19e-06  -7.46e-08  -1.79e-09  -1.51e-06      4.36         1 
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+     singular covariance
+    pars at singular: 4.05e-06  3.45e-08  -1.89e-09  -5.38e-08      4.51         1 
+     singular covariance
+    pars at singular: -1.18e-06  -3.44e-07  -2.38e-09  4.27e-08      4.51         1 
+1063
+1064
+     singular covariance
+    pars at singular: 4.64e-08  -4.3e-07  -5.06e-09  -2.5e-07      4.54         1 
+1065
+     singular covariance
+    pars at singular: 6.39e-07  -4.85e-08  -1.27e-09  -5.61e-10      4.35         1 
+1066
+     singular covariance
+    pars at singular: 2.58e-06  3.67e-10  -5.77e-07  -5.07e-07      4.34         1 
+1067
+1068
+1069
+1070
+1071
+1072
+1073
+1074
+     singular covariance
+    pars at singular: 3.62e-07  2.48e-07  2.37e-09  1.23e-07      4.37         1 
+1075
+1076
+1077
+     singular covariance
+    pars at singular: -6.53e-10  -3.81e-06  4.65e-07  2.42e-07      4.52         1 
+1078
+1079
+1080
+1081
+1082
+1083
+1084
+1085
+1086
+1087
+1088
+1089
+1090
+1091
+1092
+1093
+1094
+1095
+1096
+1097
+1098
+1099
+1100
+1101
+1102
+     singular covariance
+    pars at singular: 4.08e-10  1.57e-07  -2.72e-07  -8.25e-07      4.52         1 
+     singular covariance
+    pars at singular: -8.49e-07  9.38e-08  -1.08e-09  -1.05e-07      4.35         1 
+1103
+1104
+1105
+1106
+     singular covariance
+    pars at singular: 2.57e-10  1.37e-06   2.3e-07  -1.82e-07      4.51         1 
+1107
+1108
+     singular covariance
+    pars at singular: 4.19e-07  1.34e-06  -1.92e-10  -5.29e-09      4.52         1 
+1109
+1110
+1111
+1112
+1113
+1114
+1115
+1116
+1117
+1118
+1119
+1120
+1121
+1122
+1123
+1124
+1125
+1126
+1127
+1128
+1129
+1130
+1131
+1132
+1133
+1134
+1135
+1136
+     singular covariance
+    pars at singular: -4.36e-09  7.22e-08  -4.08e-10  2.97e-08      4.53         1 
+1137
+1138
+1139
+1140
+1141
+1142
+1143
+1144
+1145
+     singular covariance
+    pars at singular: -2.59e-09  -4.62e-08  1.84e-07  3.79e-08      4.53         1 
+1146
+1147
+     singular covariance
+    pars at singular:  2.3e-09  6.47e-08  1.49e-07  2.06e-07      4.52         1 
+1148
+1149
+     singular covariance
+    pars at singular: -1.53e-07  5.12e-09  2.68e-08    -1e-07      4.53         1 
+1150
+1151
+1152
+1153
+1154
+1155
+1156
+     singular covariance
+    pars at singular: -1.73e-07   1.5e-09  -1.44e-08  1.12e-07      4.52         1 
+1157
+1158
+1159
+1160
+1161
+1162
+1163
+1164
+1165
+1166
+1167
+     singular covariance
+    pars at singular: 1.34e-06  -2.58e-06  -1.01e-09  -4.3e-07      4.53         1 
+1168
+1169
+1170
+1171
+1172
+1173
+1174
+1175
+1176
+1177
+1178
+1179
+1180
+1181
+1182
+1183
+1184
+1185
+1186
+1187
+1188
+1189
+1190
+1191
+1192
+1193
+1194
+1195
+1196
+1197
+1198
+1199
+1200
+1201
+1202
+1203
+1204
+1205
+1206
+1207
+1208
+     singular covariance
+    pars at singular: 3.71e-07  6.02e-08  -1.54e-09  -2.12e-08      4.51         1 
+1209
+1210
+1211
+1212
+1213
+1214
+1215
+1216
+1217
+1218
+1219
+1220
+1221
+     singular covariance
+    pars at singular: -2.47e-08  -2.2e-10  1.17e-09  1.24e-07      4.53         1 
+1222
+1223
+1224
+1225
+1226
+1227
+     singular covariance
+    pars at singular: 1.25e-07  1.02e-08  -3.25e-09  9.99e-08      4.53         1 
+1228
+1229
+1230
+1231
+1232
+1233
+1234
+1235
+1236
+1237
+1238
+1239
+     singular covariance
+    pars at singular: -4.35e-07  3.64e-06  7.99e-10  -3.81e-06      4.35         1 
+1240
+1241
+1242
+1243
+1244
+1245
+1246
+1247
+     singular covariance
+    pars at singular: -4.87e-07  -3.35e-07  1.37e-09  -1.31e-07      4.53         1 
+1248
+1249
+1250
+1251
+     singular covariance
+    pars at singular: 5.91e-07  -1.1e-06  2.27e-10  -2.25e-07      4.52         1 
+1252
+1253
+1254
+1255
+1256
+1257
+1258
+     singular covariance
+    pars at singular: -5.39e-07   3.2e-10  8.65e-08  -3.33e-08      4.36         1 
+1259
+1260
+1261
+1262
+1263
+1264
+     singular covariance
+    pars at singular: -1.31e-06  -1.17e-08  -1.22e-09   6.3e-08      4.52         1 
+1265
+1266
+1267
+1268
+1269
+1270
+     singular covariance
+    pars at singular: -1.24e-06  -2.49e-06  -2.64e-10  2.53e-07      4.52         1 
+1271
+1272
+     singular covariance
+    pars at singular: -2.29e-07  -1.31e-07  -9.85e-10   1.4e-07      4.51         1 
+1273
+1274
+     singular covariance
+    pars at singular: 3.89e-08  1.74e-07  -1.24e-09  7.74e-08      4.52         1 
+1275
+     singular covariance
+    pars at singular: -4.48e-07  6.75e-07  2.23e-10  2.11e-08      4.52         1 
+1276
+1277
+1278
+     singular covariance
+    pars at singular: 8.21e-07  -4.28e-07  -4.3e-10  4.36e-07      4.35         1 
+1279
+1280
+1281
+1282
+1283
+     singular covariance
+    pars at singular: 4.15e-07  5.95e-08  -2.86e-09  1.15e-07      4.35         1 
+1284
+     singular covariance
+    pars at singular: 2.97e-07  5.48e-08  7.13e-10  1.62e-06      4.51     0.999 
+1285
+1286
+1287
+1288
+     singular covariance
+    pars at singular: 4.88e-07  -3.3e-07  -7.14e-10  -1.69e-07      4.51         1 
+1289
+1290
+1291
+1292
+1293
+1294
+1295
+1296
+1297
+1298
+1299
+     singular covariance
+    pars at singular: 4.25e-09  9.01e-07  -7.2e-08  6.31e-07      4.51         1 
+1300
+     singular covariance
+    pars at singular: 1.46e-06  1.25e-07  -1.34e-09  -1.11e-07      4.52         1 
+1301
+1302
+1303
+     singular covariance
+    pars at singular: 1.47e-06  1.38e-06  6.84e-10  2.29e-07      4.35         1 
+1304
+     singular covariance
+    pars at singular: -2.01e-07  -1.39e-07  -1.84e-09  -2.37e-07      4.52         1 
+     singular covariance
+    pars at singular: -4.52e-08  -1.45e-07  -1.41e-09  -1.03e-07      4.52         1 
+1305
+1306
+     singular covariance
+    pars at singular: 1.64e-07  5.48e-09  3.13e-09  -7.54e-09      4.52         1 
+1307
+1308
+1309
+1310
+1311
+1312
+1313
+     singular covariance
+    pars at singular: -6.3e-07  4.06e-09  6.22e-08  -8.84e-08      4.51         1 
+1314
+1315
+1316
+1317
+1318
+1319
+1320
+1321
+1322
+1323
+1324
+1325
+     singular covariance
+    pars at singular:  2.2e-07  -5.17e-07   2.1e-10  4.68e-07      4.53         1 
+1326
+1327
+1328
+1329
+1330
+1331
+1332
+1333
+1334
+1335
+1336
+1337
+1338
+1339
+1340
+1341
+1342
+     singular covariance
+    pars at singular:  1.1e-10  -2.42e-07   7.2e-08  -8.45e-08      4.52         1 
+1343
+     singular covariance
+    pars at singular: -2.44e-07  7.84e-07  2.08e-09  1.48e-07      4.35         1 
+1344
+1345
+     singular covariance
+    pars at singular: -7.48e-06  6.03e-07  4.36e-10  6.52e-07      4.52         1 
+1346
+1347
+1348
+1349
+1350
+1351
+1352
+1353
+1354
+1355
+1356
+     singular covariance
+    pars at singular: 2.23e-07  -1.77e-09  2.05e-08  2.83e-07      4.52         1 
+1357
+1358
+1359
+     singular covariance
+    pars at singular: -2.95e-07  1.36e-09  -1.11e-07  -2.28e-07      4.52         1 
+1360
+1361
+     singular covariance
+    pars at singular: -1.64e-07  -9.58e-09  -1.15e-07  -1.91e-07      4.53         1 
+1362
+1363
+     singular covariance
+    pars at singular: 6.11e-08  1.24e-07  3.13e-09  2.63e-07      4.52         1 
+1364
+1365
+1366
+1367
+1368
+     singular covariance
+    pars at singular: 1.72e-09  -7.98e-07  -2.16e-07  -2.32e-07      4.53         1 
+1369
+1370
+     singular covariance
+    pars at singular: -3.06e-07  1.44e-07  5.68e-10  7.98e-08      4.53         1 
+1371
+1372
+     singular covariance
+    pars at singular: -4.55e-08  1.43e-10  -1.84e-07  -5.15e-08      4.53         1 
+1373
+1374
+1375
+1376
+1377
+1378
+1379
+1380
+1381
+1382
+1383
+1384
+1385
+1386
+1387
+1388
+1389
+1390
+1391
+1392
+1393
+1394
+1395
+1396
+1397
+1398
+     singular covariance
+    pars at singular: 3.32e-08  4.46e-07  -2.11e-09  -4.37e-09      4.52         1 
+1399
+1400
+1401
+1402
+     singular covariance
+    pars at singular:  1.5e-06  -3.27e-09  5.52e-10  -4.56e-08      4.53         1 
+1403
+1404
+1405
+     singular covariance
+    pars at singular: -7.38e-07  5.99e-07    -3e-09  6.43e-08      4.52         1 
+1406
+1407
+1408
+1409
+1410
+1411
+1412
+1413
+1414
+1415
+1416
+1417
+1418
+1419
+1420
+1421
+1422
+     singular covariance
+    pars at singular: -3.2e-07  -8.99e-08  -9.81e-10  -1.72e-08      4.52         1 
+1423
+     singular covariance
+    pars at singular: -6.35e-10  -1.24e-06  -1.01e-07  -3.96e-08      4.53         1 
+1424
+1425
+1426
+1427
+1428
+1429
+1430
+1431
+1432
+1433
+1434
+1435
+1436
+1437
+1438
+     singular covariance
+    pars at singular: 2.28e-08  7.71e-10   4.3e-08  -2.83e-08      4.52         1 
+     singular covariance
+    pars at singular: -1.26e-07  3.77e-10  1.13e-08  -8.33e-08      4.52         1 
+1439
+     singular covariance
+    pars at singular: 5.94e-10  1.39e-06  -2.63e-07  -2.07e-06      4.53         1 
+1440
+1441
+1442
+1443
+1444
+1445
+     singular covariance
+    pars at singular: -9.95e-08  2.96e-06  -6.46e-10  4.13e-07      4.53         1 
+1446
+1447
+1448
+1449
+1450
+1451
+1452
+1453
+1454
+1455
+1456
+1457
+1458
+     singular covariance
+    pars at singular:   -7e-07   2.5e-10  -3.46e-07  -1.38e-08      4.36         1 
+1459
+     singular covariance
+    pars at singular: -3.57e-06  -7.24e-07  -1.03e-09  1.45e-07      4.52         1 
+1460
+1461
+1462
+1463
+1464
+1465
+     singular covariance
+    pars at singular: -1.29e-06  -3.56e-07  1.35e-10  9.97e-08      4.52         1 
+1466
+     singular covariance
+    pars at singular: -4.23e-07  -1.84e-07  -2.18e-09  1.53e-07      4.53         1 
+1467
+     singular covariance
+    pars at singular: -1.61e-06  -1.49e-06  1.84e-09  4.74e-07      4.51         1 
+1468
+1469
+1470
+1471
+     singular covariance
+    pars at singular: 5.82e-06  5.41e-07  -1.69e-09  -8.55e-08      4.36         1 
+1472
+1473
+     singular covariance
+    pars at singular: 1.12e-07  -2.67e-07  -1.3e-09  -2.99e-08      4.51         1 
+1474
+     singular covariance
+    pars at singular: -8.05e-08  -1.46e-06  2.46e-09  -5.06e-08      4.35         1 
+1475
+1476
+1477
+1478
+1479
+1480
+1481
+1482
+1483
+1484
+1485
+1486
+1487
+1488
+1489
+1490
+1491
+1492
+1493
+1494
+1495
+1496
+1497
+1498
+     singular covariance
+    pars at singular: 9.59e-09  -3.24e-09   2.1e-07  -5.14e-08      4.53         1 
+1499
+1500
+1501
+1502
+1503
+1504
+1505
+     singular covariance
+    pars at singular: 1.32e-07  1.03e-06  -1.37e-09  3.33e-07      4.51         1 
+1506
+     singular covariance
+    pars at singular:  6.9e-09  -1.55e-07  8.33e-10  -1.43e-09      4.53         1 
+     singular covariance
+    pars at singular: 1.52e-09  2.37e-07  1.41e-07  1.01e-07      4.53         1 
+1507
+1508
+1509
+     singular covariance
+    pars at singular: -1.99e-06  3.29e-07  -1.38e-09     4e-07      4.53         1 
+1510
+1511
+1512
+     singular covariance
+    pars at singular: 3.24e-08  -1.31e-07  1.52e-09  2.08e-08      4.53         1 
+     singular covariance
+    pars at singular: 2.01e-07  2.04e-08  4.81e-09  -8.6e-08      4.53         1 
+1513
+1514
+1515
+1516
+1517
+1518
+     singular covariance
+    pars at singular: 1.98e-07  9.92e-08  -3.58e-09  6.31e-08      4.52         1 
+1519
+1520
+1521
+1522
+1523
+1524
+1525
+1526
+1527
+1528
+1529
+1530
+     singular covariance
+    pars at singular: 4.31e-07   7.3e-07  -9.38e-11  8.67e-08      4.53         1 
+1531
+1532
+1533
+     singular covariance
+    pars at singular: -1.22e-07  -1.68e-06  9.84e-10  -5.49e-07      4.52         1 
+1534
+1535
+1536
+1537
+1538
+1539
+1540
+1541
+1542
+1543
+1544
+1545
+1546
+1547
+     singular covariance
+    pars at singular: -1.54e-06  -2.41e-07  -1.4e-08  -6.98e-11      4.52         1 
+1548
+1549
+1550
+     singular covariance
+    pars at singular: -5.82e-07  5.33e-07  -1.38e-11  1.45e-07      4.53         1 
+1551
+1552
+1553
+1554
+     singular covariance
+    pars at singular: 1.16e-07  3.01e-09  -3.66e-08  -8.73e-09      4.52         1 
+1555
+1556
+1557
+1558
+1559
+1560
+1561
+1562
+1563
+1564
+1565
+1566
+1567
+1568
+1569
+1570
+1571
+1572
+1573
+     singular covariance
+    pars at singular: -1.19e-06  -1.65e-06  1.57e-09    -2e-07      4.51         1 
+1574
+1575
+1576
+     singular covariance
+    pars at singular: -2.66e-07  -1.93e-07  1.54e-09  -1.78e-08      4.53         1 
+1577
+1578
+1579
+     singular covariance
+    pars at singular:  5.3e-10  3.97e-06  -3.84e-07  -1.46e-06      4.52         1 
+1580
+1581
+1582
+1583
+1584
+1585
+1586
+1587
+1588
+1589
+1590
+1591
+1592
+     singular covariance
+    pars at singular:  3.6e-06  3.13e-07   3.6e-10  -5.49e-08      4.35         1 
+1593
+1594
+1595
+1596
+1597
+1598
+1599
+1600
+     singular covariance
+    pars at singular:    1e-06  4.33e-07  3.12e-09  2.26e-07      4.52         1 
+1601
+1602
+1603
+1604
+1605
+1606
+1607
+1608
+1609
+1610
+1611
+1612
+1613
+     singular covariance
+    pars at singular: 1.67e-06  -3.1e-08  1.64e-10  2.28e-07      4.51         1 
+1614
+1615
+1616
+1617
+     singular covariance
+    pars at singular: -7.74e-08  1.01e-07  1.86e-09  -3.77e-08      4.54         1 
+1618
+1619
+1620
+     singular covariance
+    pars at singular: -2.17e-07  -7.06e-08  -2.37e-11  2.47e-07      4.52         1 
+1621
+1622
+1623
+1624
+1625
+1626
+1627
+1628
+1629
+1630
+1631
+1632
+1633
+     singular covariance
+    pars at singular: 2.83e-07  -6.37e-07  -1.89e-09  -1.44e-08      4.52         1 
+1634
+1635
+1636
+1637
+1638
+1639
+1640
+     singular covariance
+    pars at singular: 1.16e-07  -5.44e-07  -1.34e-09  -5.48e-07      4.52         1 
+1641
+1642
+1643
+1644
+1645
+1646
+     singular covariance
+    pars at singular: 1.07e-09  -2.5e-07  -2.08e-08   2.1e-09      4.52         1 
+1647
+1648
+1649
+1650
+1651
+1652
+1653
+1654
+1655
+1656
+1657
+1658
+     singular covariance
+    pars at singular: 9.32e-07  -1.07e-06  1.35e-09  -4.83e-08      4.52         1 
+1659
+1660
+1661
+     singular covariance
+    pars at singular: 4.14e-10  2.67e-06  -1.09e-06  1.31e-06      4.52         1 
+1662
+1663
+1664
+1665
+1666
+1667
+1668
+1669
+1670
+1671
+1672
+1673
+1674
+1675
+1676
+1677
+1678
+1679
+1680
+     singular covariance
+    pars at singular: -1.87e-07  -1.48e-07  -1.53e-07  2.49e-13      4.52     0.999 
+1681
+1682
+1683
+     singular covariance
+    pars at singular:  1.2e-09  -1.31e-06  -6.45e-08  1.11e-07      4.53         1 
+1684
+1685
+1686
+1687
+     singular covariance
+    pars at singular: 1.68e-06  -9.22e-11  2.18e-09  4.19e-08      4.53         1 
+1688
+1689
+1690
+1691
+1692
+1693
+1694
+     singular covariance
+    pars at singular: -1.44e-06  2.41e-06  -4.75e-10  -2.18e-07      4.36         1 
+1695
+1696
+1697
+1698
+1699
+     singular covariance
+    pars at singular: 4.34e-07  -1.44e-08  2.62e-09  -2.01e-07      4.35         1 
+1700
+1701
+1702
+1703
+1704
+1705
+     singular covariance
+    pars at singular: -4.88e-07  -3.18e-07  -1.46e-09  -2.34e-07      4.53         1 
+     singular covariance
+    pars at singular: 1.44e-07  -4.62e-08  -2.54e-09  -1.3e-07      4.53         1 
+1706
+     singular covariance
+    pars at singular: -9.71e-08  6.52e-10  -3.14e-08  9.26e-08      4.52         1 
+1707
+1708
+1709
+1710
+1711
+1712
+1713
+1714
+1715
+1716
+1717
+     singular covariance
+    pars at singular: 3.21e-07  1.08e-09  -4.84e-08  1.06e-08      4.52         1 
+1718
+1719
+     singular covariance
+    pars at singular: 1.57e-07  3.24e-07  1.35e-09  -4.29e-08      4.52         1 
+     singular covariance
+    pars at singular: -3.86e-07  4.54e-07  3.16e-09  -3.22e-07      4.52         1 
+1720
+1721
+     singular covariance
+    pars at singular: -2.69e-06  -6.02e-07  4.38e-09  -2.29e-08      4.52         1 
+1722
+1723
+1724
+1725
+1726
+1727
+1728
+1729
+     singular covariance
+    pars at singular: -8.89e-07  -9.96e-07  -2.77e-10  -9.49e-07       4.5         1 
+1730
+     singular covariance
+    pars at singular: -2.87e-10  -1.73e-07  8.26e-08  -1.63e-08      4.52         1 
+1731
+     singular covariance
+    pars at singular: 2.57e-07  2.97e-07  -1.97e-09  1.04e-08      4.52         1 
+1732
+1733
+1734
+1735
+1736
+1737
+1738
+1739
+1740
+1741
+1742
+1743
+1744
+     singular covariance
+    pars at singular: 1.37e-06  -2.5e-10  4.03e-07  4.93e-07      4.36         1 
+1745
+1746
+     singular covariance
+    pars at singular: -5.06e-08  1.16e-06  1.31e-09  -3.95e-08      4.53         1 
+1747
+1748
+1749
+     singular covariance
+    pars at singular: 1.69e-06  -2.13e-11  -1.53e-06   1.3e-06      4.52         1 
+1750
+1751
+1752
+1753
+1754
+1755
+1756
+1757
+1758
+1759
+1760
+1761
+     singular covariance
+    pars at singular: -2.44e-07  -1.04e-06  1.53e-09  9.53e-08      4.52         1 
+1762
+1763
+1764
+1765
+1766
+1767
+     singular covariance
+    pars at singular: -5.2e-07  -5.74e-07  -3.37e-09  3.49e-08      4.53         1 
+1768
+     singular covariance
+    pars at singular: 3.18e-07  -2.23e-10  -1.08e-08  2.84e-09      4.52         1 
+1769
+1770
+1771
+1772
+1773
+1774
+1775
+1776
+1777
+1778
+1779
+     singular covariance
+    pars at singular: 2.23e-09  2.49e-06  -2.32e-07   6.3e-07      4.52         1 
+1780
+     singular covariance
+    pars at singular: 1.18e-06  -7.85e-10  8.53e-07  2.02e-08      4.54         1 
+1781
+1782
+1783
+1784
+1785
+1786
+1787
+1788
+1789
+1790
+1791
+1792
+1793
+1794
+1795
+1796
+1797
+1798
+1799
+1800
+1801
+1802
+     singular covariance
+    pars at singular: 7.34e-08  7.05e-07  -7.79e-10  2.99e-07      4.53         1 
+1803
+1804
+1805
+1806
+     singular covariance
+    pars at singular: -1.05e-06  1.39e-06  -7.42e-10  -4.74e-08      4.53         1 
+1807
+1808
+     singular covariance
+    pars at singular: 1.51e-08  2.42e-09  2.42e-07  -4.81e-08      4.52         1 
+1809
+1810
+1811
+1812
+1813
+1814
+1815
+1816
+1817
+1818
+1819
+1820
+1821
+     singular covariance
+    pars at singular: 2.58e-07  4.26e-07  -3.27e-09  6.24e-09      4.53         1 
+     singular covariance
+    pars at singular: 1.22e-07  3.26e-06   3.6e-09  8.51e-08      4.53         1 
+1822
+1823
+1824
+     singular covariance
+    pars at singular: 9.39e-07  -1.91e-06  -4.86e-11  2.83e-08      4.53         1 
+     singular covariance
+    pars at singular: 5.44e-07     1e-07  3.06e-10  -3.57e-07      4.53         1 
+1825
+1826
+1827
+1828
+1829
+1830
+1831
+1832
+1833
+     singular covariance
+    pars at singular: 6.62e-07  6.07e-07   4.5e-09  2.21e-07      4.52         1 
+1834
+1835
+     singular covariance
+    pars at singular: 2.75e-09  4.73e-08  -1.57e-07  -1.7e-07      4.52         1 
+1836
+1837
+1838
+1839
+1840
+     singular covariance
+    pars at singular: -9.51e-07  1.59e-06  4.69e-10  -3.14e-08      4.52         1 
+1841
+1842
+1843
+1844
+1845
+1846
+1847
+1848
+1849
+     singular covariance
+    pars at singular: 1.58e-06  9.98e-07   7.4e-10  -1.25e-07      4.52         1 
+1850
+1851
+1852
+1853
+     singular covariance
+    pars at singular: -1.83e-07  7.11e-08  -2.36e-10  -2.23e-09      4.52         1 
+1854
+1855
+1856
+1857
+1858
+1859
+1860
+1861
+1862
+1863
+1864
+     singular covariance
+    pars at singular: 1.56e-09  2.32e-07  -1.73e-08  -4.35e-08      4.52         1 
+     singular covariance
+    pars at singular: 5.43e-07  1.77e-06  -1.34e-09  9.33e-07      4.52         1 
+1865
+1866
+1867
+1868
+1869
+1870
+1871
+     singular covariance
+    pars at singular: 8.42e-08  -2.95e-07  -6.83e-10  -1.16e-06      4.51         1 
+     singular covariance
+    pars at singular: 1.08e-06  -9.23e-07  3.78e-09  2.55e-09      4.35         1 
+1872
+     singular covariance
+    pars at singular: 2.27e-09  2.33e-08  -1.29e-08  -6.93e-08      4.52         1 
+1873
+1874
+     singular covariance
+    pars at singular:  3.3e-07  1.08e-10  -1.38e-07  -3.89e-07      4.51         1 
+1875
+1876
+1877
+1878
+1879
+1880
+1881
+1882
+1883
+1884
+1885
+1886
+1887
+1888
+1889
+     singular covariance
+    pars at singular: -2.02e-06   2.4e-06  -3.58e-09  5.37e-07      4.52         1 
+     singular covariance
+    pars at singular: -6.56e-08  -6.73e-08  -5.07e-11  6.41e-08      4.52         1 
+1890
+1891
+1892
+1893
+1894
+1895
+1896
+1897
+1898
+1899
+1900
+1901
+1902
+1903
+1904
+1905
+1906
+1907
+1908
+1909
+1910
+1911
+1912
+1913
+1914
+     singular covariance
+    pars at singular: 3.27e-07  8.39e-09   3.5e-08  -2.13e-07      4.52         1 
+1915
+1916
+1917
+1918
+1919
+     singular covariance
+    pars at singular: -4.19e-08  1.06e-08    -6e-10  1.58e-07      4.52         1 
+1920
+1921
+1922
+1923
+1924
+1925
+1926
+1927
+1928
+1929
+1930
+1931
+1932
+1933
+1934
+1935
+1936
+1937
+1938
+1939
+1940
+1941
+1942
+1943
+     singular covariance
+    pars at singular: -2.06e-07  4.68e-09   8.4e-08   7.8e-08      4.53         1 
+1944
+1945
+1946
+1947
+1948
+1949
+     singular covariance
+    pars at singular: -1.98e-08  -2.94e-07  3.18e-10  1.13e-07      4.52         1 
+1950
+1951
+1952
+     singular covariance
+    pars at singular: -2.45e-07  -1.92e-06  -1.29e-09  1.06e-06      4.36         1 
+1953
+1954
+1955
+1956
+1957
+     singular covariance
+    pars at singular: -6.24e-07  3.35e-10  -4.83e-07  -6.28e-07      4.37         1 
+1958
+1959
+1960
+1961
+1962
+1963
+1964
+1965
+1966
+1967
+1968
+1969
+1970
+1971
+     singular covariance
+    pars at singular: -1.38e-07  1.77e-07   3.2e-10  -8.14e-08      4.52         1 
+1972
+     singular covariance
+    pars at singular: 5.08e-06  1.73e-09  -4.76e-07  -4.81e-07      4.52         1 
+1973
+1974
+1975
+1976
+1977
+1978
+1979
+1980
+1981
+1982
+1983
+1984
+1985
+1986
+1987
+     singular covariance
+    pars at singular: 2.65e-09  -6.79e-07  -3.5e-08  6.08e-08      4.52         1 
+1988
+1989
+1990
+1991
+     singular covariance
+    pars at singular: 2.72e-10  -6.83e-07  1.49e-08  -4.2e-07      4.52         1 
+1992
+1993
+1994
+1995
+1996
+1997
+     singular covariance
+    pars at singular: 2.76e-07   9.6e-07  2.58e-10  1.04e-07      4.36         1 
+     singular covariance
+    pars at singular:  4.6e-06  -1.14e-06  1.12e-09  -4.43e-10      4.36         1 
+1998
+1999
+Connection to astro0027 closed.
+source ~/.bashrc
+
+/gpfs01/astro/workarea/lmezini/deblender_tests/new_galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run102/run102_5-output-000484.fits 2000 28343 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v2.yaml
+

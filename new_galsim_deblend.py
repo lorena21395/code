@@ -109,7 +109,7 @@ class Simulation(dict):
 
         if mode ==  'scarlet' or mode == 'control':
             im = im.reshape( (1, dims[0], dims[1]) )
-        return im,psf_im,coords,dims,mode
+        return im,psf_im,coords,dims
 
 class Model(Simulation):
     
@@ -217,12 +217,12 @@ def norm_test():
         cen_obj = C[:,:,0]
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
-            cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[0,int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1)]
+            cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[0,int(coord1[0]-(cen_shape[1]/2.)+1):int(coord1[0]+(cen_shape[1]/2.)+1),int(coord1[1]-(cen_shape[2]/2.)+1):int(coord1[1]+(cen_shape[2]/2.)+1)]
         else:
-            cen_obj = C[int(coord1[0]-(cen_shape[1]/2)+1):int(coord1[0]+(cen_shape[1]/2)+1),int(coord1[1]-(cen_shape[2]/2)+1):int(coord1[1]+(cen_shape[2]/2)+1),0]
+            cen_obj = C[int(coord1[0]-(cen_shape[1]/2.)+1):int(coord1[0]+(cen_shape[1]/2.)+1),int(coord1[1]-(cen_shape[2]/2.)+1):int(coord1[1]+(cen_shape[2]/2.)+1),0]
         zeros = np.where(W[:,:,0] == 0.0)
         W[:,:,0][zeros] += 0.000001
-        W=W[int(coord1[0]-(cen_obj.shape[0]/2)+1):int(coord1[0]+(cen_obj.shape[0]/2)+1),int(coord1[1]-(cen_obj.shape[1]/2)+1):int(coord1[1]+(cen_obj.shape[1]/2)+1),0]
+        W=W[int(coord1[0]-(cen_obj.shape[0]/2.)+1):int(coord1[0]+(cen_obj.shape[0]/2.)+1),int(coord1[1]-(cen_obj.shape[1]/2.)+1):int(coord1[1]+(cen_obj.shape[1]/2.)+1),0]
         """
         plt.figure(figsize=(8,4))
         plt.plot(1,2,2)
@@ -253,8 +253,13 @@ def norm_test():
                        new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
     elif mode == 'control':
         im,psf_im,coords,dims = Mod.__call__()
-        dobs = observation(cen_obj,Mod['Image']['Bgrms'],new_coords[1],
-                       new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
+        output['dims'][j] = np.array(dims)
+        dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][1],
+                       coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
+        #plt.imshow(im[0,:,:])
+        #plt.show()
+        #plt.savefig("test.png")
+    
     return dobs
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
@@ -318,7 +323,7 @@ for j in range(ntrial):
         output = do_metacal(psf_model,gal_model,max_pars,
                          psf_Tguess,prior,ntry,
                          metacal_pars,output,dobs)
-    except ():#np.linalg.linalg.LinAlgError,ValueError):
+    except (np.linalg.linalg.LinAlgError,ValueError):
         print("error")
         output['flags'][j] = 2
 

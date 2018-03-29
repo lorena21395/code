@@ -1,0 +1,8 @@
+
+command: |
+    source ~/.bashrc
+    
+    /gpfs01/astro/workarea/lmezini/deblender_tests/new_galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run102/run102_5-output-000407.fits 2000 17889 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v2.yaml
+
+job_name: "run102_5-000407"
+

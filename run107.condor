@@ -1,0 +1,310 @@
+Universe        = vanilla
+Notification    = Never
+# Run this exe with these args
+Executable      = /gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py
+Image_Size       =  1000000
+GetEnv = True
+kill_sig        = SIGINT
+#requirements = (cpu_experiment == "star") || (cpu_experiment == "phenix")
+requirements = (cpu_experiment == "phenix")
++Experiment     = "astro"
++job_name = "run107-000101"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000101.fits 2000 25834 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000102"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000102.fits 2000 1317 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000103"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000103.fits 2000 12386 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000104"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000104.fits 2000 11970 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000105"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000105.fits 2000 1713 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000106"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000106.fits 2000 3496 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000107"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000107.fits 2000 8334 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000108"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000108.fits 2000 18916 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000109"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000109.fits 2000 7101 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000110"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000110.fits 2000 470 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000111"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000111.fits 2000 28013 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000112"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000112.fits 2000 20347 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000113"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000113.fits 2000 10205 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000114"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000114.fits 2000 8025 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000115"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000115.fits 2000 6525 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000116"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000116.fits 2000 28482 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000117"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000117.fits 2000 15150 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000118"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000118.fits 2000 25409 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000119"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000119.fits 2000 11872 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000120"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000120.fits 2000 17116 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000121"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000121.fits 2000 11516 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000122"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000122.fits 2000 15199 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000123"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000123.fits 2000 16728 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000124"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000124.fits 2000 29345 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000125"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000125.fits 2000 19221 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000126"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000126.fits 2000 23789 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000127"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000127.fits 2000 8621 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000128"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000128.fits 2000 31879 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000129"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000129.fits 2000 25272 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000130"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000130.fits 2000 24757 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000131"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000131.fits 2000 21573 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000132"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000132.fits 2000 15066 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000133"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000133.fits 2000 11645 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000134"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000134.fits 2000 6374 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000135"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000135.fits 2000 14086 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000136"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000136.fits 2000 10050 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000137"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000137.fits 2000 2995 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000138"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000138.fits 2000 4797 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000139"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000139.fits 2000 994 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000140"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000140.fits 2000 3822 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000141"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000141.fits 2000 31019 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000142"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000142.fits 2000 30470 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000143"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000143.fits 2000 4609 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000144"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000144.fits 2000 19096 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000145"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000145.fits 2000 10431 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000146"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000146.fits 2000 23775 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000147"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000147.fits 2000 20880 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000148"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000148.fits 2000 11706 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000149"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000149.fits 2000 24598 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000150"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000150.fits 2000 25057 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000151"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000151.fits 2000 1244 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000152"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000152.fits 2000 11015 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000153"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000153.fits 2000 15966 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000154"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000154.fits 2000 16479 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000155"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000155.fits 2000 4137 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000156"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000156.fits 2000 9175 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000157"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000157.fits 2000 8760 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000158"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000158.fits 2000 29830 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000159"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000159.fits 2000 12042 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000160"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000160.fits 2000 8538 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000161"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000161.fits 2000 13911 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000162"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000162.fits 2000 1036 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000163"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000163.fits 2000 6469 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000164"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000164.fits 2000 5838 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000165"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000165.fits 2000 10780 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000166"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000166.fits 2000 4791 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000167"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000167.fits 2000 806 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000168"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000168.fits 2000 2420 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000169"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000169.fits 2000 3629 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000170"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000170.fits 2000 18779 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000171"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000171.fits 2000 1519 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000172"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000172.fits 2000 5493 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000173"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000173.fits 2000 2302 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000174"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000174.fits 2000 751 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000175"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000175.fits 2000 24006 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000176"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000176.fits 2000 24959 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000177"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000177.fits 2000 29002 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000178"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000178.fits 2000 26204 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000179"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000179.fits 2000 10713 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000180"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000180.fits 2000 4869 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000181"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000181.fits 2000 25696 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000182"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000182.fits 2000 28080 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000183"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000183.fits 2000 28584 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000184"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000184.fits 2000 15500 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000185"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000185.fits 2000 8174 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000186"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000186.fits 2000 31476 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000187"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000187.fits 2000 13084 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000188"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000188.fits 2000 25213 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000189"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000189.fits 2000 24264 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000190"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000190.fits 2000 7186 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000191"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000191.fits 2000 5747 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000192"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000192.fits 2000 27800 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000193"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000193.fits 2000 27513 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000194"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000194.fits 2000 31052 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000195"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000195.fits 2000 7325 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000196"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000196.fits 2000 828 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000197"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000197.fits 2000 22608 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000198"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000198.fits 2000 31346 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000199"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000199.fits 2000 2738 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
++job_name = "run107-000200"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run107/run107-output-000200.fits 2000 30556 /gpfs01/astro/workarea/lmezini/deblender_tests/config_v7.yaml
+Queue
