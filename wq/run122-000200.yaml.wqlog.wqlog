@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "<string>", line 1012, in <module>
+  File "<string>", line 973, in main
+  File "<string>", line 908, in get_command_obj
+  File "<string>", line 556, in __init__
+  File "<string>", line 587, in _process_args
+  File "<string>", line 636, in _process_job_file
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml", line 71, in load
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.constructor", line 37, in get_single_data
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.composer", line 36, in get_single_node
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.composer", line 55, in compose_document
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.composer", line 84, in compose_node
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.composer", line 127, in compose_mapping_node
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.parser", line 98, in check_event
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.parser", line 428, in parse_block_mapping_key
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.scanner", line 116, in check_token
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.scanner", line 220, in fetch_more_tokens
+  File "/direct/astro+u/tthrowe/Astro/wq_exe_140801/build/wq/out00-PYZ.pyz/yaml.scanner", line 580, in fetch_value
+yaml.scanner.ScannerError: mapping values are not allowed here
+  in "run122-000200.yaml.wqlog", line 1, column 38

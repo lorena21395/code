@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import yaml
-from minimof import minimof
-from scipy.misc import imsave
+#from minimof import minimof
+from scipy import signal
 import fitsio
 import galsim
 import argparse
@@ -11,7 +11,6 @@ import numpy as np
 import scarlet
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
-from matplotlib.patches import Ellipse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -118,10 +117,11 @@ class Simulation(dict):
 
         noise = self._get_noise(dims,bg_rms)
         im += noise
+        noise = self._get_noise(dims,bg_rms)
 
         if mode ==  'scarlet' or mode == 'control':
             im = im.reshape( (1, dims[0], dims[1]) )
-        return im,psf_im,coords,dims,dx1,dy1
+        return im,psf_im,coords,dims,dx1,dy1,noise
 
 class Model(Simulation):
     
@@ -129,7 +129,7 @@ class Model(Simulation):
         Simulation.__init__(self,Sim_specs)
     
     def _get_model(self):
-        im,psf_im,coords,dims,dx1,dy1 = Simulation.__call__(self)
+        im,psf_im,coords,dims,dx1,dy1,noise = Simulation.__call__(self)
         bg_rms = self['Image']['Bgrms']
         mode = self['Mode']
         if mode == 'scarlet':
@@ -142,14 +142,14 @@ class Model(Simulation):
             mod1 = blend.get_model(m=0)
             #mod2 = blend.get_model(m=1)
             cen_mod = sources[0].get_model()
-            output['mod_size_flag'][j] = 0
-            if np.shape(cen_mod) != (1,25,25):
-                output['mod_size_flag'][j] = 3
+            #output['mod_size_flag'][j] = 0
+            #if np.shape(cen_mod) != (1,25,25):
+            #    output['mod_size_flag'][j] = 3
 #neigh_mod = sources[1].get_model()
             #steps_used = blend.it
 
        # return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1
-        return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1
+        return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise
     
     def _rob_deblend(self,im,model,mod1,dims):
         C = np.zeros((dims[0],dims[1],1))#,2))
@@ -215,20 +215,13 @@ def norm_test():
     Mod = Model()
     mode = Mod._get_mode()
     if mode == 'scarlet':
-        im,psf_im,model,mod1,cen_mod,coords,dx1,dy1 = Mod._get_model()
+        im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = Mod._get_model()
         #im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1 = Mod._get_model()
         cen_shape = cen_mod.shape
         coord1 = coords[0]
         dims = [np.shape(im)[1],np.shape(im)[2]]
         C,W = Mod._rob_deblend(im,model,mod1,dims)
-        cen_obj = C[:,:,0]
-
-        """
-        print(cen_shape)
-        if cen_shape == (1,25,25):
-            print("25x25")
-        """
-
+        Cnoise,Wnoise = Mod._rob_deblend(noise,model,mod1,dims)        
         half1 = cen_shape[1]/2.
         half2 = cen_shape[2]/2.
 
@@ -242,39 +235,36 @@ def norm_test():
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
             weights = np.zeros((max(cen_shape),max(cen_shape)))
+            noise = np.zeros((max(cen_shape),max(cen_shape)))
+            
             cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
             weights[0:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
+            noise[0:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
+
         else:
             cen_obj = C[beg1:end1,beg2:end2,0]
             weights = W[beg1:end1,beg2:end2,0]
+            noise = Cnoise[beg1:end1,beg2:end2,0]
 
-        
-        """
-        plt.figure(figsize=(8,4))
-        plt.plot(1,2,2)
-        plt.subplot(121)
-        plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.colorbar();
-        plt.title("Deblended Center")
-        plt.subplot(122)
-        #plt.savefig("r_7.png")
-        """
-        
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
-        output['dims'][j] = np.array(dims)
+        noise_w_noise = Mod._readd_noise(noise,weights)
+
+        corr = signal.correlate2d(im[0,beg1:end1,beg2:end2],model[0,beg1:end1,beg2:end2])
+        #output['dims'][j] = np.array(dims)
     
-        """
-        plt.imshow(cen_obj_w_noise,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.title("Deblended Cen + Noise")
+        plt.imshow(corr,interpolation='nearest', cmap='gray',vmin = np.min(corr),vmax= np.max(corr/2000))
+        plt.title("True and Model Corr")
         plt.colorbar();
         plt.tight_layout()
         plt.savefig("test.png")
-        """
+        
         #coords of object in region
         new_coords = (dx1+(cen_obj.shape[0]-1.0)/2.0,dy1+(cen_obj.shape[1]-1.0)/2.0)
-        dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],new_coords[1],
-                       new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
-    
+        #dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],new_coords[1],
+        #               new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
+        
+        #dobs.noise = noise_w_noise
+
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1 = Mod.__call__()
         output['dims'][j] = np.array(dims)
@@ -282,7 +272,8 @@ def norm_test():
         dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     
-    return dobs#,cen_obj,cen_obj_w_noise
+    
+    return corr#dobs#,cen_obj,cen_obj_w_noise
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                          ntry,metacal_pars,output,dobs):
@@ -334,32 +325,41 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
+    'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()
-output = np.zeros(ntrial, dtype=dt)
+#output = np.zeros(ntrial, dtype=dt)
 
-#dt = [('std','f8',(25,25)),('noisy_std','f8',(25,25))]      
-#output = np.zeros(1, dtype=dt)
+dt = [('corr','f8',(29,29)),('corr_big','f8',(49,49))]      
+output = np.zeros(1, dtype=dt)
 
 
-#pix_vals = []
-#pix_vals_w_noise = []
+corr_vals = []
+corr_vals_big = []
 for j in range(ntrial):
     print(j)
     try:
-        dobs = norm_test()
-        #pix_vals.append(cen_obj)
+        corr = norm_test()
+        if np.shape(corr) == (29,29):
+            corr_vals.append(corr)
+        elif np.shape(corr) == (49,49):
+            corr_vals_big.append(corr)
         #pix_vals_w_noise.append(cen_obj_w_noise)
         #pix_vals_std = np.std(np.array(pix_vals,axis=0))
         #pix_vals_w_noise_std = np.std(np.array(pix_vals_w_noise,axis=0))
         #output['std'] = pix_vals_std
         #output['noisy_std'] = pix_vals_w_noise_std
-        out = do_metacal(psf_model,gal_model,max_pars,
-                         psf_Tguess,prior,ntry,
-                         metacal_pars,output,dobs)
+        #out = do_metacal(psf_model,gal_model,max_pars,
+        #                 psf_Tguess,prior,ntry,
+        #                 metacal_pars,output,dobs)
     except (np.linalg.linalg.LinAlgError,ValueError):
         print("error")
-        output['flags'][j] = 2
-
-fitsio.write(outfile_name, out, clobber=True)
+        #output['flags'][j] = 2
+if len(corr_vals) >= 1:
+    avg_corr = np.mean(np.array(corr_vals),axis=0)
+    output['corr'] = avg_corr
+if len(corr_vals_big) >= 1:
+    avg_corr_big = np.mean(np.array(corr_vals_big),axis=0) 
+    output['corr_big'] = avg_corr_big
+fitsio.write(outfile_name, output, clobber=True)
