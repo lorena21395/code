@@ -272,7 +272,7 @@ def norm_test():
         plt.savefig('test.png')
         print(new_coords)
         """
-        cen_obj_w_noise += noise[0:cen_shape[1],0:cen_shape[2]]
+        #cen_obj_w_noise += noise[0:cen_shape[1],0:cen_shape[2]]
         #noise_w_noise = Mod._readd_noise(mod_noise,weights)
         #tot_noise = noise_w_noise# + noise[0:cen_shape[1],0:cen_shape[2]]
         output['dims'][j] = np.array(dims)
