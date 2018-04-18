@@ -137,6 +137,7 @@ class Model(Simulation):
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
+            #scarlet.ExtendedSource.shift_center=0.0
             config = scarlet.Config(edge_flux_thresh=0.05)
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
             blend.fit(10000, e_rel=1e-3)
@@ -235,6 +236,7 @@ def norm_test():
         end2 = int(coord1[1]+half2+1)
 
 
+        print(cen_shape)
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
             weights = np.zeros((max(cen_shape),max(cen_shape)))
@@ -264,9 +266,15 @@ def norm_test():
         """
         
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
-        cen_obj_w_noise += noise[0:cen_shape[1],0:cen_shape[2]]
-        noise_w_noise = Mod._readd_noise(mod_noise,weights)
-        tot_noise = noise_w_noise + noise[0:cen_shape[1],0:cen_shape[2]]
+        """
+        plt.imshow(cen_obj_w_noise)
+        plt.colorbar()
+        plt.savefig('test.png')
+        print(new_coords)
+        """
+        #cen_obj_w_noise += noise[0:cen_shape[1],0:cen_shape[2]]
+        #noise_w_noise = Mod._readd_noise(mod_noise,weights)
+        #tot_noise = noise_w_noise# + noise[0:cen_shape[1],0:cen_shape[2]]
         output['dims'][j] = np.array(dims)
     
         """
@@ -280,10 +288,10 @@ def norm_test():
         #dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],new_coords[1],
         #               new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
         
-        dobs = observation(cen_obj_w_noise,np.sqrt(2)*Mod['Image']['Bgrms'],
+        dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],
                            new_coords[1],new_coords[0],
                            Mod['Psf']['Bgrms_psf'],psf_im)
-        dobs.noise = tot_noise
+        #dobs.noise = tot_noise
 
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = Mod.__call__()
@@ -345,7 +353,7 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    'use_noise_image': True,
+    #'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()
