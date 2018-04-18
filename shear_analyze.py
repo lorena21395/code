@@ -9,7 +9,7 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run121/run121*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run141/run141_4*.fits')
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00001*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00002*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
@@ -37,9 +37,9 @@ g_2m = data['pars_2m'][:, 2:2+2]
 dims = data['dims']
 #asym = np.where(dims[0]!=dims[1])
 #print(dims[asym])
-print(np.min(dims))
-print(np.mean(dims))
-print(np.max(dims))
+#print(np.min(dims))
+#print(np.mean(dims))
+#print(np.max(dims))
 g_mean = g.mean(axis=0)
 
 # this is used to calibrate the shear, I will explain this
@@ -58,8 +58,8 @@ shear_err = g_err.copy()
 shear_err[0] /= R11
 shear_err[1] /= R22
 
-frac = shear[0]/0.02-1#-0.01
-frac_err = shear_err[0]/0.02
+frac = shear[0]/0.1-1-0.01
+frac_err = shear_err[0]/0.1
 
 print("bias: %g +/- %g" % (frac, frac_err))
 print("additive: %g +/- %g" % (shear[1], shear_err[1]))
