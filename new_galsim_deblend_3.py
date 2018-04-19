@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #####
-# Single Object deblend, shift center = 0.0
+# Single Object deblend, add extra noise, use noise image for metacal
 
 import yaml
 from minimof import minimof
@@ -14,8 +14,8 @@ import ngmix
 import numpy as np
 import scarlet
 import matplotlib.pyplot as plt
-#plt.switch_backend('agg')
-#from matplotlib.patches import Ellipse
+plt.switch_backend('agg')
+from matplotlib.patches import Ellipse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -141,7 +141,7 @@ class Model(Simulation):
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
-            scarlet.ExtendedSource.shift_center=0.0
+            #scarlet.ExtendedSource.shift_center=0.0
             #config = scarlet.Config(edge_flux_thresh=0.05)
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
             blend.fit(10000, e_rel=1e-3)
@@ -274,9 +274,10 @@ def norm_test():
         plt.savefig('test.png')
         print(new_coords)
         """
-        #cen_obj_w_noise += noise[0:cen_shape[1],0:cen_shape[2]]
-        #noise_w_noise = Mod._readd_noise(mod_noise,weights)
-        #tot_noise = noise_w_noise# + noise[0:cen_shape[1],0:cen_shape[2]]
+        shape = np.shape(cen_obj_w_noise)
+        cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
+        noise_w_noise = Mod._readd_noise(mod_noise,weights)
+        tot_noise = noise_w_noise + noise[0:shape[0],0:shape[1]]
         output['dims'][j] = np.array(dims)
     
         """
@@ -290,10 +291,10 @@ def norm_test():
         #dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],new_coords[1],
         #               new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
         
-        dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],
+        dobs = observation(cen_obj_w_noise,np.sqrt(2)*Mod['Image']['Bgrms'],
                            new_coords[1],new_coords[0],
                            Mod['Psf']['Bgrms_psf'],psf_im)
-        #dobs.noise = tot_noise
+        dobs.noise = tot_noise
 
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = Mod.__call__()
@@ -355,7 +356,7 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    #'use_noise_image': True,
+    'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()

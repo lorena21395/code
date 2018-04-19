@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #####
-# Single Object deblend, shift center = 0.0
+# Single Object deblend
 
 import yaml
 from minimof import minimof
@@ -141,7 +141,7 @@ class Model(Simulation):
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
-            scarlet.ExtendedSource.shift_center=0.0
+            #scarlet.ExtendedSource.shift_center=0.0
             #config = scarlet.Config(edge_flux_thresh=0.05)
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
             blend.fit(10000, e_rel=1e-3)
