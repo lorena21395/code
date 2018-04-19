@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #####
-# Single Object deblend with config=0.05, use noise image for metacal
+#deblend with EFT = 0.05, only use symmetric models
 
 import yaml
 from minimof import minimof
@@ -14,8 +14,8 @@ import ngmix
 import numpy as np
 import scarlet
 import matplotlib.pyplot as plt
-plt.switch_backend('agg')
-from matplotlib.patches import Ellipse
+#plt.switch_backend('agg')
+#from matplotlib.patches import Ellipse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -88,7 +88,7 @@ class Simulation(dict):
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
         
         if mode == 'scarlet' or mode == 'minimof':
-            gals = [Cen]#, Neigh]
+            gals = [Cen, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             gals = [Cen]
@@ -118,7 +118,7 @@ class Simulation(dict):
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1]#,coord2]
+        coords = [coord1,coord2]
 
         noise = self._get_noise(dims,bg_rms)
         im += noise
@@ -147,29 +147,29 @@ class Model(Simulation):
             blend.fit(10000, e_rel=1e-3)
             model = blend.get_model()
             mod1 = blend.get_model(m=0)
-            #mod2 = blend.get_model(m=1)
+            mod2 = blend.get_model(m=1)
             cen_mod = sources[0].get_model()
             #output['mod_size_flag'][j] = 0
             #if np.shape(cen_mod) != (1,25,25):
             #    output['mod_size_flag'][j] = 3
-            #neigh_mod = sources[1].get_model()
+            neigh_mod = sources[1].get_model()
             #steps_used = blend.it
 
-        #return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
-        return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise
+        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
+        #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise
     
-    def _rob_deblend(self,im,model,mod1,dims):#mod2,dims):
-        C = np.zeros((dims[0],dims[1],1))#2))
-        W = np.zeros((dims[0],dims[1],1))#2))
+    def _rob_deblend(self,im,model,mod1,mod2,dims):
+        C = np.zeros((dims[0],dims[1],2))
+        W = np.zeros((dims[0],dims[1],2))
         I = im
-        w = np.array([model[0,:,:]])#,model[0,:,:]])
-        T = np.array([mod1[0,:,:]])#,mod2[0,:,:]])
+        w = np.array([model[0,:,:],model[0,:,:]])
+        T = np.array([mod1[0,:,:],mod2[0,:,:]])
         mod_sum = np.zeros(dims)
-        for r in range(1):
+        for r in range(2):
             mod_sum += w[r]*T[r] 
         zeros = np.where(mod_sum == 0.)
         mod_sum[zeros] += 0.000001
-        for r in range(1):
+        for r in range(2):
             W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
             C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
         return C,W
@@ -222,13 +222,13 @@ def norm_test():
     Mod = Model()
     mode = Mod._get_mode()
     if mode == 'scarlet':
-        im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = Mod._get_model()
-        #im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = Mod._get_model()
+        #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = Mod._get_model()
+        im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = Mod._get_model()
         cen_shape = cen_mod.shape
         coord1 = coords[0]
         dims = [np.shape(im)[1],np.shape(im)[2]]
-        C,W = Mod._rob_deblend(im,model,mod1,dims)#mod2,dims)
-        Cnoise,Wnoise = Mod._rob_deblend(noise,model,mod1,dims)#mod2,dims)
+        C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
+        Cnoise,Wnoise = Mod._rob_deblend(noise,model,mod1,mod2,dims)
 
         half1 = cen_shape[1]/2.
         half2 = cen_shape[2]/2.
@@ -238,7 +238,7 @@ def norm_test():
 
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
-
+        """
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
             weights = np.zeros((max(cen_shape),max(cen_shape)))
@@ -249,8 +249,8 @@ def norm_test():
             mod_noise[0:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
             shape = C[beg1:end1,beg2:end2,0].shape
             new_coords = (dx1+(shape[1]-1.0)/2.0,dy1+(shape[0]-1.0)/2.0)
-
-        else:
+        """
+        if cen_shape[1] == cen_shape[2]:
             cen_obj = C[beg1:end1,beg2:end2,0]
             weights = W[beg1:end1,beg2:end2,0]
             mod_noise = Cnoise[beg1:end1,beg2:end2,0]
@@ -275,8 +275,8 @@ def norm_test():
         print(new_coords)
         """
         #cen_obj_w_noise += noise[0:cen_shape[1],0:cen_shape[2]]
-        noise_w_noise = Mod._readd_noise(mod_noise,weights)
-        tot_noise = noise_w_noise# + noise[0:cen_shape[1],0:cen_shape[2]]
+        #noise_w_noise = Mod._readd_noise(mod_noise,weights)
+        #tot_noise = noise_w_noise# + noise[0:cen_shape[1],0:cen_shape[2]]
         output['dims'][j] = np.array(dims)
     
         """
@@ -293,7 +293,7 @@ def norm_test():
         dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],
                            new_coords[1],new_coords[0],
                            Mod['Psf']['Bgrms_psf'],psf_im)
-        dobs.noise = tot_noise
+        #dobs.noise = tot_noise
 
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = Mod.__call__()
@@ -355,28 +355,16 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    'use_noise_image': True,
+    #'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()
 output = np.zeros(ntrial, dtype=dt)
 
-#dt = [('std','f8',(25,25)),('noisy_std','f8',(25,25))]      
-#output = np.zeros(1, dtype=dt)
-
-
-#pix_vals = []
-#pix_vals_w_noise = []
 for j in range(ntrial):
     print(j)
     try:
         dobs = norm_test()
-        #pix_vals.append(cen_obj)
-        #pix_vals_w_noise.append(cen_obj_w_noise)
-        #pix_vals_std = np.std(np.array(pix_vals,axis=0))
-        #pix_vals_w_noise_std = np.std(np.array(pix_vals_w_noise,axis=0))
-        #output['std'] = pix_vals_std
-        #output['noisy_std'] = pix_vals_w_noise_std
         out = do_metacal(psf_model,gal_model,max_pars,
                          psf_Tguess,prior,ntry,
                          metacal_pars,output,dobs)

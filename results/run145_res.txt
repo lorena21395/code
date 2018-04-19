@@ -1,0 +1,16 @@
+config version = 1
+
+run145: Single deblended
+kept 200000/200000
+bias: 0.00406027 +/- 0.000810469
+additive: -0.000169752 +/- 7.8656e-05
+
+run145_2: Single deblended with shift_center=0.0
+kept 199600/199600
+bias: 0.00635251 +/- 0.000811591
+additive: 6.08971e-05 +/- 7.89135e-05
+
+run145_3: Single deblended with extra noise
+kept 200000/200000
+bias: 0.00205152 +/- 0.00137508
+additive: -0.000255673 +/- 0.000142653

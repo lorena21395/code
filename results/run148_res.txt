@@ -1,0 +1,36 @@
+Deblend with two exponential objects, added |0 sparsity constraint.
+
+run148_1: config v21
+kept 200000/200000
+bias: -0.0981212 +/- 0.00115576
+additive: -0.000140131 +/- 0.000119532
+
+run148_2: config v22
+kept 200000/200000
+bias: -0.00811703 +/- 0.00105386
+additive: -1.59021e-05 +/- 0.00010361
+
+run148_3: config v23
+kept 200000/200000
+bias: -0.00595669 +/- 0.000976345
+additive: 2.19766e-05 +/- 9.51765e-05
+
+run148_4: config v24
+kept 200000/200000
+bias: -0.0257535 +/- 0.000940587
+additive: 9.91596e-05 +/- 9.29288e-05
+
+run148_5: config v25
+kept 200000/200000
+bias: -0.0208248 +/- 0.000934544
+additive: 6.65923e-06 +/- 9.21327e-05
+
+run148_6: config v26
+kept 200000/200000
+bias: -0.00696838 +/- 0.000931826
+additive: -7.86704e-05 +/- 9.13432e-05
+
+run148_7: config v27
+kept 200000/200000
+bias: -0.00558925 +/- 0.000928647
+additive: -0.000127671 +/- 9.09485e-05

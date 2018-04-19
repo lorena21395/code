@@ -1,0 +1,38 @@
+Regular deblend with exponential objects instead of gauss and exp
+
+bgrms = 10, shear = 0.1
+
+run146_1: config v21
+kept 200000/200000
+bias: -0.0985608 +/- 0.00115685
+additive: -0.000243942 +/- 0.000119218
+
+run146_2: config v22
+kept 199800/199800
+bias: -0.00870379 +/- 0.00105166
+additive: -0.000100871 +/- 0.000104208
+
+run146_3: config v23
+kept 200000/200000
+bias: -0.00439757 +/- 0.000976681
+additive: -2.35257e-05 +/- 9.49601e-05
+
+run146_4: config v24
+kept 200000/200000
+bias: -0.0262299 +/- 0.000940484
+additive: -0.000145186 +/- 9.25275e-05
+
+run146_5: config v25
+kept 200000/200000
+bias: -0.0204152 +/- 0.000932757
+additive: 6.00399e-05 +/- 9.19079e-05
+
+run146_6: config v26
+kept 200000/200000
+bias: -0.00927668 +/- 0.000933138
+additive: -0.000117332 +/- 9.14259e-05
+
+run146_7: config v27
+kept 200000/200000
+bias: -0.00583736 +/- 0.000927936
+additive: 8.05151e-05 +/- 9.10006e-05

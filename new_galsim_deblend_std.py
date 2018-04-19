@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ####
-# Noise analysis with EFT=0.05, 25x25 dimensions added too
+# Noise analysis with |1 sparsity constraint.
 
 import yaml
 #from minimof import minimof
@@ -150,10 +150,11 @@ class Model(Simulation):
         mode = self['Mode']
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
+            constraints['l1'] = bg_rms
             sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
-            config = scarlet.Config(edge_flux_thresh=0.05)
+            #config = scarlet.Config(edge_flux_thresh=0.05)
             #scarlet.ExtendedSource.shift_center=0.0
-            blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
+            blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
             blend.fit(10000, e_rel=1e-3)
             model = blend.get_model()
             mod1 = blend.get_model(m=0)
@@ -236,7 +237,7 @@ def norm_test():
     if mode == 'scarlet':
         #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,img = Mod._get_model()
         im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord = Mod._get_model()
-        cen_shape = cen_mod.shape
+        cen_shape = (1,15,15)#cen_mod.shape
         coord1 = coords[0]
         dims = [np.shape(im)[1],np.shape(im)[2]]
         C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
@@ -370,8 +371,6 @@ dt = [('std','f8',(15,15)),('mean','f8',(15,15)),('std_2','f8',(25,25)),('mean_2
 output = np.zeros(1, dtype=dt)
 
 pix_vals = []
-pix_vals_2 = []
-pix_vals_3 = []
 for j in range(ntrial):
     print(j)
     try:
@@ -389,10 +388,6 @@ for j in range(ntrial):
         diff = sing_im[0,beg1:end1,beg2:end2]-cen_obj_w_noise
         if np.shape(diff) == (15,15):
             pix_vals.append(diff)
-        elif np.shape(diff) == (25,25):
-            pix_vals_2.append(diff)
-        elif np.shape(diff) == (15,25):
-            pix_vals_3.append(diff)
 
     except (np.linalg.linalg.LinAlgError,ValueError):
         print("error")
@@ -403,15 +398,5 @@ if len(pix_vals) != 0:
     pix_vals_mean = np.mean(np.array(pix_vals),axis=0)
     output['std'] = pix_vals_std
     output['mean'] = pix_vals_mean
-if len(pix_vals_2) != 0:
-    pix_vals_std_2 = np.std(np.array(pix_vals_2),axis=0)
-    pix_vals_mean_2 = np.mean(np.array(pix_vals_2),axis=0)
-    output['std_2'] = pix_vals_std_2
-    output['mean_2'] = pix_vals_mean_2
-if len(pix_vals_3) != 0:
-    pix_vals_std_3 = np.std(np.array(pix_vals_3),axis=0)
-    pix_vals_mean_3 = np.mean(np.array(pix_vals_3),axis=0)
-    output['std_3'] = pix_vals_std_3
-    output['mean_3'] = pix_vals_mean_3
 
 fitsio.write(outfile_name, output, clobber=True)
