@@ -14,3 +14,8 @@ run145_3: Single deblended with extra noise
 kept 200000/200000
 bias: 0.00205152 +/- 0.00137508
 additive: -0.000255673 +/- 0.000142653
+
+run145_4: Single deblended with noise image
+kept 200000/200000
+bias: 0.00350067 +/- 0.000809577
+additive: -5.66911e-05 +/- 7.8881e-05

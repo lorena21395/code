@@ -42,11 +42,11 @@ plt.savefig('test.png')
 plt.close()
 """
 plt.plot(corr_avg[14,:])
-#plt.ylim(-15,15)
+plt.ylim(-15,25)
 plt.tight_layout()
-plt.savefig('corr_cross_section.png')
+plt.savefig('corr_cross_section_close.png')
 
-
+plt.close()
 plt.imshow(corr_avg,interpolation='nearest', cmap='gray',vmin = np.min(corr_avg),vmax =np.max(corr_avg))#corr_big_avg))#,norm=asinh)
 plt.colorbar()
 plt.title("Averaged Noise Correlation")

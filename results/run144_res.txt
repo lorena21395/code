@@ -1,0 +1,22 @@
+config version = 1
+
+Deblended single object with edge flux thresh = 0.05
+
+kept 200000/200000
+bias: 0.00680094 +/- 0.000809905
+additive: -8.65841e-05 +/- 7.87537e-05
+
+run144_2: gave noise image to metacal
+kept 199999/200000
+bias: 0.00570736 +/- 0.000810386
+additive: -0.00011841 +/- 7.86819e-05
+
+run144_3: added extra noise and used noise image for metacal
+kept 400000/400000
+bias: 0.00597899 +/- 0.00104788
+additive: 0.00047347 +/- 9.89699e-05
+
+run144_4: deblend sing object with EFT = 0.05, shift_center = 0.0
+kept 200000/200000
+bias: 0.00714985 +/- 0.000808804
+additive: 1.06548e-05 +/- 7.86764e-05
