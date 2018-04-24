@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #####
-#regular deblend, uses noise image
+#regular deblend,noise img, no noise img
 
 import yaml
 from minimof import minimof
@@ -254,6 +254,15 @@ def norm_test():
         #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = Mod._get_scar_model()
         im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = Mod._get_scar_model()
         cen_shape = cen_mod.shape
+        im_shape = np.shape(im)
+
+        #check if model dimensions are ever larger than image dims
+        #if larger, trim the dimensions
+        if cen_shape[1] > im_shape[1]:
+            cen_shape = (1,im_shape[1],cen_shape[2])
+        if cen_shape[2] > im_shape[2]:
+            cen_shape = (1,cen_shape[1],im_shape[2])
+
         coord1 = coords[0]
         dims = [np.shape(im)[1],np.shape(im)[2]]
         C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
@@ -267,6 +276,7 @@ def norm_test():
 
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
+
 
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
@@ -285,15 +295,17 @@ def norm_test():
             mod_noise = Cnoise[beg1:end1,beg2:end2,0]
             new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
 
+
         """
         plt.figure(figsize=(8,4))
         plt.plot(1,2,2)
         plt.subplot(121)
+        
         plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
         plt.colorbar();
-        plt.title("Deblended Center")
-        plt.subplot(122)
-        #plt.savefig("r_7.png")
+        #plt.title("Deblended Center")
+        #plt.subplot(122)
+        plt.savefig("test.png")
         """
         
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
@@ -389,7 +401,7 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    'use_noise_image': True,
+    #'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()
@@ -402,6 +414,7 @@ for j in range(ntrial):
         out = do_metacal(psf_model,gal_model,max_pars,
                          psf_Tguess,prior,ntry,
                          metacal_pars,output,dobs)
+
     except (np.linalg.linalg.LinAlgError,ValueError,ngmix.gexceptions.BootGalFailure):
         print("error")
         output['flags'][j] = 2
