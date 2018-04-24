@@ -1,0 +1,4 @@
+Average std noise anaylis for one object deblend
+
+run150_1: used config v1
+run150_2: used config v1, added |0 sparsity constrain since model seemed to overestimate edge values

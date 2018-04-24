@@ -1,0 +1,3 @@
+Noise correlation measure. Deblended two objects. Created second noise image and ran it through second step of deblending and added back noise, measure correlation with itself.
+
+run150_2: used config v2

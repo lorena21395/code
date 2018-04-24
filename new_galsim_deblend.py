@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 #####
-#regular deblend, both objects are Exponential,constraints['l0'] = bg_rms
+#regular deblend, uses noise image
 
 import yaml
 from minimof import minimof
-from scipy.misc import imsave
 import fitsio
 import galsim
 import argparse
@@ -14,7 +13,7 @@ import ngmix
 import numpy as np
 import scarlet
 import matplotlib.pyplot as plt
-#plt.switch_backend('agg')
+plt.switch_backend('agg')
 #from matplotlib.patches import Ellipse
 
 parser = argparse.ArgumentParser()
@@ -58,7 +57,7 @@ class Simulation(dict):
 
     def _get_gals(self):
         mode = self['Mode']
-        Cen = galsim.Exponential(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
+        Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
         Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
 
         #cen position
@@ -134,31 +133,60 @@ class Model(Simulation):
     def __init__(self):
         Simulation.__init__(self,Sim_specs)
     
-    def _get_model(self):
+    def _get_scar_model(self):
         im,psf_im,coords,dims,dx1,dy1,noise = Simulation.__call__(self)
         bg_rms = self['Image']['Bgrms']
         mode = self['Mode']
-        if mode == 'scarlet':
-            constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
-            constraints['l0'] = bg_rms
-            sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
-            #scarlet.ExtendedSource.shift_center=0.0
-            #config = scarlet.Config(edge_flux_thresh=0.05)
-            blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
-            blend.fit(10000, e_rel=1e-3)
-            model = blend.get_model()
-            mod1 = blend.get_model(m=0)
-            mod2 = blend.get_model(m=1)
-            cen_mod = sources[0].get_model()
-            #output['mod_size_flag'][j] = 0
-            #if np.shape(cen_mod) != (1,25,25):
-            #    output['mod_size_flag'][j] = 3
-            neigh_mod = sources[1].get_model()
-            #steps_used = blend.it
-
+        constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
+        #constraints['l0'] = bg_rms
+        sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
+        #scarlet.ExtendedSource.shift_center=0.0
+        #config = scarlet.Config(edge_flux_thresh=0.05)
+        blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
+        blend.fit(10000, e_rel=1e-3)
+        model = blend.get_model()
+        mod1 = blend.get_model(m=0)
+        mod2 = blend.get_model(m=1)
+        cen_mod = sources[0].get_model()
+        #output['mod_size_flag'][j] = 0
+        #if np.shape(cen_mod) != (1,25,25):
+        #output['mod_size_flag'][j] = 3
+        neigh_mod = sources[1].get_model()
+        #steps_used = blend.it
+        
         return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
-        #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise
-    
+        #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
+
+    def _get_mini_model(self):
+        im,psf_im,coords,dims,dx1,dy1,noise = Simulation.__call__(self)
+        bg_rms = self['Image']['Bgrms']
+        mode = self['Mode']
+        allobs = []
+        bg_rms_psf = self['Psf']['Bgrms_psf']
+        allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
+        config = allconf['mof']
+        config['psf_pars'] = {'model':'gauss','ntry':2}
+        for coord in coords:
+            row,col = coord
+            obs = observation(im,bg_rms,row,col,bg_rms_psf,psf_im)
+            this_jacob = obs.jacobian.copy()
+            this_jacob.set_cen(row=row, col=col)
+            this_obs = ngmix.Observation(
+                obs.image.copy(),
+                weight=obs.weight.copy(),
+                jacobian=this_jacob,
+                psf=obs.psf,
+                )
+            allobs.append(this_obs)
+        mm = minimof.MiniMOF(config, allobs, rng = rng)
+        mm.go()
+        res=mm.get_result()
+        if not res['converged']:
+            output['flags'][j] = 2
+        else:
+            obs = mm.get_corrected_obs(0)
+        
+        return obs,noise
     def _rob_deblend(self,im,model,mod1,mod2,dims):
         C = np.zeros((dims[0],dims[1],2))
         W = np.zeros((dims[0],dims[1],2))
@@ -223,8 +251,8 @@ def norm_test():
     Mod = Model()
     mode = Mod._get_mode()
     if mode == 'scarlet':
-        #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = Mod._get_model()
-        im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = Mod._get_model()
+        #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = Mod._get_scar_model()
+        im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = Mod._get_scar_model()
         cen_shape = cen_mod.shape
         coord1 = coords[0]
         dims = [np.shape(im)[1],np.shape(im)[2]]
@@ -296,6 +324,10 @@ def norm_test():
                            new_coords[1],new_coords[0],
                            Mod['Psf']['Bgrms_psf'],psf_im)
         dobs.noise = tot_noise
+    
+    elif mode == 'minimof':
+        dobs,noise = Mod._get_mini_model()
+        #dobs.noise = noise
 
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = Mod.__call__()

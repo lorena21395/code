@@ -6,7 +6,7 @@ import esutil as eu
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run151/run151_2*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run148/run148_1*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/code/test.fits')
 # read each file and combine into one big array
@@ -23,19 +23,19 @@ print("avg means: ",mean_avg)
 
 plt.imshow(std_avg,interpolation='nearest', cmap='gray',vmin = np.min(std_avg),vmax =np.max(std_avg)) 
 plt.colorbar()
-plt.title("Sing Object True-Mod STD W/ |0")
-plt.savefig("sing_true-mod_std_wl0.png")
+plt.title("Sing Object True-Mod STD r=19")
+plt.savefig("sing_true-mod_std_r19.png")
 plt.close()
 
 plt.imshow(mean_avg,interpolation='nearest', cmap='gray',vmin = np.min(mean_avg),vmax=np.max(mean_avg))
 plt.colorbar()
-plt.title("sing Object True-Mod Mean W/ |0")
-plt.savefig("sing_true-mod_mean_wl0.png")
+plt.title("sing Object True-Mod Mean r=19")
+plt.savefig("sing_true-mod_mean_r19.png")
 plt.close()
 
 plt.hist((std_avg.flatten()),100,histtype='step')
-plt.title("Sing Object True-Mod Stds W/ |0")
-plt.savefig("sing_true-mod_hist_wl0.png")
+plt.title("Sing Object True-Mod Stds r=19")
+plt.savefig("sing_true-mod_hist_r19.png")
 plt.close()
 
 mean_of_stds = std_avg.mean()
