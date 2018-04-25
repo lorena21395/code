@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #####
-#regular deblend,noise img, no noise img
+#regular deblend, individually shear each galaxy first, no noise img
 
 import yaml
 from minimof import minimof
@@ -59,6 +59,9 @@ class Simulation(dict):
         mode = self['Mode']
         Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
         Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
+
+        Cen = Cen.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
+        Neigh = Neigh.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
 
         #cen position
         if self['Cen']['Pos'] == 'Fixed':

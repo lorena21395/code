@@ -10,8 +10,8 @@ print('kill_sig        = SIGINT')
 #print('requirements = (cpu_experiment == "phenix")')
 print('+Experiment     = "astro"')
 
-for i in range(1,1001):
+for i in range(1,3001):
     seed = np.random.randint(0, 2**15)
-    print('+job_name = "run153-'+str(i).zfill(6)+'"')
-    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run153/run153_1-output-'+str(i).zfill(6)+'.fits 200 '+str(seed)+' /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config_v35.yaml')
+    print('+job_name = "run154-'+str(i).zfill(6)+'"')
+    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run154/run154_1-output-'+str(i).zfill(6)+'.fits 200 '+str(seed)+' /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config_v49.yaml')
     print('Queue')
