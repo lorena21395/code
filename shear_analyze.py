@@ -9,8 +9,8 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run153/run153_16-*.fits')
-#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00001*.fits'))
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run156/run156_14-*.fits')
+#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run155/run155_1*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00002*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run06*/run*.fits'))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #####
-#regular deblend, individually shear each galaxy first, no noise img
+#regular deblend, individually shear each galaxy first, don't readd noise,eft=0.05
 
 import yaml
 from minimof import minimof
@@ -144,8 +144,8 @@ class Model(Simulation):
         #constraints['l0'] = bg_rms
         sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
         #scarlet.ExtendedSource.shift_center=0.0
-        #config = scarlet.Config(edge_flux_thresh=0.05)
-        blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
+        config = scarlet.Config(edge_flux_thresh=0.05)
+        blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
         blend.fit(10000, e_rel=1e-3)
         model = blend.get_model()
         mod1 = blend.get_model(m=0)
@@ -311,7 +311,7 @@ def norm_test():
         plt.savefig("test.png")
         """
         
-        cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
+        cen_obj_w_noise = cen_obj #Mod._readd_noise(cen_obj,weights)
         """
         plt.imshow(cen_obj_w_noise)
         plt.colorbar()
@@ -320,8 +320,8 @@ def norm_test():
         """
         shape = np.shape(cen_obj_w_noise)
         #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
-        noise_w_noise = Mod._readd_noise(mod_noise,weights)
-        tot_noise = noise_w_noise# + noise[0:shape[0],0:shape[1]]
+        #noise_w_noise = Mod._readd_noise(mod_noise,weights)
+        tot_noise = noise[0:shape[0],0:shape[1]]
         output['dims'][j] = np.array(dims)
     
         """
@@ -404,7 +404,7 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    #'use_noise_image': True,
+    'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()

@@ -1,0 +1,110 @@
+Bias v radius using minimof,scarlet, and scarlet with EFT=0.05.
+Used bgrms = 0.1
+Added small extra ellipticity to galaxies
+
+minimof:
+run155_1: config v 51
+kept 3000000/3000000
+bias: 0.0124162 +/- 0.00879894
+additive: -4.47052e-05 +/- 0.000175277
+
+run155_2: config v 50
+kept 600000/600000
+bias: 0.000734902 +/- 0.00187754
+additive: 2.24786e-05 +/- 4.24433e-05
+
+run155_3: config v 52
+kept 600000/600000
+bias: 0.00168429 +/- 0.00130606
+additive: -3.20756e-05 +/- 2.62614e-05
+
+run155_4: config v 53
+kept 600000/600000
+bias: 0.000579046 +/- 0.00130084
+additive: -8.0668e-06 +/- 2.59711e-05
+
+run155_5: config v 54
+kept 600000/600000
+bias: 0.000622958 +/- 0.00129568
+additive: 5.0414e-05 +/- 2.58188e-05
+
+run155_6: config v 55
+kept 600000/600000
+bias: -0.0006141 +/- 0.00129241
+additive: -1.99773e-05 +/- 2.5825e-05
+
+run155_7: config v 56
+kept 600000/600000
+bias: -0.0015698 +/- 0.00129223
+additive: -2.81715e-05 +/- 2.5858e-05
+
+scarlet:
+run155_8: config v 57
+kept 600000/600000
+bias: 0.0027255 +/- 0.00136442
+additive: 8.13403e-06 +/- 2.71787e-05
+
+run155_9: config v 58
+kept 599800/599800
+bias: 0.00696045 +/- 0.00131622
+additive: 2.0491e-05 +/- 2.64952e-05
+
+run155_10: config v 59
+kept 600000/600000
+bias: -0.00701927 +/- 0.0013015
+additive: 3.07892e-05 +/- 2.62242e-05
+
+run155_11: config v 60
+kept 599800/599800
+bias: -0.0119736 +/- 0.00129649
+additive: -7.66355e-05 +/- 2.61045e-05
+
+run155_12: config v 61
+kept 600000/600000
+bias: -0.00758878 +/- 0.00129651
+additive: 2.21387e-05 +/- 2.59442e-05
+
+run155_13: config v 62
+kept 600000/600000
+bias: -0.00711046 +/- 0.00129442
+additive: 3.31636e-07 +/- 2.58964e-05
+
+run155_14: config v 63
+kept 599800/599800
+bias: -0.00307 +/- 0.00129586
+additive: 2.39608e-05 +/- 2.57887e-05
+
+run155_15: config v 57
+kept 600000/600000
+bias: -0.0204691 +/- 0.00141067
+additive: -4.66814e-05 +/- 2.83007e-05
+
+run155_16: config v 58
+kept 600000/600000
+bias: -0.0265281 +/- 0.00132056
+additive: -3.41144e-05 +/- 2.67314e-05
+
+run155_17: config v 59
+kept 600000/600000
+bias: -0.0236849 +/- 0.00130825
+additive: -5.48707e-05 +/- 2.61733e-05
+
+run155_18: config v 60
+kept 600000/600000
+bias: -0.0156729 +/- 0.00129899
+additive: 2.42171e-07 +/- 2.6117e-05
+
+run155_19: config v 61
+kept 600000/600000
+bias: -0.0135327 +/- 0.00129403
+additive: 2.2062e-05 +/- 2.60214e-05
+
+run155_20: config v 62
+kept 600000/600000
+bias: -0.0110527 +/- 0.00129247
+additive: -2.08754e-05 +/- 2.58491e-05
+
+run155_21: config v 63
+kept 600000/600000
+bias: -0.00689438 +/- 0.0012936
+additive: -4.43889e-05 +/- 2.58273e-05

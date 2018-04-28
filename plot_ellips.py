@@ -11,7 +11,7 @@ plt.switch_backend('agg')
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern                          
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run153/run153_16-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run154/run154_2-*.fits')
 
 data = eu.io.read(flist)
 #data = fitsio.read(args.filename)                                              
@@ -29,7 +29,7 @@ e2 = data['pars'][:,3]
 plt.hist(e1,50,histtype='step',label = 'pars 2')
 plt.hist(e2,50,histtype='step',label = 'pars 3')
 plt.legend()
-plt.title("Ellipticities for minimof r=9")
+plt.title("Ellipticities for minimof r=9 (N=0.1)")
 plt.xlabel("Ellipticity")
 
-plt.savefig("ellipticities_mini_r9.png")
+plt.savefig("ellipticities_mini_r9_n01.png")

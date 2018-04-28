@@ -5,7 +5,7 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 majorLocator = MultipleLocator(0.01)
 majorFormatter = FormatStrFormatter('%s')
-minorLocator = MultipleLocator(0.005)
+minorLocator = MultipleLocator(0.0025)
 
 
 r = [7,9,11,13,15,17,19]
@@ -32,15 +32,25 @@ r = [7,9,11,13,15,17,19]
 
 
 ### low noise results
-bias = [-0.0196882,-0.00473535,-0.00195364,-0.00180363,-0.00582074,-0.00701391,-0.00510679]
-err = [0.000787389,0.000408626,0.000296113,0.000142127,0.000164697,0.000189147,0.000236306]
+#bias = [-0.0196882,-0.00473535,-0.00195364,-0.00180363,-0.00582074,-0.00701391,-0.00510679]
+#err = [0.000787389,0.000408626,0.000296113,0.000142127,0.000164697,0.000189147,0.000236306]
 
-bias_thresh005 = [-0.0486585,-0.0383526,-0.0123844,-0.00813976,-0.00756243,-0.00738492,-0.0054329]
-err_thresh005 = [0.000892989,0.000433803,0.000232912,0.000246704,0.000267562,0.000163117,0.000192444]
+#bias_thresh005 = [-0.0486585,-0.0383526,-0.0123844,-0.00813976,-0.00756243,-0.00738492,-0.0054329]
+#err_thresh005 = [0.000892989,0.000433803,0.000232912,0.000246704,0.000267562,0.000163117,0.000192444]
 
-bias_mini = [0.0157917,-0.602205,0.00166221,0.00054305,0.0114081,-0.000130317,0.000355017]
-err_mini = [0.0344728,0.0197704,0.000297506,0.00032547,0.00260028,0.000166784,9.60466e-05]
+#bias_mini = [0.0157917,-0.602205,0.00166221,0.00054305,0.0114081,-0.000130317,0.000355017]
+#err_mini = [0.0344728,0.0197704,0.000297506,0.00032547,0.00260028,0.000166784,9.60466e-05]
 
+##bgrms = 0.1 Results
+
+bias = [0.0124162,0.00696045,-0.00701927,-0.0119736,-0.00758878,-0.00711046,-0.00307]
+err = [0.00879894,0.00131622,0.0013015,0.00129649,0.00129442,0.00129586,0.00141067]
+
+bias_thresh005 = [-0.0204691,-0.0265281,-0.0236849,-0.0156729,-0.0135327,-0.0110527,-0.00689438]
+err_thresh005 = [0.00141067,0.00132056,0.00130825,0.00129899,0.00129403,0.00129247,0.0012936]
+
+bias_mini = [0.015217,0.000734902,0.00168429,0.000579046,0.000622958,-0.0006141,-0.0015698]
+err_mini = [0.0107746,0.00187754,0.00130606,0.00130084,0.00129568,0.00129241,0.00129223]
 
 fig,ax = plt.subplots()
 
@@ -50,7 +60,7 @@ plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
 plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias vs Radius (low noise)")
+plt.title("Bias vs Radius (n=0.1)")
 #plt.yticks(np.arange(min(bias), max(bias)+0.01, .005))
 plt.grid(which='minor')
 plt.grid(which='major')
@@ -59,6 +69,6 @@ ax.yaxis.set_major_formatter(majorFormatter)
 plt.legend()
 # for the minor ticks, use no labels; default NullFormatter
 ax.yaxis.set_minor_locator(minorLocator)
-plt.ylim(-0.075,0.075)
+#plt.ylim(-0.075,0.075)
 plt.show()
-plt.savefig("bias_v_rad_mm_scar_ln.png")
+plt.savefig("bias_v_rad_mm_scar_n1e-1.png")
