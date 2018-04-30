@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ####
-# Noise analysis with two exponential objects and |1 sparsity constraint.
+# Noise analysis with |1 sparsity constraint.
 
 import yaml
 #from minimof import minimof
@@ -56,7 +56,7 @@ class Simulation(dict):
 
     def _get_gals(self,mode,dx,dy):
         #mode = self['Mode']
-        Cen = galsim.Exponential(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
+        Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
         Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
 
         #cen position
