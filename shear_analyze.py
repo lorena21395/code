@@ -9,7 +9,7 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run156/run156_14-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_7-*.fits')
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run155/run155_1*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00002*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
@@ -59,8 +59,8 @@ shear_err = g_err.copy()
 shear_err[0] /= R11
 shear_err[1] /= R22
 
-frac = shear[0]/0.02-1#-0.01
-frac_err = shear_err[0]/0.02
+frac = shear[0]/0.1-1-0.01
+frac_err = shear_err[0]/0.1
 
 print("bias: %g +/- %g" % (frac, frac_err))
 print("additive: %g +/- %g" % (shear[1], shear_err[1]))
