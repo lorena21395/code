@@ -9,7 +9,7 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_7-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_15-*.fits')
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run155/run155_1*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00002*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
@@ -18,7 +18,7 @@ flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_7-*.fit
 #flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run029/run029*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test.fits')
 # read each file and combine into one big array
-data = eu.io.read(flist)
+data = eu.io.read(flist[0:1000])
 #data = fitsio.read(args.filename)
 
 w, = np.where(data['flags']==0)
@@ -35,7 +35,7 @@ g_2m = data['pars_2m'][:, 2:2+2]
 e1 = data['pars'][:,2]
 e2 = data['pars'][:,3]
 
-dims = data['dims']
+#dims = data['dims']
 #asym = np.where(dims[0]!=dims[1])
 #print(dims[asym])
 #print(np.min(dims))

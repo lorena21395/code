@@ -3,18 +3,18 @@ import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
-majorLocator = MultipleLocator(0.1)
+majorLocator = MultipleLocator(0.025)
 majorFormatter = FormatStrFormatter('%s')
-minorLocator = MultipleLocator(0.025)
+minorLocator = MultipleLocator(0.005)
 
 
 r = [7,9,11,13,15,17,19]
 
-#bias = [-0.0812011,0.00226535,0.0023871,-0.0123014,-0.00806869,0.00111734,0.004131]
-#err = [0.00063597,0.000587096,0.000554516,0.000540192,0.000538317,0.000536182,0.000535371]
+bias = [-0.0812011,0.00226535,0.0023871,-0.0123014,-0.00806869,0.00111734,0.004131]
+err = [0.00063597,0.000587096,0.000554516,0.000540192,0.000538317,0.000536182,0.000535371]
 
-#bias_thresh005 = [-0.0640488,-0.0607346,-0.0263503,-0.00830626,0.00142396,0.006777,0.00594998]
-#err_thresh005 = [0.000683949,0.000593845,0.000558472,0.000543158,0.000538711,0.000536819,0.000535745]
+bias_thresh005 = [-0.0640488,-0.0607346,-0.0263503,-0.00830626,0.00142396,0.006777,0.00594998]
+err_thresh005 = [0.000683949,0.000593845,0.000558472,0.000543158,0.000538711,0.000536819,0.000535745]
 
 bias_mini = [0.019005,-0.00361754,-0.00383634,-0.00105035,0.000678016,0.00128536,-0.00101486]
 err_mini = [0.00273789,0.00103818,0.000826182,0.00080896,0.00028416,0.000804708,0.000566695]
@@ -58,21 +58,28 @@ err_mini = [0.00273789,0.00103818,0.000826182,0.00080896,0.00028416,0.000804708,
 #err_thresh0052 = [0.00140998,0.00132141,0.00130829,0.00129973,0.00129998,0.00129502,0.00129432]
 
 ##no second step, bgrms =10
-bias = [-0.198448,0.3075,0.256529,0.064536,0.0286707,0.0960161,0.0414348]
-err = [0.00196558,0.00280918,0.00237365,0.00180178,0.0015737,0.00122952,0.000689568]
+#bias = [-0.198448,0.3075,0.256529,0.064536,0.0286707,0.0960161,0.0414348]
+#err = [0.00196558,0.00280918,0.00237365,0.00180178,0.0015737,0.00122952,0.000689568]
 
-bias_thresh005 = [0.0187861,0.0445087,-0.0345543,0.00924453,-0.00162122,-0.0290263,0.0227536]
-err_thresh005 = [0.00173017,0.0017998,0.001966,0.0016946,0.00177524,0.00158451,0.00123914]
+#bias_thresh005 = [0.0187861,0.0445087,-0.0345543,0.00924453,-0.00162122,-0.0290263,0.0227536]
+#err_thresh005 = [0.00173017,0.0017998,0.001966,0.0016946,0.00177524,0.00158451,0.00123914]
+
+#use old code
+bias2 = [-0.0456805,0.0932809,0.0220271,-0.00466206,-0.00913659,0.0023212,-0.00034029]
+err2 = [0.0051878,0.00507743,0.00489331,0.00462416,0.0040779,0.00421858,0.00396608]
+
+bias_thresh0052 = [-0.0733619,-0.0694567,-0.0563895,-0.0243661,-0.00124443,0.00191828,-0.00440019]
+err_thresh0052 = [0.00467769,0.00443167,0.00452556,0.00415059,0.00421953,0.00468915,0.0041015]
 
 
 fig,ax = plt.subplots()
 
 plt.axhline(y=0,color='black',linewidth=2)
 plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet",color='r')
-#plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet",linestyle = ":",color='r')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet",linestyle = ":",color='r')
 plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
 plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
-#plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
+plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
 plt.title("Bias vs Radius (N=10)")
@@ -86,4 +93,4 @@ plt.legend()
 ax.yaxis.set_minor_locator(minorLocator)
 #plt.ylim(-0.075,0.075)
 plt.show()
-plt.savefig("bias_v_rad_mm_scar_n10_nostep2.png")
+plt.savefig("bias_v_rad_mm_scar_n10_nostep2_v2.png")
