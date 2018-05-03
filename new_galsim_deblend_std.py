@@ -159,11 +159,6 @@ class Model(Simulation):
             mod1 = blend.get_model(m=0)
             mod2 = blend.get_model(m=1)
             cen_mod = sources[0].get_model()
-            #mod_size_flag = 0
-            #if np.shape(cen_mod) != (1,25,25):
-            #    mod_size_flag = 3
-#print("not 25x25")
-                #output['mod_size_flag'][j] = 3
             neigh_mod = sources[1].get_model()
             #steps_used = blend.it
 
@@ -243,16 +238,6 @@ def norm_test():
         #cen_obj = C[:,:,0]
         #neigh_obj = C[:,:,1]
 
-        """
-        print(cen_shape)
-        if cen_shape == (1,25,25):
-            print("25x25")
-            plt.imshow(C[:,:,0],interpolation='nearest', cmap='gray',vmin = np.min(C[:,:,0]),vmax= np.max(C[:,:,0]))
-            plt.colorbar();
-            plt.show()
-            plt.savefig("test.png")
-        """
-
         half1 = cen_shape[1]/2.
         half2 = cen_shape[2]/2.
 
@@ -262,46 +247,11 @@ def norm_test():
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
 
-        #if cen_shape[1] != cen_shape[2]:
-        #    cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
-        #    weights = np.zeros((max(cen_shape),max(cen_shape)))
-        #cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
-        #weights[0:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
-        #else:
         cen_obj = C[beg1:end1,beg2:end2,0]
         weights = W[beg1:end1,beg2:end2,0]
 
-        """
-        plt.figure(figsize=(8,4))
-        plt.plot(1,2,2)
-        plt.subplot(121)
-        plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.colorbar();
-        plt.title("Deblended Center")
-        plt.subplot(122)
-        #plt.savefig("r_7.png")
-        """
-
-        """
-        plt.imshow(cen_obj)
-        plt.savefig('test2.png')
-        """
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
-        
-        #output['dims'][j] = np.array(dims)
-    
-        """
-        plt.imshow(cen_obj_w_noise,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.title("Deblended Cen + Noise")
-        plt.colorbar();
-        plt.tight_layout()
-        plt.savefig("test.png")
-        """
-        #coords of object in region
-        #new_coords = (dx1+(cen_obj.shape[0]-1.0)/2.0,dy1+(cen_obj.shape[1]-1.0)/2.0)
-        #dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],new_coords[1],
-        #              new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
-    
+
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1 = Mod.__call__()
         output['dims'][j] = np.array(dims)
@@ -366,7 +316,7 @@ metacal_pars = {
 prior = get_prior()
 #output = np.zeros(ntrial, dtype=dt)
 
-dt = [('std','f8',(15,15)),('mean','f8',(15,15)),('std_2','f8',(25,25)),('mean_2','f8',(25,25)),('std_3','f8',(15,25)),('mean_3','f8',(15,25))]
+dt = [('std','f8',(15,15)),('mean','f8',(15,15))]
 output = np.zeros(1, dtype=dt)
 
 pix_vals = []
