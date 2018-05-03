@@ -2,7 +2,7 @@ import numpy as np
 print('Universe        = vanilla')
 print('Notification    = Never')
 print('# Run this exe with these args')
-print('Executable      = /gpfs01/astro/workarea/lmezini/deblender_tests/new_galsim_deblend_2.py')
+print('Executable      = /gpfs01/astro/workarea/lmezini/deblender_tests/new_galsim_deblend.py')
 print('Image_Size       =  1000000')
 print('GetEnv = True')
 print('kill_sig        = SIGINT')
@@ -12,6 +12,6 @@ print('+Experiment     = "astro"')
 
 for i in range(1,1001):
     seed = np.random.randint(0, 2**15)
-    print('+job_name = "run160-'+str(i).zfill(6)+'"')
-    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_15-output-'+str(i).zfill(6)+'.fits 200 '+str(seed)+' /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config_v64.yaml')
+    print('+job_name = "run163-'+str(i).zfill(6)+'"')
+    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run163/run163_14-output-'+str(i).zfill(6)+'.fits 200 '+str(seed)+' /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config_v56.yaml')
     print('Queue')

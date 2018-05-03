@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-
 #####
-#regular deblend, individually shear each galaxy first
+#minideblend,individually shear each galaxy first
+#use sersic galaxies
 
 import yaml
 from minimof import minimof
@@ -57,9 +57,14 @@ class Simulation(dict):
 
     def _get_gals(self):
         mode = self['Mode']
-        Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
-        Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
+        #Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
+        #Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
 
+        n=rng.uniform(low=0.5, high=4)
+        Cen = galsim.Sersic(n,half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
+        n=rng.uniform(low=0.5, high=4)
+        Neigh = galsim.Sersic(n,half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
+        
         Cen = Cen.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
         Neigh = Neigh.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
 
@@ -151,9 +156,6 @@ class Model(Simulation):
         mod1 = blend.get_model(m=0)
         mod2 = blend.get_model(m=1)
         cen_mod = sources[0].get_model()
-        #output['mod_size_flag'][j] = 0
-        #if np.shape(cen_mod) != (1,25,25):
-        #output['mod_size_flag'][j] = 3
         neigh_mod = sources[1].get_model()
         #steps_used = blend.it
         
@@ -261,6 +263,7 @@ def norm_test():
 
         #check if model dimensions are ever larger than image dims
         #if larger, trim the dimensions
+        #This is sometimes an issue for low edge flux test
         if cen_shape[1] > im_shape[1]:
             cen_shape = (1,im_shape[1],cen_shape[2])
         if cen_shape[2] > im_shape[2]:
@@ -280,7 +283,7 @@ def norm_test():
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
 
-
+        #metacal needs symmetric image
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
             weights = np.zeros((max(cen_shape),max(cen_shape)))
@@ -298,31 +301,12 @@ def norm_test():
             mod_noise = Cnoise[beg1:end1,beg2:end2,0]
             new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
 
-
-        """
-        plt.figure(figsize=(8,4))
-        plt.plot(1,2,2)
-        plt.subplot(121)
-        
-        plt.imshow(cen_obj,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.colorbar();
-        #plt.title("Deblended Center")
-        #plt.subplot(122)
-        plt.savefig("test.png")
-        """
         
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
-        """
-        plt.imshow(cen_obj_w_noise)
-        plt.colorbar()
-        plt.savefig('test.png')
-        print(new_coords)
-        """
         shape = np.shape(cen_obj_w_noise)
         #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
         noise_w_noise = Mod._readd_noise(mod_noise,weights)
         tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
-        output['dims'][j] = np.array(dims)
     
         """
         plt.imshow(cen_obj_w_noise,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
@@ -332,7 +316,7 @@ def norm_test():
         plt.savefig("test.png")
 
         """
-        #dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],new_coords[1],
+        #dobs = observation(cen_obj_w_noise,np.sqrt(2)*Mod['Image']['Bgrms'],new_coords[1],
         #               new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
         
         dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],
@@ -384,8 +368,6 @@ dt = [
     ('pars_1m','f8',6),
     ('pars_2p','f8',6),
     ('pars_2m','f8',6),
-    ('dims','f8',2),
-    #('mod_size_flag','i4'),
 ]
 
 psf_model = 'gauss'
@@ -404,7 +386,7 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    'use_noise_image': True,
+    #'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()

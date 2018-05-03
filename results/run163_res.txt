@@ -1,0 +1,45 @@
+Used sersic gals
+Low noise deblend (bg = 0.1) with scar and mini
+
+run163_1: config v57
+kept 200000/200000
+bias: -0.0652111 +/- 0.00230512
+additive: 1.53968e-05 +/- 4.57922e-05
+
+run163_2: config v58
+kept 200000/200000
+bias: -0.0304299 +/- 0.00227304
+additive: -2.09749e-05 +/- 4.50805e-05
+
+run163_3: config v59
+kept 200000/200000
+bias: -0.0165877 +/- 0.00226535
+additive: -1.97776e-06 +/- 4.51305e-05
+
+run163_4: config v60
+kept 200000/200000
+bias: -0.00791151 +/- 0.00225719
+additive: 2.29683e-05 +/- 4.50037e-05
+
+run163_5: config v61
+kept 200000/200000
+bias: -0.00485946 +/- 0.00225828
+additive: 1.44472e-05 +/- 4.49531e-05
+
+run163_6: config v62
+kept 200000/200000
+bias: -0.00242685 +/- 0.00227093
+additive: 7.8932e-05 +/- 4.50546e-05
+
+run163_7: config v63
+kept 200000/200000
+bias: -0.00582617 +/- 0.00226765
+additive: -5.68863e-05 +/- 4.48913e-05
+
+run163_8: config v51
+run163_9: config v50
+run163_10: config v52
+run163_11: config v53
+run163_12: config v54
+run163_13: config v55
+run163_14: config v56

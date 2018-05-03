@@ -9,7 +9,7 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_15-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run163/run163_7-*.fits')
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run155/run155_1*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00002*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
@@ -18,7 +18,7 @@ flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run160/run160_15-*.fi
 #flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run029/run029*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test.fits')
 # read each file and combine into one big array
-data = eu.io.read(flist[0:1000])
+data = eu.io.read(flist)
 #data = fitsio.read(args.filename)
 
 w, = np.where(data['flags']==0)
@@ -59,8 +59,8 @@ shear_err = g_err.copy()
 shear_err[0] /= R11
 shear_err[1] /= R22
 
-frac = shear[0]/0.1-1-0.01
-frac_err = shear_err[0]/0.1
+frac = shear[0]/0.02-1#-0.01
+frac_err = shear_err[0]/0.02
 
 print("bias: %g +/- %g" % (frac, frac_err))
 print("additive: %g +/- %g" % (shear[1], shear_err[1]))

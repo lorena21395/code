@@ -9,7 +9,7 @@ minorLocator = MultipleLocator(0.005)
 
 
 r = [7,9,11,13,15,17,19]
-
+"""
 bias = [-0.0812011,0.00226535,0.0023871,-0.0123014,-0.00806869,0.00111734,0.004131]
 err = [0.00063597,0.000587096,0.000554516,0.000540192,0.000538317,0.000536182,0.000535371]
 
@@ -18,7 +18,7 @@ err_thresh005 = [0.000683949,0.000593845,0.000558472,0.000543158,0.000538711,0.0
 
 bias_mini = [0.019005,-0.00361754,-0.00383634,-0.00105035,0.000678016,0.00128536,-0.00101486]
 err_mini = [0.00273789,0.00103818,0.000826182,0.00080896,0.00028416,0.000804708,0.000566695]
-
+"""
 
 ### low noise results
 #bias = [-0.0196882,-0.00473535,-0.00195364,-0.00180363,-0.00582074,-0.00701391,-0.00510679]
@@ -64,25 +64,39 @@ err_mini = [0.00273789,0.00103818,0.000826182,0.00080896,0.00028416,0.000804708,
 #bias_thresh005 = [0.0187861,0.0445087,-0.0345543,0.00924453,-0.00162122,-0.0290263,0.0227536]
 #err_thresh005 = [0.00173017,0.0017998,0.001966,0.0016946,0.00177524,0.00158451,0.00123914]
 
+"""
 #use old code
 bias2 = [-0.0456805,0.0932809,0.0220271,-0.00466206,-0.00913659,0.0023212,-0.00034029]
 err2 = [0.0051878,0.00507743,0.00489331,0.00462416,0.0040779,0.00421858,0.00396608]
 
 bias_thresh0052 = [-0.0733619,-0.0694567,-0.0563895,-0.0243661,-0.00124443,0.00191828,-0.00440019]
 err_thresh0052 = [0.00467769,0.00443167,0.00452556,0.00415059,0.00421953,0.00468915,0.0041015]
+"""
+"""
+##Sersic gals
 
+bias = [-0.119586,-0.041375,-0.0157337,-0.0191576,-0.0236748,-0.0171168,-0.0142049]
+err = [0.00152048,0.00145598,0.0013534,0.00131648,0.00132543,0.00132846,0.00114863]
+
+bias_mini = [-0.106728,-0.0188556,-0.00881271,-0.00431783,-0.00182994,0.00150557,-0.000325426]
+err_mini = [0.00692365,0.00187336,0.00141832,0.00133865,0.0013372,0.00133648,0.0013343]
+"""
+
+## Sersic with bgrms = 0.1
+bias = [-0.0652111,-0.0304299,-0.0165877,-0.00791151,-0.00485946,-0.00242685,-0.00582617]
+err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226765]
 
 fig,ax = plt.subplots()
 
 plt.axhline(y=0,color='black',linewidth=2)
 plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet",color='r')
-plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet",linestyle = ":",color='r')
-plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
-plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
-plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
+#plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet",linestyle = ":",color='r')
+#plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
+#plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
+#plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias vs Radius (N=10)")
+plt.title("Bias vs Radius (N=0.1, Sersic)")
 #plt.yticks(np.arange(min(bias), max(bias)+0.01, .005))
 plt.grid(which='minor')
 plt.grid(which='major')
@@ -93,4 +107,4 @@ plt.legend()
 ax.yaxis.set_minor_locator(minorLocator)
 #plt.ylim(-0.075,0.075)
 plt.show()
-plt.savefig("bias_v_rad_mm_scar_n10_nostep2_v2.png")
+plt.savefig("bias_v_rad_n1e-1_sers_mini_scar.png")

@@ -148,9 +148,9 @@ class Model(Simulation):
         blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
         blend.fit(10000, e_rel=1e-3)
         model = blend.get_model()
-        plt.imshow(im[0,:,:])
-        plt.colorbar()
-        plt.savefig('test.png')
+        #plt.imshow(im[0,:,:])
+        #plt.colorbar()
+        #plt.savefig('test.png')
         mod1 = blend.get_model(m=0)
         mod2 = blend.get_model(m=1)
         cen_mod = sources[0].get_model()
@@ -262,9 +262,10 @@ def norm_test():
         coord1 = coords[0]
         coord2 = coords[1]
         cen_obj = im[0,:,:]-mod2[0,:,:]
+        orig_minus_model = im[0,:,:] - model[0,:,:]
         cen_obj_shape = cen_mod.shape 
         neigh_shape = neigh_mod.shape
-        region = cen_obj[int(coord2[0]-(neigh_shape[1]/2.)+1):int(coord2[0]+(neigh_shape[1]/2.)+1),int(coord2[1]-(neigh_shape[2]/2.)+1):int(coord2[1]+(neigh_shape[2]/2.)+1)]
+        region = orig_minus_model[int(coord2[0]-(neigh_shape[1]/2.)+1):int(coord2[0]+(neigh_shape[1]/2.)+1),int(coord2[1]-(neigh_shape[2]/2.)+1):int(coord2[1]+(neigh_shape[2]/2.)+1)]
 
         extra_noise = np.sqrt(np.abs(Mod['Image']['Bgrms']**2 - np.var(region)))
         cen_obj[int(coord2[0]-(neigh_shape[1]/2.)+1):int(coord2[0]+(neigh_shape[1]/2.)+1),int(coord2[1]-(neigh_shape[2]/2.)+1):int(coord2[1]+(neigh_shape[2]/2.)+1)] += rng.normal(scale=extra_noise) 
