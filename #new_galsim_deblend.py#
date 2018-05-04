@@ -2,7 +2,6 @@
 #####
 #minideblend,individually shear each galaxy first
 #use sersic galaxies
-#change minimof gal model to "cm"
 
 import yaml
 from minimof import minimof
@@ -169,7 +168,7 @@ class Model(Simulation):
         mode = self['Mode']
         allobs = []
         bg_rms_psf = self['Psf']['Bgrms_psf']
-        allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-04.yaml'))
+        allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-02.yaml'))
         config = allconf['mof']
         config['psf_pars'] = {'model':'gauss','ntry':2}
         for coord in coords:
@@ -308,15 +307,21 @@ def norm_test():
         #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
         noise_w_noise = Mod._readd_noise(mod_noise,weights)
         tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
-    
-        """
-        plt.imshow(cen_obj_w_noise,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.title("Deblended Cen + Noise")
-        plt.colorbar();
-        #plt.tight_layout()
+        
+        plt.figure(figsize=(8,4))
+        plt.plot(1,2,2)
+        plt.subplot(121)
+        plt.imshow(im[0,75:-75,75:-75],interpolation='nearest', cmap='gray',vmin = np.min(cen_obj_w_noise),vmax= np.max(cen_obj_w_noise))
+        plt.colorbar()
+        plt.title("Original")
+        plt.subplot(122)
+        plt.imshow(cen_obj_w_noise,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj_w_noise),vmax= np.max(cen_obj_w_noise))
+        plt.colorbar()
+        plt.title("Deblended Center")
+        plt.tight_layout()
         plt.savefig("test.png")
 
-        """
+
         #dobs = observation(cen_obj_w_noise,np.sqrt(2)*Mod['Image']['Bgrms'],new_coords[1],
         #               new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
         
@@ -372,7 +377,8 @@ dt = [
 ]
 
 psf_model = 'gauss'
-gal_model = 'gauss'
+
+#gal_model = 'gauss'
 psf_Tguess = 4.0
 psf_fit_pars = {'maxfev': 2000}
 ntry=2

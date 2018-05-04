@@ -2,6 +2,9 @@
 
 ####
 # Noise analysis
+#no step 2
+
+
 import yaml
 #from minimof import minimof
 #from scipy.misc import imsave
@@ -233,11 +236,13 @@ def norm_test():
         im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord = Mod._get_model()
         cen_shape = (1,15,15)#cen_mod.shape
         coord1 = coords[0]
+        
+        """
         dims = [np.shape(im)[1],np.shape(im)[2]]
         C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
         #cen_obj = C[:,:,0]
         #neigh_obj = C[:,:,1]
-
+        """
         half1 = cen_shape[1]/2.
         half2 = cen_shape[2]/2.
 
@@ -246,11 +251,14 @@ def norm_test():
 
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
+        cen_obj_w_noise = mod1[0,beg1:end1,beg2:end2]
 
+        """
         cen_obj = C[beg1:end1,beg2:end2,0]
         weights = W[beg1:end1,beg2:end2,0]
 
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
+        """
 
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1 = Mod.__call__()

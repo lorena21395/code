@@ -86,12 +86,16 @@ err_mini = [0.00692365,0.00187336,0.00141832,0.00133865,0.0013372,0.00133648,0.0
 bias = [-0.0652111,-0.0304299,-0.0165877,-0.00791151,-0.00485946,-0.00242685,-0.00582617]
 err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226765]
 
+bias_mini = [-0.159687,-0.0164582,-0.00409156,0.00378743,4.3599e-05,0.000101924,0.000573448]
+err_mini = [0.035359,0.00488523,0.00230586,0.00229654,0.00230798,0.0022896,0.00227844]
+
+
 fig,ax = plt.subplots()
 
 plt.axhline(y=0,color='black',linewidth=2)
 plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet",color='r')
 #plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet",linestyle = ":",color='r')
-#plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
+plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
 #plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
 #plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
 plt.xlabel("Distance to Neighbor (pixels)")
