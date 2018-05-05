@@ -2,12 +2,12 @@
 
 ####
 # Noise analysis
-#no step 2
 
 
 import yaml
 #from minimof import minimof
 #from scipy.misc import imsave
+import scarlet.psf_match
 import fitsio
 import galsim
 import argparse
@@ -153,7 +153,12 @@ class Model(Simulation):
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             #constraints['l1'] = bg_rms
-            sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
+            psf_im = psf_im[0:19,0:19]
+            psf_dims = np.shape(psf_im)
+            psf_im = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
+            target_psf = scarlet.psf_match.fit_target_psf(psf_im, scarlet.psf_match.gaussian)
+            diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im, target_psf)
+            sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels) for coord in coords]
             #config = scarlet.Config(edge_flux_thresh=0.05)
             #scarlet.ExtendedSource.shift_center=0.0
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
@@ -237,12 +242,12 @@ def norm_test():
         cen_shape = (1,15,15)#cen_mod.shape
         coord1 = coords[0]
         
-        """
+        
         dims = [np.shape(im)[1],np.shape(im)[2]]
         C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
         #cen_obj = C[:,:,0]
         #neigh_obj = C[:,:,1]
-        """
+        
         half1 = cen_shape[1]/2.
         half2 = cen_shape[2]/2.
 
@@ -251,14 +256,14 @@ def norm_test():
 
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
-        cen_obj_w_noise = mod1[0,beg1:end1,beg2:end2]
+        #cen_obj_w_noise = mod1[0,beg1:end1,beg2:end2]
 
-        """
+        
         cen_obj = C[beg1:end1,beg2:end2,0]
         weights = W[beg1:end1,beg2:end2,0]
 
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
-        """
+        
 
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1 = Mod.__call__()
@@ -346,7 +351,7 @@ for j in range(ntrial):
         if np.shape(diff) == (15,15):
             pix_vals.append(diff)
 
-    except (np.linalg.linalg.LinAlgError,ValueError):
+    except ():#np.linalg.linalg.LinAlgError,ValueError):
         print("error")
         #output['flags'][j] = 2
 
