@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 #####
-#minideblend,individually shear each galaxy first
+#individually shear each galaxy first
 #use sersic galaxies
 #change minimof gal model to "cm"
+#PSF matching
 
 import yaml
 from minimof import minimof
@@ -49,7 +50,7 @@ class Simulation(dict):
     def _get_psf_img(self):
         psf_hlr = self['Psf']['Psf_hlr']
         psf = galsim.Gaussian(half_light_radius = psf_hlr)
-        psf_gsim = psf.drawImage(scale = self['Psf']['Scale'])
+        psf_gsim = psf.drawImage(nx = 25, ny=25, scale = self['Psf']['Scale'])
         psf_im = psf_gsim.array
         noise_psf = np.random.normal(scale=self['Psf']['Bgrms_psf'],size=psf_im.shape)
         psf_im += noise_psf
@@ -148,7 +149,12 @@ class Model(Simulation):
         mode = self['Mode']
         constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
         #constraints['l0'] = bg_rms
-        sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
+        psf_dims = np.shape(psf_im)
+        psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
+        target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
+        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)
+        sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels) for coord in coords]
+        #sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
         #scarlet.ExtendedSource.shift_center=0.0
         #config = scarlet.Config(edge_flux_thresh=0.05)
         blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
@@ -387,7 +393,7 @@ max_pars = {
 
 metacal_pars = {
     'symmetrize_psf': True,
-    #'use_noise_image': True,
+    'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
 prior = get_prior()

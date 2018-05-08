@@ -90,7 +90,7 @@ class Simulation(dict):
         if mode == 'scarlet' or mode == 'minimof':
             Cen = Cen.shift(dx=dx1, dy=dy1)
             Neigh = Neigh.shift(dx=dx2, dy=dy2)
-            gals = [Cen, Neigh]
+            gals = [Cen]#, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             Cen = Cen.shift(dx=dx, dy=dy)
@@ -122,7 +122,7 @@ class Simulation(dict):
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1,coord2]
+        coords = [coord1]#,coord2]
 
         noise = self._get_noise(dims,bg_rms)
         im += noise
@@ -153,37 +153,37 @@ class Model(Simulation):
         if mode == 'scarlet':
             constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             #constraints['l1'] = bg_rms
-            psf_dims = np.shape(psf_im)
-            psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
-            target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
-            diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)
-            sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels) for coord in coords]
+            #psf_dims = np.shape(psf_im)
+            #psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
+            #target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
+            #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)
+            sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]#,psf=diff_kernels) for coord in coords]
             #config = scarlet.Config(edge_flux_thresh=0.05)
             #scarlet.ExtendedSource.shift_center=0.0
             blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
             blend.fit(10000, e_rel=1e-3)
             model = blend.get_model()
             mod1 = blend.get_model(m=0)
-            mod2 = blend.get_model(m=1)
+            #mod2 = blend.get_model(m=1)
             cen_mod = sources[0].get_model()
-            neigh_mod = sources[1].get_model()
+            #neigh_mod = sources[1].get_model()
             #steps_used = blend.it
 
-        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord
-        #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,img
+        #return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord
+        return im,psf_im,model,mod1,cen_mod,coords,sing_im,sing_coord
     
-    def _rob_deblend(self,im,model,mod1,mod2,dims):
-        C = np.zeros((dims[0],dims[1],2))
-        W = np.zeros((dims[0],dims[1],2))
+    def _rob_deblend(self,im,model,mod1,dims):
+        C = np.zeros((dims[0],dims[1],1))
+        W = np.zeros((dims[0],dims[1],1))
         I = im
-        w = np.array([model[0,:,:],model[0,:,:]])
-        T = np.array([mod1[0,:,:],mod2[0,:,:]])
+        w = np.array([model[0,:,:]])#,model[0,:,:]])
+        T = np.array([mod1[0,:,:]])#,mod2[0,:,:]])
         mod_sum = np.zeros(dims)
-        for r in range(2):
+        for r in range(1):
             mod_sum += w[r]*T[r] 
         zeros = np.where(mod_sum == 0.)
         mod_sum[zeros] += 0.000001
-        for r in range(2):
+        for r in range(1):
             W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
             C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
         return C,W
@@ -236,15 +236,15 @@ def norm_test():
     Mod = Model()
     mode = Mod._get_mode()
     if mode == 'scarlet':
-        #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,img = Mod._get_model()
-        im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord = Mod._get_model()
+        im,psf_im,model,mod1,cen_mod,coords,sing_im,sing_coord = Mod._get_model()
+        #im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord = Mod._get_model()
         cen_shape = (1,15,15)#cen_mod.shape
         coord1 = coords[0]
         
         
         dims = [np.shape(im)[1],np.shape(im)[2]]
         
-        C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
+        C,W = Mod._rob_deblend(im,model,mod1,dims)
         #cen_obj = C[:,:,0]
         #neigh_obj = C[:,:,1]
         
@@ -273,7 +273,7 @@ def norm_test():
         dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     
-    return cen_obj_w_noise,coord1,sing_im,sing_coord
+    return cen_obj_w_noise,coord1,sing_im,sing_coord,im
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                          ntry,metacal_pars,output,dobs):
@@ -337,7 +337,7 @@ pix_vals = []
 for j in range(ntrial):
     print(j)
     try:
-        cen_obj_w_noise,coord1,sing_im,sing_coord = norm_test()
+        cen_obj_w_noise,coord1,sing_im,sing_coord,im = norm_test()
         cen_shape = np.shape(cen_obj_w_noise)
 
         half1 = cen_shape[0]/2.
@@ -348,11 +348,19 @@ for j in range(ntrial):
         beg2 = int(sing_coord[1]-half2+1)
         end2 = int(sing_coord[1]+half2+1)
 
-        diff = sing_im[0,beg1:end1,beg2:end2]-cen_obj_w_noise
+        diff = im[0,beg1:end1,beg2:end2]-cen_obj_w_noise
+        plt.imshow(im[0,beg1:end1,beg2:end2])
+        plt.savefig('test.png')
+        plt.close()
+        plt.imshow(cen_obj_w_noise)
+        plt.savefig('test2.png')
+        plt.close()
+
+        print(diff)
         if np.shape(diff) == (15,15):
             pix_vals.append(diff)
 
-    except ():#np.linalg.linalg.LinAlgError,ValueError):
+    except (np.linalg.linalg.LinAlgError,ValueError):
         print("error")
         #output['flags'][j] = 2
 

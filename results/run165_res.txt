@@ -1,0 +1,77 @@
+Regular deblend
+Used Sersic Gals
+Changed config file for minimof to use CM (composite mode) instead of exp models
+Mini results only here
+
+LOW NOISE:
+run165_1 config v51:
+kept 392871/400000
+bias: -0.169015 +/- 0.0262119
+additive: -0.000409203 +/- 0.000522555
+
+run165_2 config v50:
+kept 387818/400000
+bias: 0.267239 +/- 0.0192209
+additive: 0.000175952 +/- 0.000386265
+
+run165_3 config v52:
+kept 392264/400000
+bias: -0.00207964 +/- 0.00177944
+additive: -2.77281e-05 +/- 3.58437e-05
+
+run165_4 config	v53:
+kept 397142/400000
+bias: -0.000695256 +/- 0.00160845
+additive: -1.39796e-05 +/- 3.22859e-05
+
+run165_5 config	v54:
+kept 399666/400000
+bias: -0.000599733 +/- 0.00160396
+additive: 8.00033e-05 +/- 3.20143e-05
+
+run165_6 config	v55:
+kept 400000/400000
+bias: -0.000912097 +/- 0.00160149
+additive: -2.60929e-05 +/- 3.18559e-05
+
+run165_7 config v56:
+kept 400000/400000
+bias: -0.000706023 +/- 0.00160665
+additive: 1.92371e-05 +/- 3.18731e-05
+
+
+HIGH NOISE:
+run165_8 config v28:
+kept 397354/400000
+bias: -0.0167178 +/- 0.00511843
+additive: 0.000317516 +/- 0.000505652
+
+run165_9 config v29:
+kept 398417/400000
+bias: 0.29282 +/- 0.00418356
+additive: 0.00049609 +/- 0.000407029
+
+run165_10 config v30:
+kept 399605/400000
+bias: 0.0556112 +/- 0.00219845
+additive: 0.000472585 +/- 0.000210588
+
+run165_11 config v31:
+kept 398795/400000
+bias: 0.00428428 +/- 0.00108241
+additive: 9.45736e-06 +/- 0.000102087
+
+run165_12 config v32:
+kept 397976/400000
+bias: -0.00447817 +/- 0.000943684
+additive: -2.89626e-05 +/- 9.07702e-05
+
+run165_13 config v33:
+kept 398878/400000
+bias: -0.00324964 +/- 0.000944699
+additive: 1.75979e-05 +/- 9.07351e-05
+
+run165_14 config v34:
+kept 399742/400000
+bias: -0.00286702 +/- 0.000942955
+additive: 0.000118753 +/- 9.08096e-05

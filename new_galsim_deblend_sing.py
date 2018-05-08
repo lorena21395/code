@@ -239,6 +239,7 @@ def norm_test():
         beg2 = int(coord1[1]-half2+1)
         end2 = int(coord1[1]+half2+1)
 
+
         if cen_shape[1] != cen_shape[2]:
             cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
             weights = np.zeros((max(cen_shape),max(cen_shape)))
@@ -268,6 +269,8 @@ def norm_test():
         """
         
         cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
+
+
         """
         plt.imshow(cen_obj_w_noise)
         plt.colorbar()

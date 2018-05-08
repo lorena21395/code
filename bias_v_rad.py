@@ -75,20 +75,20 @@ err_thresh0052 = [0.00467769,0.00443167,0.00452556,0.00415059,0.00421953,0.00468
 """
 ##Sersic gals
 """
-bias = [-0.119586,-0.041375,-0.0157337,-0.0191576,-0.0236748,-0.0171168,-0.0142049]
-err = [0.00152048,0.00145598,0.0013534,0.00131648,0.00132543,0.00132846,0.00114863]
+#bias = [-0.119586,-0.041375,-0.0157337,-0.0191576,-0.0236748,-0.0171168,-0.0142049]
+#err = [0.00152048,0.00145598,0.0013534,0.00131648,0.00132543,0.00132846,0.00114863]
 
 #bias_mini = [-0.106728,-0.0188556,-0.00881271,-0.00431783,-0.00182994,0.00150557,-0.000325426]
 #err_mini = [0.00692365,0.00187336,0.00141832,0.00133865,0.0013372,0.00133648,0.0013343]
 
 #used cm model for mini
 
-bias_mini = [-0.0167178,0.29282,0.0556112,0.00428428,-0.00447817,-0.00324964,-0.00286702]
-err_mini = [0.00511843,0.00418356,0.00219845,0.00108241,0.000943684,0.000944699,0.000942955]
+#bias_mini = [-0.0167178,0.29282,0.0556112,0.00428428,-0.00447817,-0.00324964,-0.00286702]
+#err_mini = [0.00511843,0.00418356,0.00219845,0.00108241,0.000943684,0.000944699,0.000942955]
 
 ## Sersic with bgrms = 0.1
-#bias = [-0.0652111,-0.0304299,-0.0165877,-0.00791151,-0.00485946,-0.00242685,-0.00582617]
-#err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226765]
+bias = [-0.0652111,-0.0304299,-0.0165877,-0.00791151,-0.00485946,-0.00242685,-0.00582617]
+err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226765]
 
 #bias_mini = [-0.159687,-0.0164582,-0.00409156,0.00378743,4.3599e-05,0.000101924,0.000573448]
 #err_mini = [0.035359,0.00488523,0.00230586,0.00229654,0.00230798,0.0022896,0.00227844]
@@ -97,25 +97,36 @@ err_mini = [0.00511843,0.00418356,0.00219845,0.00108241,0.000943684,0.000944699,
 #bias_mini = [-0.169015,0.267239,-0.00207964,-0.000695256,-0.000599733,-0.000912097,-0.000706023]
 #err_mini = [0.0262119,0.0192209,0.00177944,0.00160845,0.00160396,0.00160149,0.00160665]
 
+## USED PSF MATCHING AND SERSIC
+#noisy
+#bias2 = [-0.102715,-0.00184132,0.00242638,-0.0328944,-0.0325155,-0.0232965,-0.0216367]
+#err2 = [0.00163663,0.00149327,0.00136155,0.0013105,0.00131261,0.0013147,0.00131668]
+
+#low noise
+
+bias2 = [0.034893,0.0156834,0.0116585,-0.00214875,0.00232793,0.00882859,0.00335039]
+err2 = [0.00285284,0.00285284,0.0022912,0.00227236,0.000716216,0.00101213,0.00101089]
+
 fig,ax = plt.subplots()
 
 plt.axhline(y=0,color='black',linewidth=2)
 plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet",color='r')
-#plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet",linestyle = ":",color='r')
-plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet+PSF match",linestyle = ":",color='r')
+#plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
 #plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
 #plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias vs Radius (N=10, Sersic)")
+plt.title("Bias vs Radius (N=0.1, Sersic, PSF matched)")
 #plt.yticks(np.arange(min(bias), max(bias)+0.01, .005))
 plt.grid(which='minor')
 plt.grid(which='major')
 ax.yaxis.set_major_locator(majorLocator)
 ax.yaxis.set_major_formatter(majorFormatter)
-plt.legend()
+ax.yaxis.set_major_locator(plt.MaxNLocator(6))
+plt.legend(loc=4)
 # for the minor ticks, use no labels; default NullFormatter
 ax.yaxis.set_minor_locator(minorLocator)
 #plt.ylim(-0.075,0.075)
 plt.show()
-plt.savefig("bias_v_rad_n10_sers_mini_scar2.png")
+plt.savefig("bias_v_rad_n1e-1_sers_PSFmatch.png")
