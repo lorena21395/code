@@ -247,7 +247,7 @@ class Model(Simulation):
             guess[beg+3] = rng.uniform(low=-0.05, high=0.05)
 
             # we could get a better guess from sep
-            T = 2.0
+            T = 10.0
             guess[beg+4] = T*(1.0 + rng.uniform(low=-0.05, high=0.05))
 
             guess[beg+5] = rng.uniform(low=0.4,high=0.6)
