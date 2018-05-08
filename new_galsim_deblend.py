@@ -6,17 +6,13 @@
 #PSF matching
 
 import yaml
-from minimof import minimof
+import minimof
 import fitsio
 import galsim
 import argparse
 import sep
 import ngmix
 import numpy as np
-import scarlet
-import matplotlib.pyplot as plt
-plt.switch_backend('agg')
-#from matplotlib.patches import Ellipse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -96,7 +92,7 @@ class Simulation(dict):
         Cen = Cen.shift(dx=dx1, dy=dy1)
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
         
-        if mode == 'scarlet' or mode == 'minimof':
+        if mode == 'scarlet' or mode == 'mof':
             gals = [Cen, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
@@ -119,7 +115,16 @@ class Simulation(dict):
         psf, psf_im = self._get_psf_img()
         objs,dx1,dy1,dx2,dy2 = self._get_gals()
         objs = galsim.Convolve(objs, psf)
-        gsim = objs.drawImage(scale=self['Image']['Scale'])
+        if 'dims' in self['Image']:
+            ny,nx=self['Image']['dims']
+        else:
+            ny, nx = None, None
+
+        gsim = objs.drawImage(
+            nx=nx,
+            ny=ny,
+            scale=self['Image']['Scale'],
+        )
         im = gsim.array
         dims = np.shape(im)
         
@@ -144,6 +149,8 @@ class Model(Simulation):
         Simulation.__init__(self,Sim_specs)
     
     def _get_scar_model(self):
+        import scarlet
+
         im,psf_im,coords,dims,dx1,dy1,noise = Simulation.__call__(self)
         bg_rms = self['Image']['Bgrms']
         mode = self['Mode']
@@ -169,46 +176,17 @@ class Model(Simulation):
         return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
         #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
 
-    def _get_mini_model(self):
-        im,psf_im,coords,dims,dx1,dy1,noise = Simulation.__call__(self)
-        bg_rms = self['Image']['Bgrms']
-        mode = self['Mode']
-        allobs = []
-        bg_rms_psf = self['Psf']['Bgrms_psf']
-        allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-04.yaml'))
-        config = allconf['mof']
-        config['psf_pars'] = {'model':'gauss','ntry':2}
-        for coord in coords:
-            row,col = coord
-            obs = observation(im,bg_rms,row,col,bg_rms_psf,psf_im)
-            this_jacob = obs.jacobian.copy()
-            this_jacob.set_cen(row=row, col=col)
-            this_obs = ngmix.Observation(
-                obs.image.copy(),
-                weight=obs.weight.copy(),
-                jacobian=this_jacob,
-                psf=obs.psf,
-                )
-            allobs.append(this_obs)
-        mm = minimof.MiniMOF(config, allobs, rng = rng)
-        mm.go()
-        res=mm.get_result()
-        if not res['converged']:
-            output['flags'][j] = 2
-        else:
-            obs = mm.get_corrected_obs(0)
-        
-        return obs,noise
+
+    def _fit_psf_admom(self, obs):
+        Tguess=4.0
+        am=ngmix.admom.run_admom(obs, Tguess)
+        return am.get_gmix()
 
     def _get_mof_obs(self):
         im,psf_im,coords,dims,dx1,dy1,noise = self()
 
         bg_rms = self['Image']['Bgrms']
-        mode = self['Mode']
         bg_rms_psf = self['Psf']['Bgrms_psf']
-        allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-04.yaml'))
-        config = allconf['mof']
-        config['psf_pars'] = {'model':'gauss','ntry':2}
 
         psf_ccen=(np.array(psf_im.shape)-1.0)/2.0
         psf_jacob = ngmix.UnitJacobian(
@@ -222,12 +200,14 @@ class Model(Simulation):
             jacobian=psf_jacob,
         )
 
+        psf_gmix=self._fit_psf_admom(psf_obs)
+        psf_obs.set_gmix(psf_gmix)
+
         weight=im*0 + 1.0/bg_rms**2
         jacobian=ngmix.UnitJacobian(
             row=0,
             col=0,
         )
-
 
         obs = ngmix.Observation(
             im,
@@ -235,26 +215,127 @@ class Model(Simulation):
             jacobian=jacobian,
             psf=psf_obs,
         )
-
+        obs.noise=noise
 
         return obs, coords
 
-    def _get_prior(self):
-        pass
+    def _get_mof_guess(self, coord_list):
+        npars_per=7
+        num=len(coord_list)
+        assert num==2,"two objects for now"
+
+        npars_tot = num*npars_per
+        guess = np.zeros(npars_tot)
+
+        for i,coords in enumerate(coord_list):
+            row, col = coords
+
+            beg=i*npars_per
+
+            if i==0:
+                F = self['Cen']['Flux']
+            else:
+                F = self['Neigh']['Flux']
+
+
+            # always close guess for center
+            guess[beg+0] = row + rng.uniform(low=-0.05, high=0.05)
+            guess[beg+1] = col + rng.uniform(low=-0.05, high=0.05)
+
+            # always arbitrary guess for shape
+            guess[beg+2] = rng.uniform(low=-0.05, high=0.05)
+            guess[beg+3] = rng.uniform(low=-0.05, high=0.05)
+
+            # we could get a better guess from sep
+            T = 2.0
+            guess[beg+4] = T*(1.0 + rng.uniform(low=-0.05, high=0.05))
+
+            guess[beg+5] = rng.uniform(low=0.4,high=0.6)
+            guess[beg+6] = Fguess = F*(1.0 + rng.uniform(low=-0.05, high=0.05))
+
+        return guess
+
+
+    def _get_mof_prior(self, coord_list):
+        """
+        prior for N objects.  The priors are the same for
+        structural parameters, the only difference being the
+        centers
+        """
+
+        nobj=len(coord_list)
+
+        cen_priors=[]
+
+        cen_sigma=1.0 #pixels for now
+        for coords in coord_list:
+            row,col=coords
+            p=ngmix.priors.CenPrior(
+                row,
+                col,
+                cen_sigma, cen_sigma,
+                rng=rng,
+            )
+            cen_priors.append(p)
+
+        g_prior=ngmix.priors.GPriorBA(
+            0.2,
+            rng=rng,
+        )
+        T_prior = ngmix.priors.TwoSidedErf(
+            -1.0, 0.1, 1.0e6, 1.0e5,
+            rng=rng,
+        )
+
+        fracdev_prior = ngmix.priors.Normal(0.0, 0.1, rng=rng)
+
+        F_prior = ngmix.priors.TwoSidedErf(
+            -100.0, 1.0, 1.0e9, 1.0e8,
+            rng=rng,
+        )
+
+        return minimof.priors.PriorBDFSepMulti(
+            cen_priors,
+            g_prior,
+            T_prior,
+            fracdev_prior,
+            F_prior,
+        )
 
     def get_mof_model(self):
+        import images
         obs, coords = self._get_mof_obs()
 
-        prior=self._get_mof_prior()
-        mm = minimof.MOF(config, allobs, rng = rng)
-        mm.go()
-        res=mm.get_result()
-        if not res['converged']:
-            output['flags'][j] = 2
+        prior=self._get_mof_prior(coords)
+
+        nobj=len(coords)
+        mm = minimof.MOF(obs, "bdf", nobj, prior=prior)
+
+        for i in range(2):
+            guess=self._get_mof_guess(coords)
+            ngmix.print_pars(guess, front="    guess:")
+            mm.go(guess)
+            res=mm.get_result()
+            if res['flags']==0:
+                break
+
+        #mim=mm.make_image() 
+        #images.compare_images(
+        #    obs.image, mim,
+        #)
+        #images.multiview(obs.psf.image)
+        #images.multiview(obs.image)
+        #stop
+
+
+        if res['flags'] == 0:
+            ngmix.print_pars(res['pars'], front="      fit:")
+            center_obs = mm.make_corrected_obs(0)
+            center_obs.noise = obs.noise
         else:
-            obs = mm.get_corrected_obs(0)
+            center_obs=None
         
-        return obs,noise
+        return center_obs
 
 
     def _rob_deblend(self,im,model,mod1,mod2,dims):
@@ -372,29 +453,15 @@ def norm_test():
         #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
         noise_w_noise = Mod._readd_noise(mod_noise,weights)
         tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
-    
-        """
-        plt.imshow(cen_obj_w_noise,interpolation='nearest', cmap='gray',vmin = np.min(cen_obj),vmax= np.max(cen_obj))
-        plt.title("Deblended Cen + Noise")
-        plt.colorbar();
-        #plt.tight_layout()
-        plt.savefig("test.png")
 
-        """
-        #dobs = observation(cen_obj_w_noise,np.sqrt(2)*Mod['Image']['Bgrms'],new_coords[1],
-        #               new_coords[0],Mod['Psf']['Bgrms_psf'],psf_im)
-        
         dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],
                            new_coords[1],new_coords[0],
                            Mod['Psf']['Bgrms_psf'],psf_im)
         dobs.noise = tot_noise
     
-    elif mode == 'minimof':
-        dobs,noise = Mod._get_mini_model()
-        #dobs.noise = noise
-
     elif mode=='mof':
-        dobs,noise = Mod.get_mof_obs()
+        dobs = Mod.get_mof_model()
+
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = Mod.__call__()
         output['dims'][j] = np.array(dims)
@@ -406,7 +473,8 @@ def norm_test():
     return dobs#,cen_obj,cen_obj_w_noise
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
-                         ntry,metacal_pars,output,dobs):
+               ntry,metacal_pars,dobs):
+
     boot = ngmix.bootstrap.MaxMetacalBootstrapper(dobs)
     boot.fit_psfs(
             psf_model,
@@ -418,15 +486,9 @@ def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
     boot.fit_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior=prior,
                      ntry=ntry,metacal_pars=metacal_pars,)
     res = boot.get_metacal_result()
-    #print("flags:",res['mcal_flags'])                                      
-    output['flags'][j] = res['mcal_flags']
-    output['pars'][j] = res['noshear']['pars']
-    output['pars_1p'][j] = res['1p']['pars']
-    output['pars_1m'][j] = res['1m']['pars']
-    output['pars_2p'][j] = res['2p']['pars']
-    output['pars_2m'][j] = res['2m']['pars']
 
-    return output
+    return res
+
 
 dt = [
     ('flags','i4'),
@@ -463,12 +525,25 @@ for j in range(ntrial):
     print(j)
     try:
         dobs = norm_test()
-        out = do_metacal(psf_model,gal_model,max_pars,
-                         psf_Tguess,prior,ntry,
-                         metacal_pars,output,dobs)
+        if dobs is None:
+            output['flags'][j] = 2
+        else:
+            res = do_metacal(
+                psf_model,gal_model,max_pars,
+                psf_Tguess,prior,ntry,
+                metacal_pars,dobs,
+            )
+
+            output['flags'][j] = res['mcal_flags']
+            if res['mcal_flags'] == 0:
+                output['pars'][j] = res['noshear']['pars']
+                output['pars_1p'][j] = res['1p']['pars']
+                output['pars_1m'][j] = res['1m']['pars']
+                output['pars_2p'][j] = res['2p']['pars']
+                output['pars_2m'][j] = res['2m']['pars']
 
     except (np.linalg.linalg.LinAlgError,ValueError,ngmix.gexceptions.BootGalFailure):
         print("error")
         output['flags'][j] = 2
 
-fitsio.write(outfile_name, out, clobber=True)
+fitsio.write(outfile_name, output, clobber=True)
