@@ -199,6 +199,64 @@ class Model(Simulation):
             obs = mm.get_corrected_obs(0)
         
         return obs,noise
+
+    def _get_mof_obs(self):
+        im,psf_im,coords,dims,dx1,dy1,noise = self()
+
+        bg_rms = self['Image']['Bgrms']
+        mode = self['Mode']
+        bg_rms_psf = self['Psf']['Bgrms_psf']
+        allconf=yaml.load(open('/astro/u/esheldon/git/nsim/config/run-nbr01-mcal-04.yaml'))
+        config = allconf['mof']
+        config['psf_pars'] = {'model':'gauss','ntry':2}
+
+        psf_ccen=(np.array(psf_im.shape)-1.0)/2.0
+        psf_jacob = ngmix.UnitJacobian(
+            row=psf_ccen[0],
+            col=psf_ccen[1],
+        )
+        psf_weight=psf_im*0 + 1.0/bg_rms_psf**2
+        psf_obs = ngmix.Observation(
+            psf_im,
+            weight=psf_weight,
+            jacobian=psf_jacob,
+        )
+
+        weight=im*0 + 1.0/bg_rms**2
+        jacobian=ngmix.UnitJacobian(
+            row=0,
+            col=0,
+        )
+
+
+        obs = ngmix.Observation(
+            im,
+            weight=weight,
+            jacobian=jacobian,
+            psf=psf_obs,
+        )
+
+
+        return obs, coords
+
+    def _get_prior(self):
+        pass
+
+    def get_mof_model(self):
+        obs, coords = self._get_mof_obs()
+
+        prior=self._get_mof_prior()
+        mm = minimof.MOF(config, allobs, rng = rng)
+        mm.go()
+        res=mm.get_result()
+        if not res['converged']:
+            output['flags'][j] = 2
+        else:
+            obs = mm.get_corrected_obs(0)
+        
+        return obs,noise
+
+
     def _rob_deblend(self,im,model,mod1,mod2,dims):
         C = np.zeros((dims[0],dims[1],2))
         W = np.zeros((dims[0],dims[1],2))
@@ -335,6 +393,8 @@ def norm_test():
         dobs,noise = Mod._get_mini_model()
         #dobs.noise = noise
 
+    elif mode=='mof':
+        dobs,noise = Mod.get_mof_obs()
     elif mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = Mod.__call__()
         output['dims'][j] = np.array(dims)
