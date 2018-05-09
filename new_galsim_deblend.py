@@ -64,18 +64,6 @@ class Simulation(dict):
         self.update(specs)
         self.rng=rng
 
-        self._set_pdfs()
-    
-    def _set_pdfs(self):
-        cspec=self['Cen']
-        if cspec['Type']=='Sersic':
-            self._cen_n_pdf=ngmix.priors.FlatPrior(0.5, 4.0, rng=self.rng)
-
-        nspec=self['Neigh']
-        if cspec['Type']=='Sersic':
-            self._neigh_n_pdf=ngmix.priors.FlatPrior(0.5, 4.0, rng=self.rng)
-
-
     def get_mode(self):
         mode = self['Mode']
         return mode
@@ -90,36 +78,95 @@ class Simulation(dict):
 
         return psf,psf_im
 
+    def _add_ellipticity(self, obj, spec):
+        gsigma=spec['g']['sigma']
+        g1,g2 = self.rng.normal(scale=gsigma, size=2)
+        return obj.shear(g1=g1, g2=g2)
+
+    def _get_bd_model(self, spec):
+        rng=self.rng
+
+        flux = spec['Flux']
+
+        fracdev=rng.uniform(low=0.0, high=1.0)
+
+        bulge_flux = fracdev*flux
+        disk_flux = (1.0 - fracdev)*flux
+
+        disk_hlr = spec['hlr']
+        if 'bulge_size_factor' in spec:
+            frange=spec['bulge_size_factor']['range']
+            bulge_hlr = disk_hlr*rng.uniform(
+                low=frange[0],
+                high=frange[1],
+            )
+        else:
+            bulge_hlr=disk_hlr
+
+        disk = galsim.Exponential(
+            half_light_radius=disk_hlr,
+            flux=disk_flux,
+        )
+        bulge = galsim.DeVaucouleurs(
+            half_light_radius=bulge_hlr,
+            flux=bulge_flux,
+        )
+
+        disk = self._add_ellipticity(disk, spec)
+        bulge = self._add_ellipticity(bulge, spec)
+
+
+        return galsim.Add([disk, bulge])
+
+
+
     def _get_sersic_model(self, spec):
         rng=self.rng
 
         nrange=spec['n']['range']
         n=rng.uniform(low=nrange[0], high=nrange[1])
 
-        return galsim.Sersic(
+        obj = galsim.Sersic(
             n,
             half_light_radius=spec['hlr'],
             flux=spec['Flux'],
         )
 
+        obj = self._add_ellipticity(obj, spec)
+
+        return obj
+
     def _get_exp_model(self, spec):
-        return galsim.Exponential(
+        obj = galsim.Exponential(
             half_light_radius=spec['hlr'],
             flux=spec['Flux'],
         )
+
+        obj = self._add_ellipticity(obj, spec)
+
+        return obj
+
 
     def _get_dev_model(self, spec):
-        return galsim.DeVaucouleurs(
+        obj = galsim.DeVaucouleurs(
             half_light_radius=spec['hlr'],
             flux=spec['Flux'],
         )
+
+        obj = self._add_ellipticity(obj, spec)
+
+        return obj
+
+
     def _get_gauss_model(self, spec):
-        return galsim.Gaussian(
+        obj = galsim.Gaussian(
             half_light_radius=spec['hlr'],
             flux=spec['Flux'],
         )
 
+        obj = self._add_ellipticity(obj, spec)
 
+        return obj
 
     def _get_galaxy_model(self, spec):
 
@@ -132,6 +179,8 @@ class Simulation(dict):
             obj=self._get_exp_model(spec)
         elif mod=='DeVaucouleurs':
             obj=self._get_dev_model(spec)
+        elif mod=='bulge+disk':
+            obj=self._get_bd_model(spec)
         else:
             raise RuntimeError("bad model: '%s'" % mod)
 
@@ -151,15 +200,6 @@ class Simulation(dict):
 
         Cen = self._get_cen_model()
         Neigh = self._get_nbr_model()
-        
-        Cen = Cen.shear(
-            g1=np.random.normal(scale=0.02),
-            g2=np.random.normal(scale=0.02),
-        )
-        Neigh = Neigh.shear(
-            g1=np.random.normal(scale=0.02),
-            g2=np.random.normal(scale=0.02),
-        )
 
         #cen position
         if self['Cen']['Pos'] == 'Fixed':
