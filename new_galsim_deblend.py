@@ -79,9 +79,12 @@ class Simulation(dict):
         return psf,psf_im
 
     def _add_ellipticity(self, obj, spec):
-        gsigma=spec['g']['sigma']
-        g1,g2 = self.rng.normal(scale=gsigma, size=2)
-        return obj.shear(g1=g1, g2=g2)
+        if 'g' in spec:
+            gsigma=spec['g']['sigma']
+            g1,g2 = self.rng.normal(scale=gsigma, size=2)
+            obj = obj.shear(g1=g1, g2=g2)
+
+        return obj
 
     def _get_bd_model(self, spec):
         rng=self.rng
@@ -288,7 +291,6 @@ class Model(object):
         import scarlet
 
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
-
         bg_rms = self.sim['Image']['Bgrms']
         mode = self.sim['Mode']
         constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
@@ -443,7 +445,6 @@ class Model(object):
         )
 
     def get_mof_model(self):
-        import images
         obs, coords = self._get_mof_obs()
 
         prior=self._get_mof_prior(coords)
@@ -459,19 +460,12 @@ class Model(object):
             if res['flags']==0:
                 break
 
-        #mim=mm.make_image() 
-        #images.compare_images(
-        #    obs.image, mim,
-        #)
-        #images.multiview(obs.psf.image)
-        #images.multiview(obs.image)
-        #stop
-
 
         if res['flags'] == 0:
             ngmix.print_pars(res['pars'], front="      fit:")
-            center_obs = mm.make_corrected_obs(0)
+            center_obs = mm.make_corrected_obs(0, recenter=True)
             center_obs.noise = obs.noise
+
         else:
             center_obs=None
         
