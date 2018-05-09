@@ -106,6 +106,15 @@ class Simulation(dict):
         else:
             bulge_hlr=disk_hlr
 
+        if 'knots' in spec:
+            krng=spec['knots']['fluxfrac']['range']
+            knot_frac = rng.uniform(
+                low=krng[0],
+                high=krng[1],
+            )
+            knot_flux = disk_flux*knot_frac
+            disk_flux = disk_flux*(1.0 - knot_frac)
+
         disk = galsim.Exponential(
             half_light_radius=disk_hlr,
             flux=disk_flux,
@@ -114,6 +123,15 @@ class Simulation(dict):
             half_light_radius=bulge_hlr,
             flux=bulge_flux,
         )
+
+        if 'knots' in spec:
+            knots = galsim.RandomWalk(
+                npoints=spec['knots']['num'],
+                half_light_radius=disk_hlr,
+                flux=knot_flux,
+            )
+            disk = galsim.Add([disk, knots])
+
 
         disk = self._add_ellipticity(disk, spec)
         bulge = self._add_ellipticity(bulge, spec)
@@ -323,6 +341,10 @@ class Model(object):
 
     def _get_mof_obs(self):
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
+        #import images
+        #images.view(im)
+        #if 'q'==input('hit a key'):
+        #    stop
 
         bg_rms = self.sim['Image']['Bgrms']
         bg_rms_psf = self.sim['Psf']['Bgrms_psf']
