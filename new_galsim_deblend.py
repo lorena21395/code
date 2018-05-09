@@ -23,6 +23,8 @@ parser.add_argument("ntrials",help="Number of trials to be run",type = int)
 parser.add_argument("seed",help="Seed for random number generator",type = int)
 parser.add_argument("config",help="Configuration for the simulation")
 
+parser.add_argument("--profile",action='store_true',help="run the profiler")
+
 dt = [
     ('flags','i4'),
     ('pars','f8',6),
@@ -60,7 +62,19 @@ class Simulation(dict):
     def __init__(self,specs, rng):
         self.update(specs)
         self.rng=rng
+
+        self._set_pdfs()
     
+    def _set_pdfs(self):
+        cspec=self['Cen']
+        if cspec['Type']=='Sersic':
+            self._cen_n_pdf=ngmix.priors.FlatPrior(0.5, 4.0, rng=self.rng)
+
+        nspec=self['Neigh']
+        if cspec['Type']=='Sersic':
+            self._neigh_n_pdf=ngmix.priors.FlatPrior(0.5, 4.0, rng=self.rng)
+
+
     def get_mode(self):
         mode = self['Mode']
         return mode
@@ -75,17 +89,76 @@ class Simulation(dict):
 
         return psf,psf_im
 
+    def _get_sersic_model(self, spec):
+        rng=self.rng
+
+        nrange=spec['n']['range']
+        n=rng.uniform(low=nrange[0], high=nrange[1])
+
+        return galsim.Sersic(
+            n,
+            half_light_radius=spec['hlr'],
+            flux=spec['Flux'],
+        )
+
+    def _get_exp_model(self, spec):
+        return galsim.Exponential(
+            half_light_radius=spec['hlr'],
+            flux=spec['Flux'],
+        )
+
+    def _get_dev_model(self, spec):
+        return galsim.DeVaucouleurs(
+            half_light_radius=spec['hlr'],
+            flux=spec['Flux'],
+        )
+    def _get_gauss_model(self, spec):
+        return galsim.Gaussian(
+            half_light_radius=spec['hlr'],
+            flux=spec['Flux'],
+        )
+
+
+
+    def _get_galaxy_model(self, spec):
+
+        mod=spec['Type']
+        if mod=='Sersic':
+            obj=self._get_sersic_model(spec)
+        elif mod=='Gaussian':
+            obj=self._get_gauss_model(spec)
+        elif mod=='Exponential':
+            obj=self._get_exp_model(spec)
+        elif mod=='DeVaucouleurs':
+            obj=self._get_dev_model(spec)
+        else:
+            raise RuntimeError("bad model: '%s'" % mod)
+
+        return obj
+
+    def _get_cen_model(self):
+        spec=self['Cen']
+        return self._get_galaxy_model(spec)
+
+    def _get_nbr_model(self):
+        spec=self['Neigh']
+        return self._get_galaxy_model(spec)
+
     def _get_gals(self):
         mode = self['Mode']
         rng=self.rng
 
-        n=rng.uniform(low=0.5, high=4)
-        Cen = galsim.Sersic(n,half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
-        n=rng.uniform(low=0.5, high=4)
-        Neigh = galsim.Sersic(n,half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
+        Cen = self._get_cen_model()
+        Neigh = self._get_nbr_model()
         
-        Cen = Cen.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
-        Neigh = Neigh.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
+        Cen = Cen.shear(
+            g1=np.random.normal(scale=0.02),
+            g2=np.random.normal(scale=0.02),
+        )
+        Neigh = Neigh.shear(
+            g1=np.random.normal(scale=0.02),
+            g2=np.random.normal(scale=0.02),
+        )
 
         #cen position
         if self['Cen']['Pos'] == 'Fixed':
@@ -136,6 +209,7 @@ class Simulation(dict):
         psf, psf_im = self._get_psf_img()
         objs,dx1,dy1,dx2,dy2 = self._get_gals()
         objs = galsim.Convolve(objs, psf)
+
         if 'dims' in self['Image']:
             ny,nx=self['Image']['dims']
         else:
@@ -525,9 +599,7 @@ def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
     return res
 
 
-def main():
-
-    args = parser.parse_args()
+def main(args):
 
     prior = get_prior()
     output = np.zeros(args.ntrials, dtype=dt)
@@ -563,11 +635,31 @@ def main():
 
         #except (LinAlgError,ValueError,BootGalFailure) as err:
         #except ValueError as err:
-        except NotImplementedError as err:
+        except BootGalFailure as err:
             print(str(err))
             output['flags'][j] = 2
 
     print("writing:",args.outfile)
     fitsio.write(args.outfile, output, clobber=True)
 
-main()
+def do_profile(args):
+    # don't want to see the JIT
+    import cProfile
+    import pstats
+
+    import ngmix
+
+    cProfile.runctx('main(args)',
+                    globals(),locals(),
+                    'profile_stats')
+    
+    p = pstats.Stats('profile_stats')
+    p.sort_stats('time').print_stats()
+
+
+if __name__=='__main__':
+    args = parser.parse_args()
+    if args.profile:
+        do_profile(args)
+    else:
+        main(args)
