@@ -5,6 +5,7 @@
 #change minimof gal model to "cm"
 #PSF matching
 
+import time
 import yaml
 import minimof
 import fitsio
@@ -612,18 +613,26 @@ def main(args):
 
     sim=Simulation(Sim_specs, rng)
 
+    tm_deblend=0.0
+    tm_metacal=0.0
+
     for j in range(args.ntrials):
         print(j)
         try:
+            tm0=time.time()
             dobs = norm_test(sim)
+            tm_deblend += time.time()-tm0
+
             if dobs is None:
                 output['flags'][j] = 2
             else:
+                tm0=time.time()
                 res = do_metacal(
                     psf_model,gal_model,max_pars,
                     psf_Tguess,prior,ntry,
                     metacal_pars,dobs,
                 )
+                tm_metacal += time.time()-tm0
 
                 output['flags'][j] = res['mcal_flags']
                 if res['mcal_flags'] == 0:
@@ -639,6 +648,11 @@ def main(args):
             print(str(err))
             output['flags'][j] = 2
 
+    tm_deblend_per = tm_deblend/args.ntrials
+    tm_metacal_per = tm_metacal/args.ntrials
+
+    print("time sim+deblend: %g (%g per object)" % (tm_deblend,tm_deblend_per))
+    print("time metacal: %g (%g per object)" % (tm_metacal,tm_metacal_per))
     print("writing:",args.outfile)
     fitsio.write(args.outfile, output, clobber=True)
 
