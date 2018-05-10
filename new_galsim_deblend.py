@@ -63,6 +63,7 @@ class Simulation(dict):
     def __init__(self,specs, rng):
         self.update(specs)
         self.rng=rng
+        self.galsim_rng = galsim.BaseDeviate(self.rng.randint(0,2**30))
 
     def get_mode(self):
         mode = self['Mode']
@@ -86,6 +87,25 @@ class Simulation(dict):
 
         return obj
 
+    def _split_flux_with_knots(self, spec, flux):
+        krng=spec['knots']['fluxfrac']['range']
+        knot_frac = self.rng.uniform(
+            low=krng[0],
+            high=krng[1],
+        )
+        knot_flux = flux*knot_frac
+        remaining_flux = flux*(1.0 - knot_frac)
+
+        return remaining_flux, knot_flux
+
+    def _get_knots(self, spec, hlr, knot_flux):
+        return galsim.RandomWalk(
+            npoints=spec['knots']['num'],
+            half_light_radius=hlr,
+            flux=knot_flux,
+            rng=self.galsim_rng,
+        )
+
     def _get_bd_model(self, spec):
         rng=self.rng
 
@@ -107,13 +127,7 @@ class Simulation(dict):
             bulge_hlr=disk_hlr
 
         if 'knots' in spec:
-            krng=spec['knots']['fluxfrac']['range']
-            knot_frac = rng.uniform(
-                low=krng[0],
-                high=krng[1],
-            )
-            knot_flux = disk_flux*knot_frac
-            disk_flux = disk_flux*(1.0 - knot_frac)
+            disk_flux, knot_flux = self._split_flux_with_knots(spec, disk_flux)
 
         disk = galsim.Exponential(
             half_light_radius=disk_hlr,
@@ -125,11 +139,7 @@ class Simulation(dict):
         )
 
         if 'knots' in spec:
-            knots = galsim.RandomWalk(
-                npoints=spec['knots']['num'],
-                half_light_radius=disk_hlr,
-                flux=knot_flux,
-            )
+            knots = self._get_knots(spec, disk_hlr, knot_flux)
             disk = galsim.Add([disk, knots])
 
 
@@ -153,8 +163,6 @@ class Simulation(dict):
             flux=spec['Flux'],
         )
 
-        obj = self._add_ellipticity(obj, spec)
-
         return obj
 
     def _get_exp_model(self, spec):
@@ -162,8 +170,6 @@ class Simulation(dict):
             half_light_radius=spec['hlr'],
             flux=spec['Flux'],
         )
-
-        obj = self._add_ellipticity(obj, spec)
 
         return obj
 
@@ -174,8 +180,6 @@ class Simulation(dict):
             flux=spec['Flux'],
         )
 
-        obj = self._add_ellipticity(obj, spec)
-
         return obj
 
 
@@ -185,12 +189,9 @@ class Simulation(dict):
             flux=spec['Flux'],
         )
 
-        obj = self._add_ellipticity(obj, spec)
-
         return obj
 
-    def _get_galaxy_model(self, spec):
-
+    def _get_single_component_model(self, spec):
         mod=spec['Type']
         if mod=='Sersic':
             obj=self._get_sersic_model(spec)
@@ -200,10 +201,30 @@ class Simulation(dict):
             obj=self._get_exp_model(spec)
         elif mod=='DeVaucouleurs':
             obj=self._get_dev_model(spec)
-        elif mod=='bulge+disk':
-            obj=self._get_bd_model(spec)
         else:
             raise RuntimeError("bad model: '%s'" % mod)
+
+
+        return obj
+
+    def _get_galaxy_model(self, spec):
+
+        if spec['Type']=='bulge+disk':
+            obj=self._get_bd_model(spec)
+        else:
+            obj=self._get_single_component_model(spec)
+
+            if 'knots' in spec:
+                flux=obj.flux
+                hlr=obj.half_light_radius
+
+                remaining_flux, knot_flux = \
+                        self._split_flux_with_knots(spec, flux)
+
+                knots = self._get_knots(spec, hlr, knot_flux)
+                obj = galsim.Add([obj, knots])
+
+            obj = self._add_ellipticity(obj, spec)
 
         return obj
 
