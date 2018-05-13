@@ -377,7 +377,10 @@ class Model(object):
 
         if self.show:
             import images
-            images.view(im)
+            tim = im/im.max()
+            tim = np.log10( tim-tim.min() + 1.0 )
+
+            images.view(tim)
             if 'q'==input('hit a key: (q to quit) '):
                 stop
 
@@ -525,7 +528,20 @@ class Model(object):
 
             if self.show:
                 import images
-                images.view(center_obs.image, title='nbr subtracted')
+                cim=center_obs.image
+                s=cim.shape
+                tim=np.zeros((s[0], 2*s[1]))
+
+                tim[:, 0:s[1]] = obs.image
+                tim[:, s[1]:] = cim
+                tim *= 1.0/tim.max()
+                tim = np.log10( tim-tim.min() + 1.0 )
+
+                images.view(
+                    #tim-tim.min(),
+                    tim,
+                    title='MOF',
+                )
                 if 'q'==input('hit a key: (q to quit) '):
                     stop
 
