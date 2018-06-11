@@ -1,0 +1,45 @@
+import numpy as np
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+
+majorLocator = MultipleLocator(0.002)
+majorFormatter = FormatStrFormatter('%s')
+minorLocator = MultipleLocator(0.001)
+
+r = [7,9,11,13,15]
+####Calibrate with extra shear response:
+#2 step, bg =0.1
+bias = [0.00266184,-0.0248007,-0.00544136,-0.00624419,0.00708624]
+err = [0.00127191,0.00113552,0.00107044,0.00104095,0.00138829]
+#2 step, bg=0.1, without division by metacal responses:
+bias2 = [0.00289931,-0.0227334,-0.00450081,-0.00345485,0.00987126]
+err2 = [0.00127221,0.00113792,0.00107146,0.00104387,0.00139212]
+
+#1step, bg=0.1
+bias3 = [0.00183218,-0.0135421,-0.0131184,-0.00579225,0.00621719]
+err3 = [0.00170727,0.0019614,0.00137348,0.00134146,0.00137743]
+#1step, bg = 0.1, without division by metacal response:
+bias4 = [0.00303388,-0.0110562,-0.0123844,-0.00260066,0.0092246]
+err4 = [0.00170932,0.00196634,0.0013745,0.00134577,0.00138155]
+
+
+fig,ax = plt.subplots()
+plt.axhline(y=0,color='black',linewidth=2)
+plt.errorbar(r,bias,yerr=err,xerr=None,label="2-Step w/ meta",color='r')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label=" 2-Step",color='r',linestyle=':')
+plt.errorbar(r,bias3,yerr=err3,xerr=None,label="1-Step w/ meta",color='blue')
+plt.errorbar(r,bias4,yerr=err4,xerr=None,label="1-Step",color='blue',linestyle=':')
+plt.xlabel("Distance to Neighbor (pixels)")
+plt.ylabel("Fractional Shear Bias")
+plt.title("Bias v radius (calibrated)")
+
+plt.grid(which='minor')
+plt.grid(which='major')
+
+ax.yaxis.set_major_formatter(majorFormatter)
+ax.yaxis.set_minor_locator(minorLocator)
+
+plt.legend(loc=4)
+
+plt.savefig('bias_v_rad_N0.1_scar_cali.png')

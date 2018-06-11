@@ -9,58 +9,78 @@ import esutil as eu
 #args = parser.parse_args()
 
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run167/run167_12-*.fits')
-#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run155/run155_1*.fits'))
-#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run098/run098-output-00002*.fits'))
-#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run05*/run*.fits'))
-#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run06*/run*.fits'))
-#flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run07*/run*.fits'))
-#flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run029/run029*.fits')
-#flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run184/run184_19-output-*.fits')
+flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run184/run184_20-*.fits')
+flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run180/run180_13-*.fits')
+#flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/test.fits')
+
+lists = [flist,flist2,flist3]
 # read each file and combine into one big array
-data = eu.io.read(flist)
-#data = fitsio.read(args.filename)
 
-w, = np.where(data['flags']==0)
-#w, = np.where(data['mod_size_flag']==0)
-print("kept %d/%d" % (w.size, data.size))
-data = data[w]
+shear1 = []
+shear2 = []
 
-g = data['pars'][:, 2:2+2]
-g_1p = data['pars_1p'][:, 2:2+2]
-g_1m = data['pars_1m'][:, 2:2+2]
-g_2p = data['pars_2p'][:, 2:2+2]
-g_2m = data['pars_2m'][:, 2:2+2]
+shear1_err = []
+shear2_err = []
 
-e1 = data['pars'][:,2]
-e2 = data['pars'][:,3]
+for fl in lists:
+    data = eu.io.read(fl)
+    #data = fitsio.read(args.filename)
 
-#dims = data['dims']
-#asym = np.where(dims[0]!=dims[1])
-#print(dims[asym])
-#print(np.min(dims))
-#print(np.mean(dims))
-#print(np.max(dims))
-g_mean = g.mean(axis=0)
+    w, = np.where(data['flags']==0)
+    #w, = np.where(data['mod_size_flag']==0)
+    print("kept %d/%d" % (w.size, data.size))
+    data = data[w]
 
-# this is used to calibrate the shear, I will explain this
-R11vals = (g_1p[:,0] - g_1m[:,0])/0.02
-R22vals = (g_2p[:,1] - g_2m[:,1])/0.02
+    g = data['pars'][:, 2:2+2]
+    g_1p = data['pars_1p'][:, 2:2+2]
+    g_1m = data['pars_1m'][:, 2:2+2]
+    g_2p = data['pars_2p'][:, 2:2+2]
+    g_2m = data['pars_2m'][:, 2:2+2]
 
-R11 = R11vals.mean()
-R22 = R22vals.mean()
+    e1 = data['pars'][:,2]
+    e2 = data['pars'][:,3]
 
-shear = g_mean.copy()
-shear[0] /= R11
-shear[1] /= R22
+    g_mean = g.mean(axis=0)
 
-g_err = g.std(axis=0)/np.sqrt(w.size)
-shear_err = g_err.copy()
-shear_err[0] /= R11
-shear_err[1] /= R22
+    # this is used to calibrate the shear, I will explain this
+    R11vals = (g_1p[:,0] - g_1m[:,0])/0.02
+    R22vals = (g_2p[:,1] - g_2m[:,1])/0.02
 
-frac = shear[0]/0.02-1#-0.01
-frac_err = shear_err[0]/0.02
+    R11 = R11vals.mean()
+    R22 = R22vals.mean()
 
-print("bias: %g +/- %g" % (frac, frac_err))
-print("additive: %g +/- %g" % (shear[1], shear_err[1]))
+    shear = g_mean.copy()
+    shear[0] /= R11
+    shear[1] /= R22
+
+    shear1.append(shear[0])
+    shear2.append(shear[1])
+
+    g_err = g.std(axis=0)/np.sqrt(w.size)
+    shear_err = g_err.copy()
+    shear_err[0] /= R11
+    shear_err[1] /= R22
+
+    shear1_err.append(shear_err[0])
+    shear2_err.append(shear_err[1])
+
+    frac = shear[0]/0.02-1#-0.01
+    frac_err = shear_err[0]/0.02
+
+    print("bias: %g +/- %g" % (frac, frac_err))
+    print("additive: %g +/- %g" % (shear[1], shear_err[1]))
+
+
+###if measuring response from deblending to shear ####
+if len(lists) == 3:
+    resp = (shear1[0]-shear1[1])/0.02
+    S = shear1[2]/resp
+    S_err = shear1_err[2]/resp
+    frac = S/0.02-1#-0.01
+    frac_err = S_err/0.02
+
+    print("bias: %g +/- %g" % (frac, frac_err))
+    #print("additive: %g +/- %g" % (shear[1], shear_err[1]))
+    print(resp)
+    print(shear1,shear2)

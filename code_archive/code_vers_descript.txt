@@ -1,4 +1,0 @@
-galsim_deblend: Original verison of code
-
-new_galsim_deblend_std: Measure standard deviation and mean of noise on per pixel basis for `true-mod` where true is the center object without noise and model is a model of the center created by running scarlet on both center and neighbor.
- 

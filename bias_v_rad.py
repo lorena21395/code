@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
-majorLocator = MultipleLocator(0.1)
+majorLocator = MultipleLocator(0.02)
 majorFormatter = FormatStrFormatter('%s')
-minorLocator = MultipleLocator(0.025)
+minorLocator = MultipleLocator(0.005)
 
 
 r = [7,9,11,13,15,17,19]
@@ -80,23 +80,24 @@ err_thresh0052 = [0.00467769,0.00443167,0.00452556,0.00415059,0.00421953,0.00468
 
 #bias_mini = [-0.106728,-0.0188556,-0.00881271,-0.00431783,-0.00182994,0.00150557,-0.000325426]
 #err_mini = [0.00692365,0.00187336,0.00141832,0.00133865,0.0013372,0.00133648,0.0013343]
-
+"""
 #used cm model for mini
 
-#bias_mini = [-0.0167178,0.29282,0.0556112,0.00428428,-0.00447817,-0.00324964,-0.00286702]
-#err_mini = [0.00511843,0.00418356,0.00219845,0.00108241,0.000943684,0.000944699,0.000942955]
-
+bias_mini_old2 = [-0.0167178,0.29282,0.0556112,0.00428428,-0.00447817]#,-0.00324964,-0.00286702]
+err_mini_old2 = [0.00511843,0.00418356,0.00219845,0.00108241,0.000943684]#,0.000944699,0.000942955]
+"""
 ## Sersic with bgrms = 0.1
-bias = [-0.0652111,-0.0304299,-0.0165877,-0.00791151,-0.00485946,-0.00242685,-0.00582617]
-err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226765]
+#bias = [-0.0652111,-0.0304299,-0.0165877,-0.00791151,-0.00485946,-0.00242685,-0.00582617]
+#err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226765]
 
-#bias_mini = [-0.159687,-0.0164582,-0.00409156,0.00378743,4.3599e-05,0.000101924,0.000573448]
-#err_mini = [0.035359,0.00488523,0.00230586,0.00229654,0.00230798,0.0022896,0.00227844]
+#bias_mini2 = [-0.159687,-0.0164582,-0.00409156,0.00378743,4.3599e-05]#,0.000101924,0.000573448]
+#err_mini2 = [0.035359,0.00488523,0.00230586,0.00229654,0.00230798]#,0.0022896,0.00227844]
 
+"""
 #used cm model for mini
-#bias_mini = [-0.169015,0.267239,-0.00207964,-0.000695256,-0.000599733,-0.000912097,-0.000706023]
-#err_mini = [0.0262119,0.0192209,0.00177944,0.00160845,0.00160396,0.00160149,0.00160665]
-
+bias_mini_old = [-0.169015,0.267239,-0.00207964,-0.000695256,-0.000599733]#,-0.000912097,-0.000706023]
+err_mini_old = [0.0262119,0.0192209,0.00177944,0.00160845,0.00160396]#,0.00160149,0.00160665]
+"""
 ## USED PSF MATCHING AND SERSIC
 #noisy
 #bias2 = [-0.102715,-0.00184132,0.00242638,-0.0328944,-0.0325155,-0.0232965,-0.0216367]
@@ -104,29 +105,103 @@ err = [0.00230512,0.00227304,0.00226535,0.00225719,0.00225828,0.00227093,0.00226
 
 #low noise
 
-bias2 = [0.034893,0.0156834,0.0116585,-0.00214875,0.00232793,0.00882859,0.00335039]
-err2 = [0.00285284,0.00285284,0.0022912,0.00227236,0.000716216,0.00101213,0.00101089]
+#bias2 = [0.034893,0.0156834,0.0116585,-0.00214875,0.00232793,0.00882859,0.00335039]
+#err2 = [0.00285284,0.00285284,0.0022912,0.00227236,0.000716216,0.00101213,0.00101089]
+
+
+####################
+#Used PSF matching, source sizes = 25, fixed step 2 bug
+####################
+
+#scarlet bgrms = 0.1
+
+bias2 = [-0.153991,-0.117085,-0.0563544,-0.0176484,0.0153853,0.0330678,0.00804536]
+err2 = [0.00169017,0.00163331,0.00160695,0.0016277,0.00171888,0.00167187,0.0016127]
+
+#w/noise
+#bias2 = [-0.157756,-0.113699,-0.0569535,-0.0147493,0.0176834,0.0325792,0.0106561]
+#err2 = [0.00138015,0.00132885,0.00131399,0.00132739,0.00140289,0.00135735,0.00131566]
+
+"""
+#scarlet bgrms = 10 (bdk)
+
+bias2 = [0.0189488,0.0201816,-0.0177113,-0.0240506,-0.00216305]
+err2 = [0.00428605,0.00402718,0.00389555,0.00386534,0.00385578]
+
+#scarlet bgrms = 0.1 (bdk)
+
+bias = [-0.135427,-0.114661,-0.0612846,-0.0202314,0.0170747]
+err = [0.00193668,0.00177987,0.00169337,0.00167017,0.00171458] 
+"""
+"""
+### new mini, bulge+disk,noisy
+bias_mini = [-0.0226229,-0.00910595,-0.00725761,0.00269573,-0.000633403,0.00434651,-0.0248173]
+err_mini = [0.00487977,0.00457164,0.00469652,0.00628666,0.00885396,0.0108011,0.0127336]
+"""
+"""
+### new mini, bulge+disk,bg=0.1
+"""
+
+"""
+##new mini, bulge+disk+knots,bg=0.1
+bias_mini =[-0.00298971,0.00227401,-0.000223274,-0.00305304,0.000507125] 
+err_mini = [0.00243845,0.0022618,0.00212604,0.00206353,0.00204311]
+
+#bg=10.
+bias_mini2 = [-0.0267059,-0.0051037,-0.00646647,0.00466012,0.0018735]
+err_mini2 = [0.00521688,0.00486871,0.0047368,0.00471063,0.00471358]
+"""
+"""
+##seris+knots N=0.1
+#bias_mini = [-0.00699358,-0.000689624,-0.00132672,0.00261319,0.000627611]
+#err_mini = [0.00286034,0.00264058,0.00246451,0.0023803,0.00235323]
+
+##sers+knots N=10
+#bias_mini = [-0.0243382,-0.00187984,-0.00766753,-0.00242527,-0.00570878]
+#err_mini = [0.00429933,0.00401691,0.00385702,0.00381044,0.0037929]
+"""
+
+######
+#scarlet one step deblend w/ PSF match and 25 size source
+#####
+
+#bgrms = 10.
+
+#bias = [0.0234591,0.0260367,-0.025567,-0.0288706,-0.00816013,0.00732365,0.00568785]
+#err = [0.00337017,0.00313286,0.00300126,0.00295796,0.00293763,0.00290733,0.00291149]
+
+#bgrms = 0.1
+#bias = [-0.184006,-0.116358,-0.0654654,-0.0229924,0.011997,0.0270986,0.00642638]
+#err = [0.00139057,0.00175697,0.00130063,0.00131826,0.00138534,0.00135198,0.00131188]
+
+######
+#scarlet 2 step deblend with psf match and 25 size sources
+#####
+#bias2 = [0.0247849,0.0192701,-0.0223264,-0.0270631,-0.00607527,0.0061067,0.00266396]
+#err2 = [0.00318324,0.00302419,0.00293784,0.00292899,0.00292864,0.00290234,0.0029083]
 
 fig,ax = plt.subplots()
-
 plt.axhline(y=0,color='black',linewidth=2)
-plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet",color='r')
-plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet+PSF match",linestyle = ":",color='r')
-#plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="Minimof",color='b')
-#plt.errorbar(r,bias_thresh005,yerr=err_thresh005,xerr=None,label="Scarlet (EFT=0.05)",color='m')
-#plt.errorbar(r,bias_thresh0052,yerr=err_thresh0052,xerr=None,label="Scarlet (EFT=0.05)",color='m',linestyle=":")
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Scarlet 2-Step",color='r')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet 1-Step",linestyle = ":",color='r')
+#plt.errorbar(r,bias_mini,yerr=err_mini,xerr=None,label="mof-N0.1",color='b')
+#plt.errorbar(r,bias_mini2,yerr=err_mini2,xerr=None,label="mof-N10",color='b',linestyle=":")
+#plt.errorbar(r,bias_mini_old,yerr=err_mini_old,xerr=None,label="mini-sersic-N0.1",color='m')
+#plt.errorbar(r,bias_mini_old2,yerr=err_mini_old2,xerr=None,label="mini-sersic-N10",color='m',linestyle=":")
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias vs Radius (N=0.1, Sersic, PSF matched)")
+plt.title("Bias vs Radius")
 #plt.yticks(np.arange(min(bias), max(bias)+0.01, .005))
 plt.grid(which='minor')
 plt.grid(which='major')
 ax.yaxis.set_major_locator(majorLocator)
 ax.yaxis.set_major_formatter(majorFormatter)
-ax.yaxis.set_major_locator(plt.MaxNLocator(6))
+#ax.yaxis.set_major_locator(plt.MaxNLocator(50))
 plt.legend(loc=4)
 # for the minor ticks, use no labels; default NullFormatter
+#ax.set_xlim(6,16)
 ax.yaxis.set_minor_locator(minorLocator)
-#plt.ylim(-0.075,0.075)
+#plt.ylim(-0.051,0.051)
 plt.show()
-plt.savefig("bias_v_rad_n1e-1_sers_PSFmatch.png")
+plt.savefig("bias_v_rad_scar_N0.1_1step_v_2step.png")
+#plt.savefig('test.png')

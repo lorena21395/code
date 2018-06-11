@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 #####
+
+##one object mini deblend
+
 #individually shear each galaxy first
 #use sersic galaxies
 #change minimof gal model to "cm"
@@ -270,7 +273,7 @@ class Simulation(dict):
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
         
         if mode == 'scarlet' or mode == 'mof':
-            gals = [Cen, Neigh]
+            gals = [Cen]#, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             gals = [Cen]
@@ -310,7 +313,7 @@ class Simulation(dict):
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1,coord2]
+        coords = [coord1]#,coord2]
 
         noise = self._get_noise(dims,bg_rms)
         im += noise
@@ -406,7 +409,7 @@ class Model(object):
 
         npars_per=7
         num=len(coord_list)
-        assert num==2,"two objects for now"
+        assert num==1,"one objects for now"
 
         npars_tot = num*npars_per
         guess = np.zeros(npars_tot)
@@ -647,9 +650,9 @@ def norm_test(sim):
             noise_w_noise = mod.readd_noise(mod_noise,weights)
             tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
 
-            dobs = observation(cen_obj_w_noise,Mod['Image']['Bgrms'],
+            dobs = observation(cen_obj_w_noise,sim['Image']['Bgrms'],
                                new_coords[1],new_coords[0],
-                               Mod['Psf']['Bgrms_psf'],psf_im)
+                               sim['Psf']['Bgrms_psf'],psf_im)
             dobs.noise = tot_noise
         
         elif mode=='mof':
