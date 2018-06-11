@@ -28,6 +28,7 @@ parser.add_argument("seed",help="Seed for random number generator",type = int)
 parser.add_argument("config",help="Configuration for the simulation")
 
 parser.add_argument("--profile",action='store_true',help="run the profiler")
+parser.add_argument("--show",action='store_true',help="show images")
 
 dt = [
     ('flags','i4'),
@@ -194,6 +195,13 @@ class Simulation(dict):
 
         return obj
 
+    def _get_pure_knots_model(self, spec):
+        return self._get_knots(
+            spec,
+            spec['hlr'],
+            spec['Flux'],
+        )
+
     def _get_single_component_model(self, spec):
         mod=spec['Type']
         if mod=='Sersic':
@@ -214,6 +222,9 @@ class Simulation(dict):
 
         if spec['Type']=='bulge+disk':
             obj=self._get_bd_model(spec)
+        elif spec['Type']=='Knots':
+            obj=self._get_pure_knots_model(spec)
+            obj = self._add_ellipticity(obj, spec)
         else:
             obj=self._get_single_component_model(spec)
 
@@ -326,8 +337,9 @@ class Simulation(dict):
 
 class Model(object):
     
-    def __init__(self, sim):
+    def __init__(self, sim, show=False):
         self.sim=sim
+        self.show=show
 
     def get_scar_model(self):
         import scarlet
@@ -365,10 +377,15 @@ class Model(object):
 
     def _get_mof_obs(self):
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
-        #import images
-        #images.view(im)
-        #if 'q'==input('hit a key'):
-        #    stop
+
+        if self.show:
+            import images
+            tim = im/im.max()
+            tim = np.log10( tim-tim.min() + 1.0 )
+
+            images.view(tim)
+            if 'q'==input('hit a key: (q to quit) '):
+                stop
 
         bg_rms = self.sim['Image']['Bgrms']
         bg_rms_psf = self.sim['Psf']['Bgrms_psf']
@@ -512,6 +529,26 @@ class Model(object):
             center_obs = mm.make_corrected_obs(0, recenter=True)
             center_obs.noise = obs.noise
 
+            if self.show:
+                import images
+                cim=center_obs.image
+                s=cim.shape
+                tim=np.zeros((s[0], 2*s[1]))
+
+                tim[:, 0:s[1]] = obs.image
+                tim[:, s[1]:] = cim
+                tim *= 1.0/tim.max()
+                tim = np.log10( tim-tim.min() + 1.0 )
+
+                images.view(
+                    #tim-tim.min(),
+                    tim,
+                    title='MOF',
+                )
+                if 'q'==input('hit a key: (q to quit) '):
+                    stop
+
+
         else:
             center_obs=None
         
@@ -583,7 +620,7 @@ def get_prior():
     )
     return prior
 
-def norm_test(sim):
+def norm_test(args, sim):
 
     mode = sim.get_mode()
 
@@ -595,7 +632,7 @@ def norm_test(sim):
                            coords[0][1],Mod['Psf']['Bgrms_psf'],psf_im)
     else:
  
-        mod = Model(sim)
+        mod = Model(sim, show=args.show)
         if mode == 'scarlet':
             im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = \
                     mod.get_scar_model()
@@ -700,7 +737,7 @@ def main(args):
         print(j)
         try:
             tm0=time.time()
-            dobs = norm_test(sim)
+            dobs = norm_test(args, sim)
             tm_deblend += time.time()-tm0
 
             if dobs is None:
