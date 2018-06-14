@@ -352,7 +352,7 @@ for j in range(ntrial):
         if np.shape(diff) == (15,15):
             pix_vals.append(diff)
 
-    except ():#np.linalg.linalg.LinAlgError,ValueError):
+    except (np.linalg.linalg.LinAlgError,ValueError):
         print("error")
         #output['flags'][j] = 2
 

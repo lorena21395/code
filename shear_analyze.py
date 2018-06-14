@@ -7,11 +7,10 @@ import esutil as eu
 #parser = argparse.ArgumentParser()
 #parser.add_argument("filename",help="filename")
 #args = parser.parse_args()
-
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run184/run184_19-output-*.fits')
-flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run184/run184_20-*.fits')
-flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run180/run180_13-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_1-output-*.fits')
+flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_2-*.fits')
+flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_3-*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/test.fits')
 
 lists = [flist,flist2,flist3]
@@ -41,7 +40,16 @@ for fl in lists:
     e1 = data['pars'][:,2]
     e2 = data['pars'][:,3]
 
+    p1 = data['pars'][:,0]
+    p2 = data['pars'][:,1]
+
+    p1_err = p1.std(axis=0)/np.sqrt(w.size)
+    p2_err = p2.std(axis=0)/np.sqrt(w.size)
+    print("position: %g +/- %g" % (p1.mean(), p1_err))
+    print("position: %g +/- %g" % (p2.mean(), p2_err))
+
     g_mean = g.mean(axis=0)
+
 
     # this is used to calibrate the shear, I will explain this
     R11vals = (g_1p[:,0] - g_1m[:,0])/0.02

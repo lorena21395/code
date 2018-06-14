@@ -1,17 +1,18 @@
 from glob import glob
 import argparse
+from astropy.io import fits
 import fitsio
 import numpy as np
 import esutil as eu
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run182/run182_8-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run187/run187_2-*')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/code/test.fits')
 # read each file and combine into one big array
-mean_data = np.zeros((25,25))
-std_data = np.zeros((25,25))
+mean_data = np.zeros((51,51))
+std_data = np.zeros((51,51))
 data = eu.io.read(flist)
 for i in range(len(flist)):
     std_data +=data['std'][i]
@@ -23,7 +24,7 @@ print("avg means: ",mean_avg)
 
 
 f, ax = plt.subplots(1,3,figsize=(12,4))
-f1=ax[0].imshow(std_avg,interpolation='nearest', cmap='gray',vmin = np.min(std_avg),vmax =np.max(std_avg)) 
+f1=ax[0].imshow(std_avg,interpolation='nearest', cmap='gray',vmin = np.min(std_avg),vmax=np.max(std_avg)) 
 plt.colorbar(f1,ax=ax[0])
 ax[0].set_title("Multi Object True-Mod STD r=9")
 #plt.savefig("multi_true-mod_std_r9_PSF_match_s02_3.png")
@@ -38,10 +39,19 @@ ax[1].set_title("Multi Object True-Mod Mean r=9")
 ax[2].hist((std_avg.flatten()),100,histtype='step')
 ax[2].set_title("Multi Object True-Mod Stds r=9")
 plt.tight_layout()
-f.savefig("multi_true-mod_sers_r9_n10.png")
+f.savefig("multi_true-mod_sers_r9_n10_size51_noSC.png")
 plt.close()
 
 mean_of_stds = std_avg.mean()
 err_of_mean_stds = std_avg.std()/np.sqrt(std_avg.size)
 
 print("mean: %g +/- %g" % (mean_of_stds,err_of_mean_stds))
+"""
+hdu = (fits.PrimaryHDU(mean_avg))
+hdu1 = fits.HDUList([hdu])
+hdu1.writeto('true-mod-r9-N10-mean_avg.fits')
+
+hdu = (fits.PrimaryHDU(std_avg))
+hdu1 = fits.HDUList([hdu])
+hdu1.writeto('true-mod-r9-N10-std_avg.fits')
+"""
