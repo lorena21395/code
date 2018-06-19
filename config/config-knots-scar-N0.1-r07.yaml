@@ -14,6 +14,8 @@ Cen:
     knots:
         num: 100
 
+        # fraction of disk flux
+
 Neigh:
     Type: Knots
 
@@ -25,10 +27,12 @@ Neigh:
     Pos: Rand_circle
     dx: 15.
     dy: 15.
-    r: 11.
+    r: 7.
 
     knots:
         num: 100
+
+        # fraction of disk flux
 
 Image:
     Bgrms: 0.1
@@ -44,4 +48,4 @@ Shear:
     Shear1: 0.02
     Shear2: 0.00
 
-Mode: mof
+Mode: scarlet

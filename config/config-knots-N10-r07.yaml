@@ -14,11 +14,6 @@ Cen:
     knots:
         num: 100
 
-        # fraction of disk flux
-        fluxfrac: 
-            type: uniform
-            range: [0.0, 0.25]
-
 Neigh:
     Type: Knots
 
@@ -34,12 +29,6 @@ Neigh:
 
     knots:
         num: 100
-
-        # fraction of disk flux
-        fluxfrac: 
-            type: uniform
-            range: [0.0, 0.25]
-
 
 Image:
     Bgrms: 10.0

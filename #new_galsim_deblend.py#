@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 #####
+
+##one object mini deblend
+
+#individually shear each galaxy first
+#use sersic galaxies
+#change minimof gal model to "cm"
 #PSF matching
 
 import time
@@ -11,9 +17,6 @@ import argparse
 import sep
 import ngmix
 import numpy as np
-import matplotlib.pyplot as plt
-plt.switch_backend('agg')
-import scarlet.constraints as sc
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
@@ -25,6 +28,7 @@ parser.add_argument("seed",help="Seed for random number generator",type = int)
 parser.add_argument("config",help="Configuration for the simulation")
 
 parser.add_argument("--profile",action='store_true',help="run the profiler")
+parser.add_argument("--show",action='store_true',help="show images")
 
 dt = [
     ('flags','i4'),
@@ -33,7 +37,6 @@ dt = [
     ('pars_1m','f8',6),
     ('pars_2p','f8',6),
     ('pars_2m','f8',6),
-    ('time','f8')
 ]
 
 psf_model = 'gauss'
@@ -192,6 +195,13 @@ class Simulation(dict):
 
         return obj
 
+    def _get_pure_knots_model(self, spec):
+        return self._get_knots(
+            spec,
+            spec['hlr'],
+            spec['Flux'],
+        )
+
     def _get_single_component_model(self, spec):
         mod=spec['Type']
         if mod=='Sersic':
@@ -202,8 +212,6 @@ class Simulation(dict):
             obj=self._get_exp_model(spec)
         elif mod=='DeVaucouleurs':
             obj=self._get_dev_model(spec)
-        elif mod=='Knots':
-            obj=self._get_knots(spec)
         else:
             raise RuntimeError("bad model: '%s'" % mod)
 
@@ -214,6 +222,9 @@ class Simulation(dict):
 
         if spec['Type']=='bulge+disk':
             obj=self._get_bd_model(spec)
+        elif spec['Type']=='Knots':
+            obj=self._get_pure_knots_model(spec)
+            obj = self._add_ellipticity(obj, spec)
         else:
             obj=self._get_single_component_model(spec)
 
@@ -273,22 +284,15 @@ class Simulation(dict):
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
         
         if mode == 'scarlet' or mode == 'mof':
-            gals = [Cen, Neigh]
+            gals = [Cen]#, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             gals = [Cen]
             objs = galsim.Add(gals)
 
-        shear_spec = self['Shear']
-        shear1, shear2 = shear_spec['Shear1'],shear_spec['Shear2']
+        shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
         objs = objs.shear(g1=shear1, g2=shear2)
         
-        if 'Extra_Shear' in shear_spec:
-            if 'shear+' in shear_spec['Extra_Shear']:
-                objs = objs.shear(g1=shear_spec['Extra_Shear']['shear+'],g2=0.0)
-            elif 'shear-' in shear_spec['Extra_Shear']:
-                objs = objs.shear(g1=shear_spec['Extra_Shear']['shear-'],g2=0.0)
-
         return objs,dx1,dy1,dx2,dy2
 
     def _get_noise(self,dims,bg_rms):
@@ -314,54 +318,38 @@ class Simulation(dict):
             scale=self['Image']['Scale'],
         )
         im = gsim.array
-        #objects = sep.extract(im, 1.5, err=10.)
-        #s_coords = [(objects['y'][0],objects['x'][0]),(objects['y'][1],objects['x'][1])]
         dims = np.shape(im)
         
-        #rewrite coords for scarlet
+        #rewrite coords for galsim
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1,coord2]
-        """
-        if np.abs(coord1[0]-s_coords[0][0]) < np.abs(coord2[0]-s_coords[0][0]) and np.abs(coord1[1]-s_coords[0][1]) < np.abs(coord2[1]-s_coords[0][1]):
-            s_coord1 = s_coords[0]
-            s_coord2 = s_coords[1]
-        else:
-            s_coord1 = s_coords[1]
-            s_coord2 = s_coords[0]
-        
-        sep_coords = [s_coord1,s_coord2]
-        #print(coords,sep_coords)
-        """
+        coords = [coord1]#,coord2]
+
         noise = self._get_noise(dims,bg_rms)
         im += noise
         noise = self._get_noise(dims,bg_rms)
 
-        plt.imshow(im)
-        plt.colorbar()
-        plt.savefig('test.png')
-
         if mode ==  'scarlet' or mode == 'control':
             im = im.reshape( (1, dims[0], dims[1]) )
 
-        return im,psf_im,coords,dims,dx1,dy1,noise#,sep_coords
+        return im,psf_im,coords,dims,dx1,dy1,noise
 
 class Model(object):
     
-    def __init__(self, sim):
+    def __init__(self, sim, show=False):
         self.sim=sim
+        self.show=show
 
     def get_scar_model(self):
         import scarlet
 
-        im,psf_im,coords,dims,dx1,dy1,noise#,sep_coords = self.sim()
+        im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
         bg_rms = self.sim['Image']['Bgrms']
         mode = self.sim['Mode']
         #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
         #constraints['l0'] = bg_rms
         constraint = (sc.SimpleConstraint())
-#                       & sc.MonotonicityConstraint(use_nearest=True))
         config = scarlet.Config(source_sizes = [25])
         psf_dims = np.shape(psf_im)
         psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
@@ -380,8 +368,9 @@ class Model(object):
         neigh_mod = sources[1].get_model()
         #steps_used = blend.it
         
-        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise#,sep_coords
+        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
         #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
+
 
     def _fit_psf_admom(self, obs):
         Tguess=4.0
@@ -390,10 +379,15 @@ class Model(object):
 
     def _get_mof_obs(self):
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
-        #import images
-        #images.view(im)
-        #if 'q'==input('hit a key'):
-        #    stop
+
+        if self.show:
+            import images
+            tim = im/im.max()
+            tim = np.log10( tim-tim.min() + 1.0 )
+
+            images.view(tim)
+            if 'q'==input('hit a key: (q to quit) '):
+                stop
 
         bg_rms = self.sim['Image']['Bgrms']
         bg_rms_psf = self.sim['Psf']['Bgrms_psf']
@@ -427,14 +421,14 @@ class Model(object):
         )
         obs.noise=noise
 
-        return obs#, sep_coords,dims
+        return obs, coords
 
     def _get_mof_guess(self, coord_list):
         rng=self.sim.rng
 
         npars_per=7
         num=len(coord_list)
-        assert num==2,"two objects for now"
+        assert num==1,"one objects for now"
 
         npars_tot = num*npars_per
         guess = np.zeros(npars_tot)
@@ -537,10 +531,30 @@ class Model(object):
             center_obs = mm.make_corrected_obs(0, recenter=True)
             center_obs.noise = obs.noise
 
+            if self.show:
+                import images
+                cim=center_obs.image
+                s=cim.shape
+                tim=np.zeros((s[0], 2*s[1]))
+
+                tim[:, 0:s[1]] = obs.image
+                tim[:, s[1]:] = cim
+                tim *= 1.0/tim.max()
+                tim = np.log10( tim-tim.min() + 1.0 )
+
+                images.view(
+                    #tim-tim.min(),
+                    tim,
+                    title='MOF',
+                )
+                if 'q'==input('hit a key: (q to quit) '):
+                    stop
+
+
         else:
             center_obs=None
         
-        return center_obs,coords
+        return center_obs
 
 
     def rob_deblend(self,im,model,mod1,mod2,dims):
@@ -551,7 +565,7 @@ class Model(object):
         T = np.array([mod1[0,:,:],mod2[0,:,:]]).clip(1.0e-15)
         mod_sum = np.zeros(dims)
         for r in range(2):
-            mod_sum += w[r]*T[r]
+            mod_sum += w[r]*T[r] 
         for r in range(2):
             W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
             C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
@@ -586,7 +600,7 @@ def get_prior():
     """
     cen_sigma = 1.0
     cen_prior = ngmix.priors.CenPrior(
-        0, 0,
+        0.0, 0.0,
         cen_sigma,
         cen_sigma,
     )
@@ -606,54 +620,30 @@ def get_prior():
     )
     return prior
 
-def norm_test(sim):
+def norm_test(args, sim):
 
     mode = sim.get_mode()
 
     if mode == 'control':
-        im,psf_im,coords,dims,dx1,dy1,noise,sep_coords = sim()
-        dobs = observation(im[0],sim['Image']['Bgrms'],coords[0][0],
-                           coords[0][1],sim['Psf']['Bgrms_psf'],psf_im)
-        dobs.noise = noise
+        im,psf_im,coords,dims,dx1,dy1,noise = sim()
+        output['dims'][j] = np.array(dims)
+        
+        dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][0],
+                           coords[0][1],Mod['Psf']['Bgrms_psf'],psf_im)
     else:
  
-        mod = Model(sim)
+        mod = Model(sim, show=args.show)
         if mode == 'scarlet':
-            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise =
-            \mod.get_scar_model()
+            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = \
+                    mod.get_scar_model()
             bg_rms = sim['Image']['Bgrms']
             if sim['Steps'] == 'one':
-                #coord2=coords[1]
                 coord1 = coords[0]
-                #isolate central object
+                #isolate central object                                         
                 cen_obj = im[0,:,:]-mod2[0,:,:]
-
-                #subtract full model from original image
-                #orig_minus_model = im[0,:,:]-model[0,:,:]
-                #find shape of neighbor object
-                #neigh_shape = [1,15,15]
-                
-                #half1 = neigh_shape[1]/2.
-                #half2 = neigh_shape[2]/2.
-                
-                #beg1 = int(coord2[0]-half1+1)
-                #end1 = int(coord2[0]+half1+1)
-
-                #beg2 = int(coord2[1]-half2+1)
-                #end2 = int(coord2[1]+half2+1)
-                
-                #region = orig_minus_model[beg1:end1,beg2:end2]
-                #plt.imshow(orig_minus_model[beg1:end1,beg2:end2])
-                #plt.savefig('test.png')
-                #print(np.var(region))
-                #extra_noise = np.sqrt(bg_rms**2-np.var(region))
-                #print(extra_noise)
-                #rng = sim.rng
-                #cen_obj[beg1:end1,beg2:end2]+=rng.normal(scale=extra_noise)]
                 dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],sim['Psf']['Bgrms_psf'],psf_im)
                 dobs.noise = noise
-            elif sim['Steps'] == 'two':
-
+            if sim['Steps'] == 'two':
                 cen_shape = cen_mod.shape
                 im_shape = np.shape(im)
 
@@ -712,8 +702,9 @@ def norm_test(sim):
         elif mode=='mof':
             dobs = mod.get_mof_model()
 
+   
         #dobs.noise = noise
-    return dobs#,coords,dims#,cen_obj,cen_obj_w_noise
+    return dobs#,cen_obj,cen_obj_w_noise
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                ntry,metacal_pars,dobs):
@@ -753,10 +744,7 @@ def main(args):
         print(j)
         try:
             tm0=time.time()
-            dobs = norm_test(sim)
-            #cen =  (np.array(dim) - 1.0)/2.0
-            #coord1 = (coords[0][0]-cen[0],coords[0][1]-cen[1])
-            #prior = get_prior(coord1)
+            dobs = norm_test(args, sim)
             tm_deblend += time.time()-tm0
 
             if dobs is None:
