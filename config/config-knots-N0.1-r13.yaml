@@ -27,7 +27,7 @@ Neigh:
     Pos: Rand_circle
     dx: 15.
     dy: 15.
-    r: 11.
+    r: 13.
 
     knots:
         num: 100

@@ -8,6 +8,8 @@ majorFormatter = FormatStrFormatter('%s')
 minorLocator = MultipleLocator(0.001)
 
 r = [7,9,11,13,15]
+
+"""
 ####Calibrate with extra shear response:
 ## ALL SERSIC GALS
 #2 step, bg =0.1
@@ -44,21 +46,34 @@ err = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
 ###regular mof bg = 10
 #bias = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
 #err = [0.0031733,0.00298901,0.00315932,0.00290509,0.00290543]
+"""
+
+############
+#knots only (MOF)
+###########
+#N = 0.1
+bias = [-0.00906016,0.00320047,0.000231944,0.00544578,-0.00609954]
+err = [0.00364751,0.00333022,0.0030994,0.00296978,0.00291995]
+#N = 10
+bias2 = [-0.00691184,-0.0016747,-0.00334637,3.37054e-05,0.00701863]
+err2 = [0.00416599,0.00391162,0.00362538,0.00347558,0.00342445]
+
+
 fig,ax = plt.subplots()
 plt.axhline(y=0,color='black',linewidth=2)
-#plt.errorbar(r,bias,yerr=err,xerr=None,label="2-step w/ meta",color='r')
-#plt.errorbar(r,bias2,yerr=err2,xerr=None,label=" 2-Step",color='r',linestyle=':')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF N=0.1",color='b')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="MOF N=10",color='b',linestyle=':')
 #plt.errorbar(r,bias3,yerr=err3,xerr=None,label="1-Step w/ meta",color='blue')
 #plt.errorbar(r,bias4,yerr=err4,xerr=None,label="1-Step",color='blue',linestyle=':')
-plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF",color='m',linestyle=':')
-plt.errorbar(r,bias6,yerr=err6,xerr=None, label= "MOF w/ cali",color='m')
+#plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF",color='m',linestyle=':')
+#plt.errorbar(r,bias6,yerr=err6,xerr=None, label= "MOF w/ cali",color='m')
 #plt.errorbar(r,bias5,yerr=err5,xerr=None, label= "MOF w/ cali, no resp",color='m')
 #plt.errorbar(r,bias8,yerr=err8,xerr=None, label= "MOF w/ cali",color='m',linestyle = "-")
-plt.errorbar(13,-0.00125321,yerr=0.00102325,xerr=None,label = "MOF w/ cali + sep",marker="o",color="c")
-plt.errorbar(13,0.000438874,yerr=0.00102498,xerr=None,label="MOF + sep",marker="o",color="r")
+#plt.errorbar(13,-0.00125321,yerr=0.00102325,xerr=None,label = "MOF w/ cali + sep",marker="o",color="c")
+#plt.errorbar(13,0.000438874,yerr=0.00102498,xerr=None,label="MOF + sep",marker="o",color="r")
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias v radius (N 0.1)")
+plt.title("Bias v radius (knots)")
 
 plt.grid(which='minor')
 plt.grid(which='major')
@@ -68,5 +83,5 @@ ax.yaxis.set_minor_locator(minorLocator)
 
 plt.legend(loc=4)
 
-#plt.savefig('bias_v_rad_N0.1_scar_mof_cali.png')
-plt.savefig('test.png')
+plt.savefig('bias_v_rad_MOF_knots.png')
+#plt.savefig('test.png')

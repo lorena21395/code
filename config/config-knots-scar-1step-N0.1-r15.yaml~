@@ -27,7 +27,7 @@ Neigh:
     Pos: Rand_circle
     dx: 15.
     dy: 15.
-    r: 11.
+    r: 15.
 
     knots:
         num: 100
@@ -37,7 +37,7 @@ Neigh:
 Image:
     Bgrms: 0.1
     Scale: 1
-    dims: [48, 48]
+#    dims: [48, 48]
 
 Psf:
     Psf_hlr: 1.7
@@ -48,4 +48,6 @@ Shear:
     Shear1: 0.02
     Shear2: 0.00
 
-Mode: mof
+Mode: scarlet
+
+Steps: one

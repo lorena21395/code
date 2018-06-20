@@ -27,7 +27,7 @@ Neigh:
     Pos: Rand_circle
     dx: 15.
     dy: 15.
-    r: 11.
+    r: 15.
 
     knots:
         num: 100
@@ -48,4 +48,6 @@ Shear:
     Shear1: 0.02
     Shear2: 0.00
 
-Mode: mof
+Mode: scarlet
+
+Steps: two

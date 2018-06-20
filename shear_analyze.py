@@ -8,12 +8,12 @@ import esutil as eu
 #parser.add_argument("filename",help="filename")
 #args = parser.parse_args()
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_1-output-*.fits')
-flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_2-*.fits')
-flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_3-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run189/run189_20-output-*.fits')
+#flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_2-*.fits')
+#flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_3-*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/test.fits')
 
-lists = [flist,flist2,flist3]
+lists = [flist]#,flist2,flist3]
 # read each file and combine into one big array
 
 shear1 = []

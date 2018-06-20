@@ -14,8 +14,6 @@ Cen:
     knots:
         num: 100
 
-        # fraction of disk flux
-
 Neigh:
     Type: Knots
 
@@ -27,15 +25,13 @@ Neigh:
     Pos: Rand_circle
     dx: 15.
     dy: 15.
-    r: 11.
+    r: 13.
 
     knots:
         num: 100
 
-        # fraction of disk flux
-
 Image:
-    Bgrms: 0.1
+    Bgrms: 10.0
     Scale: 1
     dims: [48, 48]
 

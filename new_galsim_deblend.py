@@ -17,6 +17,11 @@ import argparse
 import sep
 import ngmix
 import numpy as np
+import scarlet.constraints as sc
+
+#import matplotlib.pyplot as plt
+#plt.switch_backend('agg')
+
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
@@ -284,7 +289,7 @@ class Simulation(dict):
         Neigh = Neigh.shift(dx=dx2, dy=dy2)
         
         if mode == 'scarlet' or mode == 'mof':
-            gals = [Cen]#, Neigh]
+            gals = [Cen, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             gals = [Cen]
@@ -324,7 +329,7 @@ class Simulation(dict):
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1]#,coord2]
+        coords = [coord1,coord2]
 
         noise = self._get_noise(dims,bg_rms)
         im += noise
@@ -347,17 +352,19 @@ class Model(object):
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
         bg_rms = self.sim['Image']['Bgrms']
         mode = self.sim['Mode']
-        constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
+        #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
         #constraints['l0'] = bg_rms
+        constraint = (sc.SimpleConstraint())
+        config = scarlet.Config(source_sizes = [25])
         psf_dims = np.shape(psf_im)
         psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
         target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
-        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)
-        sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels) for coord in coords]
+        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf,constraints=constraint.copy())
+        sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels,config=config) for coord in coords]
         #sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
         #scarlet.ExtendedSource.shift_center=0.0
         #config = scarlet.Config(edge_flux_thresh=0.05)
-        blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
+        blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
         blend.fit(10000, e_rel=1e-3)
         model = blend.get_model()
         mod1 = blend.get_model(m=0)
@@ -426,7 +433,7 @@ class Model(object):
 
         npars_per=7
         num=len(coord_list)
-        assert num==1,"one objects for now"
+        assert num==2,"one objects for now"
 
         npars_tot = num*npars_per
         guess = np.zeros(npars_tot)
@@ -559,13 +566,11 @@ class Model(object):
         C = np.zeros((dims[0],dims[1],2))
         W = np.zeros((dims[0],dims[1],2))
         I = im
-        w = np.array([model[0,:,:],model[0,:,:]])
-        T = np.array([mod1[0,:,:],mod2[0,:,:]])
+        w = np.array([model[0,:,:],model[0,:,:]]).clip(1.0e-15)
+        T = np.array([mod1[0,:,:],mod2[0,:,:]]).clip(1.0e-15)
         mod_sum = np.zeros(dims)
         for r in range(2):
             mod_sum += w[r]*T[r] 
-        zeros = np.where(mod_sum == 0.)
-        mod_sum[zeros] += 0.000001
         for r in range(2):
             W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
             C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
@@ -636,61 +641,68 @@ def norm_test(args, sim):
         if mode == 'scarlet':
             im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = \
                     mod.get_scar_model()
+            bg_rms = sim['Image']['Bgrms']
+            if sim['Steps'] == 'one':
+                coord1 = coords[0]
+                #isolate central object                                         
+                cen_obj = im[0,:,:]-mod2[0,:,:]
+                dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],sim['Psf']['Bgrms_psf'],psf_im)
+                dobs.noise = noise
+            if sim['Steps'] == 'two':
+                cen_shape = cen_mod.shape
+                im_shape = np.shape(im)
 
-            cen_shape = cen_mod.shape
-            im_shape = np.shape(im)
+                #check if model dimensions are ever larger than image dims
+                #if larger, trim the dimensions
+                #This is sometimes an issue for low edge flux test
+                if cen_shape[1] > im_shape[1]:
+                    cen_shape = (1,im_shape[1],cen_shape[2])
+                if cen_shape[2] > im_shape[2]:
+                    cen_shape = (1,cen_shape[1],im_shape[2])
 
-            #check if model dimensions are ever larger than image dims
-            #if larger, trim the dimensions
-            #This is sometimes an issue for low edge flux test
-            if cen_shape[1] > im_shape[1]:
-                cen_shape = (1,im_shape[1],cen_shape[2])
-            if cen_shape[2] > im_shape[2]:
-                cen_shape = (1,cen_shape[1],im_shape[2])
+                coord1 = coords[0]
+                dims = [np.shape(im)[1],np.shape(im)[2]]
+                C,W = mod.rob_deblend(im,model,mod1,mod2,dims)
+                Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims)
 
-            coord1 = coords[0]
-            dims = [np.shape(im)[1],np.shape(im)[2]]
-            C,W = mod.rob_deblend(im,model,mod1,mod2,dims)
-            Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims)
+                half1 = cen_shape[1]/2.
+                half2 = cen_shape[2]/2.
 
-            half1 = cen_shape[1]/2.
-            half2 = cen_shape[2]/2.
+                beg1 = int(coord1[0]-half1+1)
+                end1 = int(coord1[0]+half1+1)
 
-            beg1 = int(coord1[0]-half1+1)
-            end1 = int(coord1[0]+half1+1)
+                beg2 = int(coord1[1]-half2+1)
+                end2 = int(coord1[1]+half2+1)
 
-            beg2 = int(coord1[1]-half2+1)
-            end2 = int(coord1[1]+half2+1)
-
-            #metacal needs symmetric image
-            if cen_shape[1] != cen_shape[2]:
-                cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
-                weights = np.zeros((max(cen_shape),max(cen_shape)))
-                mod_noise = np.zeros((max(cen_shape),max(cen_shape)))
+                #metacal needs symmetric image
+                if cen_shape[1] != cen_shape[2]:
+                    cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
+                    weights = np.zeros((max(cen_shape),max(cen_shape)))
+                    mod_noise = np.zeros((max(cen_shape),max(cen_shape)))
                 
-                cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
-                weights[0:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
-                mod_noise[0:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
-                shape = C[beg1:end1,beg2:end2,0].shape
-                new_coords = (dx1+(shape[1]-1.0)/2.0,dy1+(shape[0]-1.0)/2.0)
+                    cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
+                    weights[0:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
+                    mod_noise[0:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
+                    shape = C[beg1:end1,beg2:end2,0].shape
+                    new_coords = (dx1+(shape[1]-1.0)/2.0,dy1+(shape[0]-1.0)/2.0)
 
-            else:
-                cen_obj = C[beg1:end1,beg2:end2,0]
-                weights = W[beg1:end1,beg2:end2,0]
-                mod_noise = Cnoise[beg1:end1,beg2:end2,0]
-                new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
+                else:
+                    cen_obj = C[beg1:end1,beg2:end2,0]
+                    weights = W[beg1:end1,beg2:end2,0]
+                    mod_noise = Cnoise[beg1:end1,beg2:end2,0]
+                    new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
 
             
-            cen_obj_w_noise = mod.readd_noise(cen_obj,weights)
-            shape = np.shape(cen_obj_w_noise)
-            #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
-            noise_w_noise = mod.readd_noise(mod_noise,weights)
-            tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
+                #cen_obj_w_noise = mod.readd_noise(cen_obj,weights)
+                #shape = np.shape(cen_obj_w_noise)
+                #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
+                #noise_w_noise = mod.readd_noise(mod_noise,weights)
+                #tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
 
-            dobs = observation(cen_obj_w_noise,sim['Image']['Bgrms'],
+                dobs = observation(cen_obj,sim['Image']['Bgrms'],
                                new_coords[1],new_coords[0],
                                sim['Psf']['Bgrms_psf'],psf_im)
-            dobs.noise = tot_noise
+                dobs.noise = mod_noise
         
         elif mode=='mof':
             dobs = mod.get_mof_model()
