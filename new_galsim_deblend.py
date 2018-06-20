@@ -17,11 +17,8 @@ import argparse
 import sep
 import ngmix
 import numpy as np
-import scarlet.constraints as sc
-
 #import matplotlib.pyplot as plt
 #plt.switch_backend('agg')
-
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
@@ -348,27 +345,28 @@ class Model(object):
 
     def get_scar_model(self):
         import scarlet
-
+        import scarlet.constraint as sc
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
         bg_rms = self.sim['Image']['Bgrms']
         mode = self.sim['Mode']
         #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
         #constraints['l0'] = bg_rms
-        constraint = (sc.SimpleConstraint())
+        constraints = (sc.SimpleConstraint(),sc.DirectMonotonicityConstraint(use_nearest=False),sc.DirectSymmetryConstraint())
         config = scarlet.Config(source_sizes = [25])
         psf_dims = np.shape(psf_im)
         psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
         target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
-        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf,constraints=constraint.copy())
+        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf,constraints = constraints)
         sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels,config=config) for coord in coords]
         #sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
         #scarlet.ExtendedSource.shift_center=0.0
         #config = scarlet.Config(edge_flux_thresh=0.05)
-        blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
+        blend = scarlet.Blend(sources)
+        blend.set_data(im, bg_rms=[bg_rms],config=config)
         blend.fit(10000, e_rel=1e-3)
         model = blend.get_model()
-        mod1 = blend.get_model(m=0)
-        mod2 = blend.get_model(m=1)
+        mod1 = blend.get_model(0)
+        mod2 = blend.get_model(1)
         cen_mod = sources[0].get_model()
         neigh_mod = sources[1].get_model()
         #steps_used = blend.it
@@ -433,7 +431,7 @@ class Model(object):
 
         npars_per=7
         num=len(coord_list)
-        assert num==2,"one objects for now"
+        assert num==1,"one objects for now"
 
         npars_tot = num*npars_per
         guess = np.zeros(npars_tot)
