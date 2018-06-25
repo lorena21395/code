@@ -17,8 +17,8 @@ import argparse
 import sep
 import ngmix
 import numpy as np
-#import matplotlib.pyplot as plt
-#plt.switch_backend('agg')
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
@@ -254,6 +254,7 @@ class Simulation(dict):
 
     def _get_gals(self):
         mode = self['Mode']
+        mode = 'control'
         rng=self.rng
 
         Cen = self._get_cen_model()
@@ -294,7 +295,7 @@ class Simulation(dict):
 
         shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
         objs = objs.shear(g1=shear1, g2=shear2)
-        
+        mode = 'scarlet'
         return objs,dx1,dy1,dx2,dy2
 
     def _get_noise(self,dims,bg_rms):
@@ -304,6 +305,7 @@ class Simulation(dict):
 
     def __call__(self):
         mode = self['Mode']
+        mode = 'control'
         bg_rms = self['Image']['Bgrms']
         psf, psf_im = self._get_psf_img()
         objs,dx1,dy1,dx2,dy2 = self._get_gals()
@@ -326,16 +328,20 @@ class Simulation(dict):
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1,coord2]
+        if mode == 'control':
+            coords = [coord1]
+        else:
+            coords = [coord1,coord2]
 
         noise = self._get_noise(dims,bg_rms)
+        im2 = gsim.array.copy()
         im += noise
         noise = self._get_noise(dims,bg_rms)
-
         if mode ==  'scarlet' or mode == 'control':
             im = im.reshape( (1, dims[0], dims[1]) )
-
-        return im,psf_im,coords,dims,dx1,dy1,noise
+            im2 = im2.reshape( (1,dims[0], dims[1]) )
+        mode = 'scarlet'
+        return im,psf_im,coords,dims,dx1,dy1,noise, im2
 
 class Model(object):
     
@@ -346,19 +352,20 @@ class Model(object):
     def get_scar_model(self):
         import scarlet
         import scarlet.constraint as sc
-        im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
+        im,psf_im,coords,dims,dx1,dy1,noise,im2 = self.sim()
         bg_rms = self.sim['Image']['Bgrms']
         mode = self.sim['Mode']
         #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
         #constraints['l0'] = bg_rms
-        constraints = (sc.SimpleConstraint(),sc.DirectMonotonicityConstraint(use_nearest=False),sc.DirectSymmetryConstraint())
+        #psf_constraints = (sc.SimpleConstraint())
+        #source_constraints = (sc.SimpleConstraint(),sc.DirectMonotonicityConstraint(use_nearest=False))#,sc.DirectSymmetryConstraint())
         config = scarlet.Config(source_sizes = [25])
         psf_dims = np.shape(psf_im)
         psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
         target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
-        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf,constraints = constraints)
-        sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=diff_kernels,config=config) for coord in coords]
-        #sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]
+        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)#,constraints = psf_constraints)
+        sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=None,config=config,shift_center=0.0) for coord in coords]
+        #sources = [scarlet.ExtendedSource(coord, im, [bg_rms],shift) for coord in coords]
         #scarlet.ExtendedSource.shift_center=0.0
         #config = scarlet.Config(edge_flux_thresh=0.05)
         blend = scarlet.Blend(sources)
@@ -366,13 +373,13 @@ class Model(object):
         blend.fit(10000, e_rel=1e-3)
         model = blend.get_model()
         mod1 = blend.get_model(0)
-        mod2 = blend.get_model(1)
+        #mod2 = blend.get_model(1)
         cen_mod = sources[0].get_model()
-        neigh_mod = sources[1].get_model()
+        #neigh_mod = sources[1].get_model()
         #steps_used = blend.it
         
-        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
-        #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
+        #return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
+        return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise,im2
 
 
     def _fit_psf_admom(self, obs):
@@ -628,7 +635,7 @@ def norm_test(args, sim):
     mode = sim.get_mode()
 
     if mode == 'control':
-        im,psf_im,coords,dims,dx1,dy1,noise = sim()
+        im,psf_im,coords,dims,dx1,dy1,noise,im2 = sim()
         output['dims'][j] = np.array(dims)
         
         dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][0],
@@ -637,13 +644,26 @@ def norm_test(args, sim):
  
         mod = Model(sim, show=args.show)
         if mode == 'scarlet':
-            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = \
-                    mod.get_scar_model()
+            #im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = mod.get_scar_model()
+            im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise,im2 = mod.get_scar_model()
             bg_rms = sim['Image']['Bgrms']
             if sim['Steps'] == 'one':
                 coord1 = coords[0]
-                #isolate central object                                         
-                cen_obj = im[0,:,:]-mod2[0,:,:]
+                #isolate central object                                       
+                #cen_obj = model[0,:,:]
+                #cen_obj = im[0,:,:]-mod2[0,:,:]
+                cen_obj = model[0,:,:] - im2[0,:,:]
+                f,ax = plt.subplots(1,2,figsize=(8,4))
+                f1 = ax[0].imshow(noise)
+                ax[0].set_title("Orig Noise")
+                plt.colorbar(f1,ax=ax[0])
+                f2 = ax[1].imshow(cen_obj)
+                plt.colorbar(f2,ax=ax[1])
+                ax[1].set_title("Mod-Im")
+                plt.tight_layout()
+                f.savefig('test.png')
+                plt.close()
+
                 dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],sim['Psf']['Bgrms_psf'],psf_im)
                 dobs.noise = noise
             if sim['Steps'] == 'two':

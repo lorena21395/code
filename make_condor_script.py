@@ -10,8 +10,8 @@ print('kill_sig        = SIGINT')
 #print('requirements = (cpu_experiment == "phenix")')
 print('+Experiment     = "astro"')
 
-for i in range(1,5001):
-    seed = np.random.randint(0, 2**15)
-    print('+job_name = "run189-'+str(i).zfill(6)+'"')
-    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run189/run189_10-output-'+str(i).zfill(6)+'.fits 200 '+str(seed)+' /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config-knots-scar-2step-N0.1-r15.yaml')
+for i in range(1,2501):
+    seed = np.random.randint(1, 2**15)
+    print('+job_name = "run193-'+str(i).zfill(6)+'"')
+    print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run193/run193_4-output-'+str(i).zfill(6)+'.fits 400 '+str(seed)+' /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config-scar-1step-N0.1-r09-e2shear0.02.yaml')
     print('Queue')

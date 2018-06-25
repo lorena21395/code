@@ -8,7 +8,7 @@ import esutil as eu
 #parser.add_argument("filename",help="filename")
 #args = parser.parse_args()
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run189/run189_20-output-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run191/run191_35-output-*.fits')
 #flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_2-*.fits')
 #flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_3-*.fits')
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/test.fits')
@@ -77,7 +77,8 @@ for fl in lists:
     frac_err = shear_err[0]/0.02
 
     print("bias: %g +/- %g" % (frac, frac_err))
-    print("additive: %g +/- %g" % (shear[1], shear_err[1]))
+    print("additive e1: %g +/- %g" % (shear[0], shear_err[0]))
+    print("additive e2: %g +/- %g" % (shear[1], shear_err[1]))
 
 
 ###if measuring response from deblending to shear ####
