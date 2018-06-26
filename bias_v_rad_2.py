@@ -20,8 +20,9 @@ bias2 = [0.00289931,-0.0227334,-0.00450081,-0.00345485,0.00987126]
 err2 = [0.00127221,0.00113792,0.00107146,0.00104387,0.00139212]
 
 #1step, bg=0.1
-bias3 = [0.00183218,-0.0135421,-0.0131184,-0.00579225,0.00621719]
-err3 = [0.00170727,0.0019614,0.00137348,0.00134146,0.00137743]
+bias9 = [0.00183218,-0.0135421,-0.0131184,-0.00579225,0.00621719]
+err9 = [0.00170727,0.0019614,0.00137348,0.00134146,0.00137743]
+
 #1step, bg = 0.1, w/o division by metacal response
 bias4 = [0.00303388,-0.0110562,-0.0123844,-0.00260066,0.0092246]
 err4 = [0.00170932,0.00196634,0.0013745,0.00134577,0.00138155]
@@ -85,7 +86,7 @@ err2 = [0.00196074,0.00134868,0.00111116,0.0011295,0.00154619]
 bias3 = [-0.235998,-0.213525,-0.122551,-0.0578107,-0.0319187]
 err3 = [0.00214287,0.00174524,0.00204687,0.0013753,0.00113997]
 
-#simple psf constraints, simple source constraint
+#no psf constraints, simple source constraint
 bias4 = [-0.239269,-0.213929,-0.122214,-0.0575771,-0.0317016]
 err4 = [0.00218168,0.0017496,0.00207052,0.00137847,0.00114131]
 
@@ -97,31 +98,36 @@ err5 = [0.00157017,0.0010794,0.00110085,0.00104087,0.00109344]
 bias6 = [-0.269641,-0.205904,-0.11858,-0.0366356,0.00262338]
 err6 = [0.0015712,0.00108116,0.00110036,0.00104084,0.00109373]
 
-#none for psf, simple and symmetry for sources
-bias7 = [-0.12889,-0.104401,-0.0714764,-0.0809106,-0.12891]
-err7 = [0.00110826,0.00103729,0.00104761,0.00102487,0.00110879]
+#default for psf, simple and symmetry for sources
+bias7 = [-0.12889,-0.104401,-0.0714764,-0.0809106,-0.0231729]
+err7 = [0.00110826,0.00103729,0.00104761,0.00102487,0.00105384]
 
-#simple for psf, simple and symmetry for sources
-bias8 = [-0.128949.-0.104454,-0.0713077,-0.080920,-0.0232014]
-err8 = [0.00110816, 0.00103715,0.00104678,0.00102484,0.0010544]
+#none for psf, simple and symmetry for sources
+bias8 = [-0.132263,-0.105286,-0.0725884,-0.0803108,-0.0224682]
+err8 = [0.00110814,0.00103429,0.00104042,0.00102166,0.00105028]
+
+#simple for psf, default for sources
+
+bias9 = [-0.184006,-0.116358,-0.0654654,-0.0229924,0.011997]
+err9 = [0.00139057,0.00175697,0.00130063,0.00131826,0.00138534]
 
 fig,ax = plt.subplots()
 plt.axhline(y=0,color='black',linewidth=2)
-plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF",color='b')
-plt.errorbar(r,bias3,yerr=err3,xerr=None,label="Scarlet (1-step)",color='r',linestyle=':')
-plt.errorbar(r,bias4,yerr=err4,exerr=None,label="Scarlet (2-step)",color='r')
-#plt.errorbar(r,bias3,yerr=err3,xerr=None,label="1-Step w/ meta",color='blue')
-#plt.errorbar(r,bias4,yerr=err4,xerr=None,label="1-Step",color='blue',linestyle=':')
-#plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF",color='m',linestyle=':')
-#plt.errorbar(r,bias6,yerr=err6,xerr=None, label= "MOF w/ cali",color='m')
-#plt.errorbar(r,bias5,yerr=err5,xerr=None, label= "MOF w/ cali, no resp",color='m')
-#plt.errorbar(r,bias8,yerr=err8,xerr=None, label= "MOF w/ cali",color='m',linestyle = "-")
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="None/None",color='r')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="Default/None",color='r',linestyle=':')
+plt.errorbar(r,bias4,yerr=err4,exerr=None,label="None/Simple",color='blue')
+plt.errorbar(r,bias3,yerr=err3,xerr=None,label="Default/Simple",color='blue',linestyle=':')
+plt.errorbar(r,bias6,yerr=err6,xerr=None,label="None/Simp+mono",color='m')
+plt.errorbar(r,bias5,yerr=err5,xerr=None,label="Default/Simp+mono",color='m',linestyle=':')
+plt.errorbar(r,bias7,yerr=err7,xerr=None, label= "Default/Simp+sym",color='c',linestyle=':')
+plt.errorbar(r,bias8,yerr=err8,xerr=None, label= "None/Simp+sym",color='c')
+plt.errorbar(r,bias9,yerr=err9,xerr=None, label= "Simple/Default",color='g')
 #plt.errorbar(13,-0.00125321,yerr=0.00102325,xerr=None,label = "MOF w/ cali + sep",marker="o",color="c")
 #plt.errorbar(13,0.000438874,yerr=0.00102498,xerr=None,label="MOF + sep",marker="o",color="r")
 
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias v radius (knots,N0.1)")
+plt.title("Bias v radius")
 
 plt.grid(which='minor')
 plt.grid(which='major')
@@ -131,5 +137,5 @@ ax.yaxis.set_minor_locator(minorLocator)
 ax.set_xlim(6,16)
 plt.legend(loc=4)
 
-plt.savefig('bias_v_rad_MOF_scar_knots_N0.1.png')
-#plt.savefig('test.png')
+#plt.savefig('bias_v_rad_MOF_scar_knots_N0.1.png')
+plt.savefig('test.png')
