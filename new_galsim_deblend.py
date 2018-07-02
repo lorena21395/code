@@ -569,12 +569,11 @@ class Model(object):
 
         nobj=len(coords)
         mm = minimof.MOF(mb, "bdf", nobj, prior=prior)
-    
+        print(mm)
         for i in range(2):
             guess=self._get_mof_guess(coords,mb)
             ngmix.print_pars(guess, front="    guess:")
             mm.go(guess)
-            print(mm)
             res=mm.get_result()
             if res['flags']==0:
                 break
