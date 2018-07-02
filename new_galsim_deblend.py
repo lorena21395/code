@@ -33,15 +33,6 @@ parser.add_argument("config",help="Configuration for the simulation")
 parser.add_argument("--profile",action='store_true',help="run the profiler")
 parser.add_argument("--show",action='store_true',help="show images")
 
-dt = [
-    ('flags','i4'),
-    ('pars','f8',6),
-    ('pars_1p','f8',6),
-    ('pars_1m','f8',6),
-    ('pars_2p','f8',6),
-    ('pars_2m','f8',6),
-]
-
 psf_model = 'gauss'
 gal_model = 'gauss'
 psf_Tguess = 4.0
@@ -515,7 +506,7 @@ class Model(object):
         return guess
 
 
-    def _get_mof_prior(self, coord_list):
+    def _get_mof_prior(self, coord_list, nband):
         """
         prior for N objects.  The priors are the same for
         structural parameters, the only difference being the
@@ -560,12 +551,12 @@ class Model(object):
             g_prior,
             T_prior,
             fracdev_prior,
-            F_prior
+            [F_prior]*nband,
         )
 
     def get_mof_model(self):
         mb, coords = self._get_mof_obs()
-        prior=self._get_mof_prior(coords)
+        prior=self._get_mof_prior(coords, len(mb))
 
         nobj=len(coords)
         mm = minimof.MOF(mb, "bdf", nobj, prior=prior)
@@ -585,7 +576,7 @@ class Model(object):
             center_obs = mm.make_corrected_obs(0, band=None, 
                                                obsnum=None, recenter=True)
             for i in range(len(center_obs)):
-                center_obs[i][0].noise = obs[i][0].noise
+                center_obs[i][0].noise = mb[i][0].noise
 
             if self.show:
                 import images
@@ -650,7 +641,7 @@ def observation(image,sigma,row,col,psf_sigma,psf_im):
 
     return obs
 
-def get_prior():
+def get_prior(nband):
     """
     metacal prior
     """
@@ -667,6 +658,8 @@ def get_prior():
 
     flux_pars = [-1.0e+04, 1.0, 1.0e+09, 0.25e+08]
     flux_prior = ngmix.priors.TwoSidedErf(*flux_pars)
+
+    flux_prior=[flux_prior]*nband
 
     prior = ngmix.joint_prior.PriorSimpleSep(
         cen_prior,
@@ -798,14 +791,30 @@ def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
 
     return res
 
+def get_output(n, nband):
+    npar=5+nband
+    dt = [
+        ('flags','i4'),
+        ('pars','f8',npar),
+        ('pars_1p','f8',npar),
+        ('pars_1m','f8',npar),
+        ('pars_2p','f8',npar),
+        ('pars_2m','f8',npar),
+    ]
+
+
+    return np.zeros(args.ntrials, dtype=dt)
 
 def main(args):
 
-    prior = get_prior()
-    output = np.zeros(args.ntrials, dtype=dt)
 
     with open(args.config) as fobj:
         Sim_specs =yaml.load(fobj)
+
+    nband = Sim_specs.get('Nbands',1)
+
+    output=get_output(args.ntrials, nband)
+    prior = get_prior(nband)
 
     np.random.seed(args.seed)
     rng = np.random.RandomState(seed=np.random.randint(0,2**30))
