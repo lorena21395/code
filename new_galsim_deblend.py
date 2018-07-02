@@ -345,6 +345,7 @@ class Simulation(dict):
             neigh_sed = [1.]
         
         ims = []
+        noises = []
         for i in range(nband):
             objs = self._get_band_obj(Cen,Neigh,cen_sed[i],neigh_sed[i])
             objs = self._get_shear_obj(objs)
@@ -358,6 +359,8 @@ class Simulation(dict):
             dims = np.shape(im)
             noise = self._get_noise(dims,bg_rms)
             im += noise
+            noise = self._get_noise(dims,bg_rms)
+            noises.append(noise)
             ims.append(im)
         ims = np.array(ims)
 
@@ -371,9 +374,7 @@ class Simulation(dict):
         else:
             coords = [coord1,coord2]
 
-        noise = self._get_noise(dims,bg_rms)
-
-        return ims,psf_im,coords,dims,dx1,dy1,noise
+        return ims,psf_im,coords,dims,dx1,dy1,noises
 
 class Model(object):
     
@@ -422,16 +423,7 @@ class Model(object):
         return am.get_gmix()
 
     def _get_mof_obs(self):
-        im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
-
-        if self.show:
-            import images
-            tim = im/im.max()
-            tim = np.log10( tim-tim.min() + 1.0 )
-
-            images.view(tim)
-            if 'q'==input('hit a key: (q to quit) '):
-                stop
+        im,psf_im,coords,dims,dx1,dy1,noises = self.sim()
 
         bg_rms = self.sim['Image']['Bgrms']
         bg_rms_psf = self.sim['Psf']['Bgrms_psf']
@@ -451,29 +443,41 @@ class Model(object):
         psf_gmix=self._fit_psf_admom(psf_obs)
         psf_obs.set_gmix(psf_gmix)
 
-        weight=im*0 + 1.0/bg_rms**2
-        jacobian=ngmix.UnitJacobian(
-            row=0,
-            col=0,
-        )
-
-        obs = ngmix.Observation(
-            im,
-            weight=weight,
-            jacobian=jacobian,
-            psf=psf_obs,
-        )
-        obs.noise=noise
-        olist = ObsList()
-        olist.append(obs)
         mb = MultiBandObsList()
-        mb.append(olist)
+        for i in range(len(im)):
+            if self.show:
+                import images
+                tim = im[i]/im[i].max()
+                tim = np.log10( tim-tim.min() + 1.0 )
+
+                images.view(tim)
+                if 'q'==input('hit a key: (q to quit) '):
+                    stop
+
+
+            weight=im[i]*0 + 1.0/bg_rms**2
+            jacobian=ngmix.UnitJacobian(
+                row=0,
+                col=0,
+            )
+
+            obs = ngmix.Observation(
+                im[i],
+                weight=weight,
+                jacobian=jacobian,
+                psf=psf_obs,
+            )
+            obs.noise=noises[i]
+            olist = ObsList()
+            olist.append(obs)
+            mb.append(olist)
         return mb, coords
 
-    def _get_mof_guess(self, coord_list):
+    def _get_mof_guess(self, coord_list,mb):
         rng=self.sim.rng
-
-        npars_per=7
+        nbands = len(mb)
+        
+        npars_per=6+nbands
         num=len(coord_list)
         assert num==2,"two objects for now"
 
@@ -504,7 +508,9 @@ class Model(object):
             guess[beg+4] = T*(1.0 + rng.uniform(low=-0.05, high=0.05))
 
             guess[beg+5] = rng.uniform(low=0.4,high=0.6)
-            guess[beg+6] = Fguess = F*(1.0 + rng.uniform(low=-0.05, high=0.05))
+            
+            for i in range(1,nbands+1):
+                guess[beg+5+i] = F*(1.0 + rng.uniform(low=-0.05, high=0.05))
 
         return guess
 
@@ -548,26 +554,27 @@ class Model(object):
             rng=rng,
         )
 
+        
         return minimof.priors.PriorBDFSepMulti(
             cen_priors,
             g_prior,
             T_prior,
             fracdev_prior,
-            F_prior,
+            F_prior
         )
 
     def get_mof_model(self):
         mb, coords = self._get_mof_obs()
-        obs = mb[0][0]
         prior=self._get_mof_prior(coords)
 
         nobj=len(coords)
-        mm = minimof.MOF(obs, "bdf", nobj, prior=prior)
-
+        mm = minimof.MOF(mb, "bdf", nobj, prior=prior)
+    
         for i in range(2):
-            guess=self._get_mof_guess(coords)
+            guess=self._get_mof_guess(coords,mb)
             ngmix.print_pars(guess, front="    guess:")
             mm.go(guess)
+            print(mm)
             res=mm.get_result()
             if res['flags']==0:
                 break
@@ -575,8 +582,10 @@ class Model(object):
 
         if res['flags'] == 0:
             ngmix.print_pars(res['pars'], front="      fit:")
-            center_obs = mm.make_corrected_obs(0, recenter=True)
-            center_obs.noise = obs.noise
+            center_obs = mm.make_corrected_obs(0, band=None, 
+                                               obsnum=None, recenter=True)
+            for i in range(len(center_obs)):
+                center_obs[i][0].noise = obs[i][0].noise
 
             if self.show:
                 import images

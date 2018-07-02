@@ -40,14 +40,15 @@ err7 = [0.00325758,0.00304018,0.00314472,0.00290211,0.00289733]
 
 bias8 = [0.000719619,0.00322232,-0.00822339,-0.000963111,-0.00186173]
 err8 = [0.00325566,0.00303788,0.00316108,0.00290069,0.00289564]
-
-###regular mof bg= 0.1
-bias = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
-err = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
-###regular mof bg = 10
-#bias = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
-#err = [0.0031733,0.00298901,0.00315932,0.00290509,0.00290543]
 """
+###regular mof bg= 0.1
+bias2 = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
+err2 = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
+
+###regular mof bg = 10
+bias4 = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
+err4 = [0.0031733,0.00298901,0.00315932,0.00290509,0.00290543]
+
 
 """
 ############
@@ -70,7 +71,7 @@ err3= [0.00376232,0.00327911,0.0030641,0.00296848,0.00293451]
 bias4 = [-0.0150497,-0.0860171,-0.0518112,-0.0213856,-0.00203856]
 err4 = [0.00358457,0.00320502,0.0030408,0.00296391,0.00293567]
 """
-
+"""
 ###Trying different constraints###
 ###Scarlet, sersic type galaxies, bgrms = 0.1###
 
@@ -110,18 +111,32 @@ err8 = [0.00110814,0.00103429,0.00104042,0.00102166,0.00105028]
 
 bias9 = [-0.184006,-0.116358,-0.0654654,-0.0229924,0.011997]
 err9 = [0.00139057,0.00175697,0.00130063,0.00131826,0.00138534]
+"""
 
+#####
+#MOF 2band polarizations (6/28/2018)
+####
+bias = [0.00272439,0.00140518,-0.000214843,-1.30061e-05,-0.000252071]
+err = [0.00104082,0.00102796,0.00101565,0.00101317,0.00101174]
+
+#RGB bands (6/29/2018)
+bias3 = [0.000707012,0.00112226,0.000425393,0.000560498,0.000993042]
+err3 = [0.00104322,0.00102752,0.00101707,0.00101164,0.00101319]
+
+#RGB bands with bgrms = 10
+bias5 = [-0.0873927,-0.0698742,-0.0547051,-0.052327,-0.0563293]
+err5 = [0.00675345,0.00645022,0.00640499,0.00647275,0.00647933]
 fig,ax = plt.subplots()
 plt.axhline(y=0,color='black',linewidth=2)
-plt.errorbar(r,bias2,yerr=err2,xerr=None,label="None/None",color='r')
-plt.errorbar(r,bias,yerr=err,xerr=None,label="Default/None",color='r',linestyle=':')
-plt.errorbar(r,bias4,yerr=err4,exerr=None,label="None/Simple",color='blue')
-plt.errorbar(r,bias3,yerr=err3,xerr=None,label="Default/Simple",color='blue',linestyle=':')
-plt.errorbar(r,bias6,yerr=err6,xerr=None,label="None/Simp+mono",color='m')
-plt.errorbar(r,bias5,yerr=err5,xerr=None,label="Default/Simp+mono",color='m',linestyle=':')
-plt.errorbar(r,bias7,yerr=err7,xerr=None, label= "Default/Simp+sym",color='c',linestyle=':')
-plt.errorbar(r,bias8,yerr=err8,xerr=None, label= "None/Simp+sym",color='c')
-plt.errorbar(r,bias9,yerr=err9,xerr=None, label= "Simple/Default",color='g')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF (2 band N0.1)",color='b')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="MOF (1 band N0.1)",color='b',linestyle=':')
+plt.errorbar(r,bias3,yerr=err3,exerr=None,label="MOF (RGB N0.1)",color='b',linestyle = '--')
+plt.errorbar(r,bias4,yerr=err4,xerr=None,label="MOF (1 band N10)",color='m',linestyle=':')
+#plt.errorbar(r,bias6,yerr=err6,xerr=None,label="None/Simp+mono",color='m')
+plt.errorbar(r,bias5,yerr=err5,xerr=None,label="MOF (RGB N10)",color='m',linestyle='--')
+#plt.errorbar(r,bias7,yerr=err7,xerr=None, label= "Default/Simp+sym",color='c',linestyle=':')
+#plt.errorbar(r,bias8,yerr=err8,xerr=None, label= "None/Simp+sym",color='c')
+#plt.errorbar(r,bias9,yerr=err9,xerr=None, label= "Simple/Default",color='g')
 #plt.errorbar(13,-0.00125321,yerr=0.00102325,xerr=None,label = "MOF w/ cali + sep",marker="o",color="c")
 #plt.errorbar(13,0.000438874,yerr=0.00102498,xerr=None,label="MOF + sep",marker="o",color="r")
 
@@ -138,4 +153,4 @@ ax.set_xlim(6,16)
 plt.legend(loc=4)
 
 #plt.savefig('bias_v_rad_MOF_scar_knots_N0.1.png')
-plt.savefig('test.png')
+plt.savefig('bias-v-rad-MOF-multiband.png')
