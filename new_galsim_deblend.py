@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 #####
 
-##one object mini deblend
-
-#individually shear each galaxy first
-#use sersic galaxies
-#change minimof gal model to "cm"
-#PSF matching
-
 import time
 import yaml
 import minimof
@@ -18,8 +11,8 @@ import sep
 import ngmix
 from ngmix.observation import Observation, ObsList, MultiBandObsList
 import numpy as np
-import matplotlib.pyplot as plt
-plt.switch_backend('agg')
+#import matplotlib.pyplot as plt
+#plt.switch_backend('agg')
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
@@ -384,16 +377,16 @@ class Model(object):
         #psf_constraints = ()#sc.SimpleConstraint())
         #source_constraints = ()#sc.SimpleConstraint(),sc.DirectSymmetryConstraint()) #sc.DirectMonotonicityConstraint(use_nearest=False)
         config = scarlet.Config(source_sizes = [25])
-        psf_dims = np.shape(psf_im)
-        psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
-        psfs = np.zeros((len(im), psf_dims[0],psf_dims[1]))
-        psfs += psf_im3d
-        target_psf = scarlet.psf_match.fit_target_psf(psfs, 
-                                        scarlet.psf_match.gaussian)
-        diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psfs,
-                                        target_psf)
+        #psf_dims = np.shape(psf_im)
+        #psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
+        #psfs = np.zeros((len(im), psf_dims[0],psf_dims[1]))
+        #psfs += psf_im3d
+        #target_psf = scarlet.psf_match.fit_target_psf(psfs, 
+        #                                scarlet.psf_match.gaussian)
+        #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psfs,
+        #                                target_psf)
         sources = [scarlet.ExtendedSource(coord, im, bg_rms = bg,
-                        psf=diff_kernels,config=config) for coord in coords]
+                        psf=None,config=config) for coord in coords]
         #config = scarlet.Config(edge_flux_thresh=0.05)
         blend = scarlet.Blend(sources)
         blend.set_data(im, bg_rms = bg,config=config)
@@ -603,12 +596,12 @@ class Model(object):
         return center_obs
 
 
-    def rob_deblend(self,im,model,mod1,mod2,dims):
+    def rob_deblend(self,im,model,mod1,mod2,dims,i):
         C = np.zeros((dims[0],dims[1],2))
         W = np.zeros((dims[0],dims[1],2))
-        I = im
-        w = np.array([model[0,:,:],model[0,:,:]]).clip(1.0e-15)
-        T = np.array([mod1[0,:,:],mod2[0,:,:]]).clip(1.0e-15)
+        I = im[i]
+        w = np.array([model[i,:,:],model[i,:,:]]).clip(1.0e-15)
+        T = np.array([mod1[i,:,:],mod2[i,:,:]]).clip(1.0e-15)
         mod_sum = np.zeros(dims)
         for r in range(2):
             mod_sum += w[r]*T[r] 
@@ -669,14 +662,14 @@ def get_prior(nband):
     return prior
 
 def create_mb(mb_mod,bg_rms,coord1,coord2,psf_bg_rms,psf_im,noise):
-    olist = ObsList()
+    mb = MultiBandObsList()
     for i in range(len(mb_mod[:])):
         o = observation(mb_mod[i],bg_rms,coord1,coord2,
                                psf_bg_rms,psf_im)
-        o.noise = noise
+        o.noise = noise[i]
+        olist = ObsList()
         olist.append(o)
-    mb = MultiBandObsList()
-    mb.append(olist)
+        mb.append(olist)
 
     return(mb)
 
@@ -695,12 +688,10 @@ def norm_test(args, sim):
         mod = Model(sim, show=args.show)
         if mode == 'scarlet':
             im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = mod.get_scar_model()
-            #im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise = mod.get_scar_model()
             bg_rms = sim['Image']['Bgrms']
             if sim['Steps'] == 'one':
                 coord1 = coords[0]
                 #isolate central object                                       
-                #cen_obj = model[0,:,:]
                 cen_obj = model[:,:,:] - mod2[:,:,:]
                 dobs = create_mb(cen_obj,sim['Image']['Bgrms'],
                                 coord1[0],coord1[1],
@@ -723,10 +714,6 @@ def norm_test(args, sim):
                     cen_shape = (1,cen_shape[1],im_shape[2])
 
                 coord1 = coords[0]
-                dims = [np.shape(im)[1],np.shape(im)[2]]
-                C,W = mod.rob_deblend(im,model,mod1,mod2,dims)
-                Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims)
-
                 half1 = cen_shape[1]/2.
                 half2 = cen_shape[2]/2.
 
@@ -736,42 +723,55 @@ def norm_test(args, sim):
                 beg2 = int(coord1[1]-half2+1)
                 end2 = int(coord1[1]+half2+1)
 
+                dims = [np.shape(im)[1],np.shape(im)[2]]
+
                 #metacal needs symmetric image
                 if cen_shape[1] != cen_shape[2]:
-                    cen_obj = np.zeros((max(cen_shape),max(cen_shape)))
-                    weights = np.zeros((max(cen_shape),max(cen_shape)))
-                    mod_noise = np.zeros((max(cen_shape),max(cen_shape)))
-                
-                    cen_obj[0:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
-                    weights[0:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
-                    mod_noise[0:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
+                    cen_obj = np.zeros((len(im),max(cen_shape),max(cen_shape)))
+                    weights = np.zeros((len(im),max(cen_shape),max(cen_shape)))
+                    mod_noise = np.zeros((len(im),max(cen_shape),max(cen_shape)))
+                    for i in range(len(im)):
+                        C,W = mod.rob_deblend(im,model,mod1,mod2,dims,i)
+                        Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims,i)
+                        cen_obj[i:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
+                        weights[i:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
+                        mod_noise[i:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
                     shape = C[beg1:end1,beg2:end2,0].shape
                     new_coords = (dx1+(shape[1]-1.0)/2.0,dy1+(shape[0]-1.0)/2.0)
 
                 else:
-                    cen_obj = C[beg1:end1,beg2:end2,0]
-                    weights = W[beg1:end1,beg2:end2,0]
-                    mod_noise = Cnoise[beg1:end1,beg2:end2,0]
-                    new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
+                    cen_obj = np.zeros(cen_shape)
+                    weights = np.zeros(cen_shape)
+                    mod_noise = np.zeros(cen_shape)
+                    
+                    for i in range(len(im)):
+                        C,W = mod.rob_deblend(im,model,mod1,mod2,dims,i)
+                        Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims,i)
+                        cen_obj[i] = C[beg1:end1,beg2:end2,0]
+                        weights[i] = W[beg1:end1,beg2:end2,0]
+                        mod_noise[i] = Cnoise[beg1:end1,beg2:end2,0]
+                    
+                        new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
 
-            
                 #cen_obj_w_noise = mod.readd_noise(cen_obj,weights)
                 #shape = np.shape(cen_obj_w_noise)
                 #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
                 #noise_w_noise = mod.readd_noise(mod_noise,weights)
                 #tot_noise = noise_w_noise#noise[0:shape[0],0:shape[1]]
 
+                """
                 dobs = observation(cen_obj,sim['Image']['Bgrms'],
                                new_coords[1],new_coords[0],
                                sim['Psf']['Bgrms_psf'],psf_im)
                 dobs.noise = mod_noise
-        
+                """
+                dobs = create_mb(cen_obj,sim['Image']['Bgrms'],
+                                 new_coords[1],new_coords[0],
+                                sim['Psf']['Bgrms_psf'],psf_im,mod_noise)
         elif mode=='mof':
             dobs = mod.get_mof_model()
-
-   
-        #dobs.noise = noise
-    return dobs#,cen_obj,cen_obj_w_noise
+    
+    return dobs
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                ntry,metacal_pars,dobs):
