@@ -8,7 +8,7 @@ import esutil as eu
 #parser.add_argument("filename",help="filename")
 #args = parser.parse_args()
 # this gets a list of all files that match the pattern
-flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run192/run192_8-output-*.fits')
+flist = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run196/run196_2-output-*.fits')
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run192/run192_12-output-*.fits'))
 #flist2 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_2-*.fits')
 #flist3 = glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run188/run188_3-*.fits')

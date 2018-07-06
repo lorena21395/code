@@ -11,8 +11,8 @@ import sep
 import ngmix
 from ngmix.observation import Observation, ObsList, MultiBandObsList
 import numpy as np
-#import matplotlib.pyplot as plt
-#plt.switch_backend('agg')
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
@@ -704,15 +704,13 @@ def norm_test(args, sim):
             if sim['Steps'] == 'two':
                 cen_shape = cen_mod.shape
                 im_shape = np.shape(im)
-
                 #check if model dimensions are ever larger than image dims
                 #if larger, trim the dimensions
                 #This is sometimes an issue for low edge flux test
                 if cen_shape[1] > im_shape[1]:
-                    cen_shape = (1,im_shape[1],cen_shape[2])
+                    cen_shape = (len(im),im_shape[1],cen_shape[2])
                 if cen_shape[2] > im_shape[2]:
-                    cen_shape = (1,cen_shape[1],im_shape[2])
-
+                    cen_shape = (len(im),cen_shape[1],im_shape[2])
                 coord1 = coords[0]
                 half1 = cen_shape[1]/2.
                 half2 = cen_shape[2]/2.
@@ -733,9 +731,9 @@ def norm_test(args, sim):
                     for i in range(len(im)):
                         C,W = mod.rob_deblend(im,model,mod1,mod2,dims,i)
                         Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims,i)
-                        cen_obj[i:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
-                        weights[i:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
-                        mod_noise[i:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
+                        cen_obj[i,0:cen_shape[1],0:cen_shape[2]] = C[beg1:end1,beg2:end2,0]
+                        weights[i,0:cen_shape[1],0:cen_shape[2]] = W[beg1:end1,beg2:end2,0]
+                        mod_noise[i,0:cen_shape[1],0:cen_shape[2]] = Cnoise[beg1:end1,beg2:end2,0]
                     shape = C[beg1:end1,beg2:end2,0].shape
                     new_coords = (dx1+(shape[1]-1.0)/2.0,dy1+(shape[0]-1.0)/2.0)
 
@@ -743,16 +741,13 @@ def norm_test(args, sim):
                     cen_obj = np.zeros(cen_shape)
                     weights = np.zeros(cen_shape)
                     mod_noise = np.zeros(cen_shape)
-                    
                     for i in range(len(im)):
                         C,W = mod.rob_deblend(im,model,mod1,mod2,dims,i)
                         Cnoise,Wnoise = mod.rob_deblend(noise,model,mod1,mod2,dims,i)
                         cen_obj[i] = C[beg1:end1,beg2:end2,0]
                         weights[i] = W[beg1:end1,beg2:end2,0]
                         mod_noise[i] = Cnoise[beg1:end1,beg2:end2,0]
-                    
-                        new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[0]-1.0)/2.0)
-
+                        new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[2]-1.0)/2.0)
                 #cen_obj_w_noise = mod.readd_noise(cen_obj,weights)
                 #shape = np.shape(cen_obj_w_noise)
                 #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
