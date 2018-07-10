@@ -11,11 +11,17 @@ import sep
 import ngmix
 from ngmix.observation import Observation, ObsList, MultiBandObsList
 import numpy as np
-import matplotlib.pyplot as plt
-plt.switch_backend('agg')
+#import matplotlib.pyplot as plt
+#plt.switch_backend('agg')
+
+#import logging
+#logger = logging.getLogger('scarlet')
+#logger.setLevel(logging.DEBUG)
 
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
+
+from astropy.io import fits
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -241,7 +247,6 @@ class Simulation(dict):
     def _get_norm_sed(self):
         cen_sed = np.array(self['Cen']['SED'])/np.sum(np.array(self['Cen']['SED']))
         neigh_sed = np.array(self['Neigh']['SED'])/np.sum(np.array(self['Neigh']['SED']))
-        
         return cen_sed, neigh_sed
 
     def _get_shifts(self):
@@ -287,13 +292,12 @@ class Simulation(dict):
         if mode == 'scarlet' or mode == 'mof':
             Cen = Cen*cen_sed
             Neigh = Neigh*neigh_sed
-            gals = [Cen, Neigh]
+            gals = [Cen,Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             Cen = Cen*cen_sed
             gals = [Cen]
             objs = galsim.Add(gals)
-
         return objs
     
     def _get_shear_obj(self,objs):
@@ -302,7 +306,7 @@ class Simulation(dict):
             
         return objs
 
-    def _get_noise(self,dims,bg_rms):
+    def _get_noise(self,dims,bg_rms,nband):
         noise = np.random.normal(scale=bg_rms,size=(dims[0],dims[1]))
         
         return noise
@@ -341,13 +345,17 @@ class Simulation(dict):
             )
             im = gsim.array
             dims = np.shape(im)
-            noise = self._get_noise(dims,bg_rms)
+            noise = self._get_noise(dims,bg_rms,nband)
             im += noise
-            noise = self._get_noise(dims,bg_rms)
+            noise = self._get_noise(dims,bg_rms,nband)
             noises.append(noise)
             ims.append(im)
         ims = np.array(ims)
-
+        #hdu = fits.PrimaryHDU(ims)
+        #hdu1 = fits.HDUList([hdu])
+        #hdu1.writeto('multi_band_im.fits')
+        #plt.imshow(ims[2])
+        #plt.savefig('test.png')
         #rewrite coords for scarlet
         cen =  (np.array(dims) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
@@ -386,11 +394,15 @@ class Model(object):
         #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psfs,
         #                                target_psf)
         sources = [scarlet.ExtendedSource(coord, im, bg_rms = bg,
-                        psf=None,config=config) for coord in coords]
+                psf=None,config=config) for coord in coords]
         #config = scarlet.Config(edge_flux_thresh=0.05)
         blend = scarlet.Blend(sources)
+
         blend.set_data(im, bg_rms = bg,config=config)
-        blend.fit(10000, e_rel=1e-3)
+        blend.fit(230, e_rel=1e-3)
+        print(blend[1][0].center,blend[1][0].left,blend[1][0].right,blend[1][0].top,blend[1][0].bottom)
+        print(blend._edge_flux)
+        print("STEPS",blend.it)
         model = blend.get_model()
         mod1 = blend.get_model(0)
         mod2 = blend.get_model(1)
@@ -671,7 +683,7 @@ def create_mb(mb_mod,bg_rms,coord1,coord2,psf_bg_rms,psf_im,noise):
         olist.append(o)
         mb.append(olist)
 
-    return(mb)
+    return mb
 
 def norm_test(args, sim):
 
@@ -747,7 +759,7 @@ def norm_test(args, sim):
                         cen_obj[i] = C[beg1:end1,beg2:end2,0]
                         weights[i] = W[beg1:end1,beg2:end2,0]
                         mod_noise[i] = Cnoise[beg1:end1,beg2:end2,0]
-                        new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[2]-1.0)/2.0)
+                    new_coords = (dx1+(cen_obj.shape[1]-1.0)/2.0,dy1+(cen_obj.shape[2]-1.0)/2.0)
                 #cen_obj_w_noise = mod.readd_noise(cen_obj,weights)
                 #shape = np.shape(cen_obj_w_noise)
                 #cen_obj_w_noise += noise[0:shape[0],0:shape[1]]
@@ -844,12 +856,11 @@ def main(args):
                     output['pars_2p'][j] = res['2p']['pars']
                     output['pars_2m'][j] = res['2m']['pars']
 
-        #except (LinAlgError,ValueError,BootGalFailure) as err:
+        except (LinAlgError,ValueError,BootGalFailure) as err:
         #except ValueError as err:
-        except BootGalFailure as err:
+        #except BootGalFailure as err:
             print(str(err))
             output['flags'][j] = 2
-
     tm_deblend_per = tm_deblend/args.ntrials
     tm_metacal_per = tm_metacal/args.ntrials
 

@@ -188,6 +188,8 @@ plt.errorbar(r,bias,yerr=err,xerr=None,label="Scarlet 1-Step",linestyle = ":",co
 #plt.errorbar(r,bias_mini2,yerr=err_mini2,xerr=None,label="mof-N10",color='b',linestyle=":")
 #plt.errorbar(r,bias_mini_old,yerr=err_mini_old,xerr=None,label="mini-sersic-N0.1",color='m')
 #plt.errorbar(r,bias_mini_old2,yerr=err_mini_old2,xerr=None,label="mini-sersic-N10",color='m',linestyle=":")
+
+
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
 plt.title("Bias vs Radius")
@@ -205,3 +207,4 @@ ax.yaxis.set_minor_locator(minorLocator)
 plt.show()
 plt.savefig("bias_v_rad_scar_N0.1_1step_v_2step.png")
 #plt.savefig('test.png')
+
