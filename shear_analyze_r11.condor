@@ -1,0 +1,11 @@
+Universe        = vanilla
+Notification    = Never
+# Run this exe with these args
+Executable      = /gpfs01/astro/workarea/lmezini/deblender_tests/code/shear_analyze.py
+Image_Size       =  1000000
+GetEnv = True
+kill_sig        = SIGINT
++Experiment     = "astro"
++job_name = "shear"
+Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_25-output- /gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_26-output- /gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_18-output- /gpfs01/astro/workarea/lmezini/deblender_tests/code/shear_r11.txt
+Queue

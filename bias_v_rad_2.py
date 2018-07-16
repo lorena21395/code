@@ -40,7 +40,7 @@ err7 = [0.00325758,0.00304018,0.00314472,0.00290211,0.00289733]
 
 bias8 = [0.000719619,0.00322232,-0.00822339,-0.000963111,-0.00186173]
 err8 = [0.00325566,0.00303788,0.00316108,0.00290069,0.00289564]
-"""
+
 ###regular mof bg= 0.1
 bias2 = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
 err2 = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
@@ -50,7 +50,6 @@ bias4 = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
 err4 = [0.0031733,0.00298901,0.00315932,0.00290509,0.00290543]
 
 
-"""
 ############
 #knots only (MOF)
 ###########
@@ -112,7 +111,7 @@ err8 = [0.00110814,0.00103429,0.00104042,0.00102166,0.00105028]
 bias9 = [-0.184006,-0.116358,-0.0654654,-0.0229924,0.011997]
 err9 = [0.00139057,0.00175697,0.00130063,0.00131826,0.00138534]
 """
-
+"""
 #####
 #MOF 2band polarizations (6/28/2018)
 ####
@@ -126,15 +125,24 @@ err3 = [0.00102495,0.0010192,0.00101346,0.00100989,0.00101181]
 #RGB bands with bgrms = 10
 bias5 = [-0.0309224,-0.0177222,0.000497857,-0.00371945,0.00262282]
 err5 = [0.00467561,0.00450122,0.00446733,0.00449141,0.00450576]
+"""
+
+####EXTRA SHEAR TESTS w/o PSF for Scarlet
+#no psf for scarlet config-v98 > config_v102
+bias = [-0.201623,-0.151733,-0.0585121,-0.0785225,-0.0603515]
+err = [0.0013384,0.00114209,0.00104895,0.00102822,0.00104069]
+#meta^2 test
+bias2 = [0.0409291,-0.0952148,-0.0434951,-0.0198612,-0.023366]
+err2 = [0.00174501,0.00121818,0.00106568,0.00109368,0.00108165]
 
 fig,ax = plt.subplots()
 plt.axhline(y=0,color='black',linewidth=2)
-#plt.errorbar(r,bias,yerr=err,xerr=None,label="MOF (2 band N0.1)",color='b')
-plt.errorbar(r,bias2,yerr=err2,xerr=None,label="MOF (1 band N0.1)",color='b',linestyle=':')
-plt.errorbar(r,bias3,yerr=err3,exerr=None,label="MOF (RGB N0.1)",color='b',linestyle = '--')
-plt.errorbar(r,bias4,yerr=err4,xerr=None,label="MOF (1 band N10)",color='m',linestyle=':')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="Uncalibrated",color='r')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Calibrated",color='r',linestyle=':')
+#plt.errorbar(r,bias3,yerr=err3,exerr=None,label="MOF (RGB N0.1)",color='b',linestyle = '--')
+#plt.errorbar(r,bias4,yerr=err4,xerr=None,label="MOF (1 band N10)",color='m',linestyle=':')
 #plt.errorbar(r,bias6,yerr=err6,xerr=None,label="None/Simp+mono",color='m')
-plt.errorbar(r,bias5,yerr=err5,xerr=None,label="MOF (RGB N10)",color='m',linestyle='--')
+#plt.errorbar(r,bias5,yerr=err5,xerr=None,label="MOF (RGB N10)",color='m',linestyle='--')
 #plt.errorbar(r,bias7,yerr=err7,xerr=None, label= "Default/Simp+sym",color='c',linestyle=':')
 #plt.errorbar(r,bias8,yerr=err8,xerr=None, label= "None/Simp+sym",color='c')
 #plt.errorbar(r,bias9,yerr=err9,xerr=None, label= "Simple/Default",color='g')
@@ -154,4 +162,4 @@ ax.set_xlim(6,16)
 plt.legend(loc=4)
 
 #plt.savefig('bias_v_rad_MOF_scar_knots_N0.1.png')
-plt.savefig('bias-v-rad-MOF-multiband.png')
+plt.savefig('bias-v-rad-scar_meta2.png')

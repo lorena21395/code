@@ -1,0 +1,15 @@
+import numpy as np
+print('Universe        = vanilla')
+print('Notification    = Never')
+print('# Run this exe with these args')
+print('Executable      = /gpfs01/astro/workarea/lmezini/deblender_tests/code/shear_analyze.py')
+print('Image_Size       =  1000000')
+print('GetEnv = True')
+print('kill_sig        = SIGINT')
+#print('#requirements = (cpu_experiment == "star") || (cpu_experiment == "phenix")')
+#print('requirements = (cpu_experiment == "phenix")')
+print('+Experiment     = "astro"')
+
+print('+job_name = "shear"')
+print('Arguments = /gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_25-output- /gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_26-output- /gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_18-output- /gpfs01/astro/workarea/lmezini/deblender_tests/code/shear_r11.txt')
+print('Queue')

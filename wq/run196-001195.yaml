@@ -1,8 +1,0 @@
-
-command: |
-    source ~/.bashrc
-    
-    /gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run196/run196_3-output-001195.fits 400 26795 /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config-scar-sers-N10-r07-3band.yaml
-
-job_name: "run196-001195"
-

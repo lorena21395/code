@@ -13,7 +13,6 @@ from ngmix.observation import Observation, ObsList, MultiBandObsList
 import numpy as np
 #import matplotlib.pyplot as plt
 #plt.switch_backend('agg')
-
 #import logging
 #logger = logging.getLogger('scarlet')
 #logger.setLevel(logging.DEBUG)
@@ -21,7 +20,7 @@ import numpy as np
 from numpy.linalg import LinAlgError
 from ngmix.gexceptions import BootGalFailure
 
-from astropy.io import fits
+#from astropy.io import fits
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -301,12 +300,19 @@ class Simulation(dict):
         return objs
     
     def _get_shear_obj(self,objs):
-        shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
+        shear_spec = self['Shear']
+        shear1, shear2 = shear_spec['Shear1'],shear_spec['Shear2']
         objs = objs.shear(g1=shear1, g2=shear2)
+
+        if 'Extra_Shear' in shear_spec:
+            if 'shear+' in shear_spec['Extra_Shear']:
+                objs = objs.shear(g1=shear_spec['Extra_Shear']['shear+'],g2=0.0)
+            elif 'shear-' in shear_spec['Extra_Shear']:
+                objs = objs.shear(g1=shear_spec['Extra_Shear']['shear-'],g2=0.0)
             
         return objs
 
-    def _get_noise(self,dims,bg_rms,nband):
+    def _get_noise(self,dims,bg_rms):
         noise = np.random.normal(scale=bg_rms,size=(dims[0],dims[1]))
         
         return noise
@@ -316,14 +322,6 @@ class Simulation(dict):
         mode = self['Mode']
         bg_rms = self['Image']['Bgrms']
 
-        if 'dims' in self['Image']:
-            ny,nx=self['Image']['dims']
-        else:
-            ny, nx = None, None
-
-        psf, psf_im = self._get_psf_img()
-        Cen,Neigh,dx1,dy1,dx2,dy2 = self._get_gals()
-        
         if 'Nbands' in self.specs:
             nband = self['Nbands']
             cen_sed,neigh_sed = self._get_norm_sed()
@@ -331,6 +329,16 @@ class Simulation(dict):
             nband = 1
             cen_sed = [1.]
             neigh_sed = [1.]
+        
+        bg_rms = bg_rms/np.sqrt(nband)
+
+        if 'dims' in self['Image']:
+            ny,nx=self['Image']['dims']
+        else:
+            ny, nx = None,None
+
+        psf, psf_im = self._get_psf_img()
+        Cen,Neigh,dx1,dy1,dx2,dy2 = self._get_gals()
         
         ims = []
         noises = []
@@ -345,26 +353,43 @@ class Simulation(dict):
             )
             im = gsim.array
             dims = np.shape(im)
-            noise = self._get_noise(dims,bg_rms,nband)
+            noise = self._get_noise(dims,bg_rms)
             im += noise
-            noise = self._get_noise(dims,bg_rms,nband)
+            noise = self._get_noise(dims,bg_rms)
             noises.append(noise)
             ims.append(im)
         ims = np.array(ims)
-        #hdu = fits.PrimaryHDU(ims)
-        #hdu1 = fits.HDUList([hdu])
-        #hdu1.writeto('multi_band_im.fits')
-        #plt.imshow(ims[2])
-        #plt.savefig('test.png')
+
+        sep_im = np.sum(ims,axis=0)
+        objects = sep.extract(sep_im, 1.5, err=10.)
+        s_coords = [(objects['y'][0],objects['x'][0]),(objects['y'][1],objects['x'][1])]
+
+        """
+        #create fits file
+        hdu1 = fits.PrimaryHDU()
+        hdu1.data = ims
+        hdu1.writeto('multi_band_im.fits',overwrite=True)
+        """
+
         #rewrite coords for scarlet
+        
         cen =  (np.array(dims) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
 
-        if mode == 'control':
-            coords = [coord1]
+        if np.abs(coord1[0]-s_coords[0][0]) < np.abs(coord2[0]-s_coords[0][0]) and np.abs(coord1[1]-s_coords[0][1]) < np.abs(coord2[1]-s_coords[0][1]):
+            s_coord1 = s_coords[0]
+            s_coord2 = s_coords[1]
         else:
-            coords = [coord1,coord2]
+            s_coord1 = s_coords[1]
+            s_coord2 = s_coords[0]
+
+        if mode == 'control':
+            #coords = [coord1]
+            coords = [s_coord1]
+        else:
+            #coords = [coord1,coord2]
+            coords = [s_coord1,s_coord2]
 
         return ims,psf_im,coords,dims,dx1,dy1,noises
 
@@ -379,6 +404,7 @@ class Model(object):
         import scarlet.constraint as sc
         im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
         bg_rms = self.sim['Image']['Bgrms']
+        bg_rms = bg_rms/np.sqrt(len(im))
         mode = self.sim['Mode']
         bg = np.zeros((len(im)))
         bg += bg_rms
@@ -397,18 +423,19 @@ class Model(object):
                 psf=None,config=config) for coord in coords]
         #config = scarlet.Config(edge_flux_thresh=0.05)
         blend = scarlet.Blend(sources)
-
         blend.set_data(im, bg_rms = bg,config=config)
-        blend.fit(230, e_rel=1e-3)
-        print(blend[1][0].center,blend[1][0].left,blend[1][0].right,blend[1][0].top,blend[1][0].bottom)
-        print(blend._edge_flux)
-        print("STEPS",blend.it)
+        blend.fit(10000, e_rel=1e-3)
+        
+        #print(blend[1][0].center,blend[1][0].left,blend[1][0].right,blend[1][0].top,blend[1][0].bottom)
+        #print(blend._edge_flux)
+        #print("STEPS",blend.it)
+        
         model = blend.get_model()
         mod1 = blend.get_model(0)
         mod2 = blend.get_model(1)
         cen_mod = sources[0].get_model()
         neigh_mod = sources[1].get_model()
-        #steps_used = blend.it
+
         return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
         #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
 
@@ -421,7 +448,7 @@ class Model(object):
     def _get_mof_obs(self):
         im,psf_im,coords,dims,dx1,dy1,noises = self.sim()
 
-        bg_rms = self.sim['Image']['Bgrms']
+        bg_rms = self.sim['Image']['Bgrms']/np.sqrt(len(im))
         bg_rms_psf = self.sim['Psf']['Bgrms_psf']
 
         psf_ccen=(np.array(psf_im.shape)-1.0)/2.0
@@ -565,7 +592,6 @@ class Model(object):
 
         nobj=len(coords)
         mm = minimof.MOF(mb, "bdf", nobj, prior=prior)
-        print(mm)
         for i in range(2):
             guess=self._get_mof_guess(coords,mb)
             ngmix.print_pars(guess, front="    guess:")
@@ -624,7 +650,6 @@ class Model(object):
 
     def readd_noise(self,cen_obj,W):
         rng=self.sim.rng
-
         bg_rms = self.sim['Image']['Bgrms']
         extra_noise = np.sqrt((bg_rms**2)*(1 - W**2))
         cen_obj += extra_noise*rng.normal(size=cen_obj.shape)
@@ -692,20 +717,20 @@ def norm_test(args, sim):
     if mode == 'control':
         im,psf_im,coords,dims,dx1,dy1,noise = sim()
         output['dims'][j] = np.array(dims)
-        
-        dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][0],
+        bg_rms = Mod['Image']['Bgrms']/np.sqrt(len(im))
+        dobs = observation(im[0],coords[0][0],
                            coords[0][1],Mod['Psf']['Bgrms_psf'],psf_im)
     else:
  
         mod = Model(sim, show=args.show)
         if mode == 'scarlet':
             im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = mod.get_scar_model()
-            bg_rms = sim['Image']['Bgrms']
+            bg_rms = sim['Image']['Bgrms']/np.sqrt(len(im))
             if sim['Steps'] == 'one':
                 coord1 = coords[0]
                 #isolate central object                                       
                 cen_obj = model[:,:,:] - mod2[:,:,:]
-                dobs = create_mb(cen_obj,sim['Image']['Bgrms'],
+                dobs = create_mb(cen_obj,bg_rms,
                                 coord1[0],coord1[1],
                                 sim['Psf']['Bgrms_psf'],psf_im,noise)
 
@@ -772,7 +797,7 @@ def norm_test(args, sim):
                                sim['Psf']['Bgrms_psf'],psf_im)
                 dobs.noise = mod_noise
                 """
-                dobs = create_mb(cen_obj,sim['Image']['Bgrms'],
+                dobs = create_mb(cen_obj,bg_rms,
                                  new_coords[1],new_coords[0],
                                 sim['Psf']['Bgrms_psf'],psf_im,mod_noise)
         elif mode=='mof':
@@ -856,9 +881,9 @@ def main(args):
                     output['pars_2p'][j] = res['2p']['pars']
                     output['pars_2m'][j] = res['2m']['pars']
 
-        except (LinAlgError,ValueError,BootGalFailure) as err:
+        #except (LinAlgError,ValueError,BootGalFailure) as err:
         #except ValueError as err:
-        #except BootGalFailure as err:
+        except BootGalFailure as err:
             print(str(err))
             output['flags'][j] = 2
     tm_deblend_per = tm_deblend/args.ntrials
