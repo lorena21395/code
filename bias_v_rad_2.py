@@ -35,15 +35,15 @@ bias6 = [ -0.00249482,-0.000580047,0.00116197,0.00160032,-0.000313858]
 err6 = [0.00073413,0.000724463,0.000718528,0.000715669,0.000778343]
 
 #MOF, bg = 10 w/o division by metacal response:
-bias7 = [0.00130908,0.00398234,-0.0133561,-0.0004764,-0.00127988] 
-err7 = [0.00325758,0.00304018,0.00314472,0.00290211,0.00289733]
+bias = [-0.00178431,0.00419539,-0.00282502,-0.000611995,0.000631424] 
+err = [0.00230481,0.0021461,0.00206198,0.00290171,0.00290287]
 
-bias8 = [0.000719619,0.00322232,-0.00822339,-0.000963111,-0.00186173]
-err8 = [0.00325566,0.00303788,0.00316108,0.00290069,0.00289564]
+bias2 = [-0.00268918,0.00408031,-0.00366705,-0.00062781,7.7428e-05]
+err2 = [0.00230272,0.00214585,0.00206024,0.00290167,0.00290126]
 
 ###regular mof bg= 0.1
-bias2 = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
-err2 = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
+bias3 = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
+err3 = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
 
 ###regular mof bg = 10
 bias4 = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
@@ -129,17 +129,17 @@ err5 = [0.00467561,0.00450122,0.00446733,0.00449141,0.00450576]
 
 ####EXTRA SHEAR TESTS w/o PSF for Scarlet
 #no psf for scarlet config-v98 > config_v102
-bias = [-0.201623,-0.151733,-0.0585121,-0.0785225,-0.0603515]
-err = [0.0013384,0.00114209,0.00104895,0.00102822,0.00104069]
+bias = [-0.161875,-0.0802582,-0.0188059,-0.0583358,-0.0305483]
+err = [0.00125761,0.00110829,0.00104501,0.00103584,0.0010554]
 #meta^2 test
-bias2 = [0.0409291,-0.0952148,-0.0434951,-0.0198612,-0.023366]
-err2 = [0.00174501,0.00121818,0.00106568,0.00109368,0.00108165]
+bias2 = [0.0407646,-0.0176779,0.00146799,-0.00214599,-0.00314854]
+err2 = [0.00156166,0.0011837,0.0010666,0.00109765,0.00108523]
 
 fig,ax = plt.subplots()
 plt.axhline(y=0,color='black',linewidth=2)
-plt.errorbar(r,bias,yerr=err,xerr=None,label="Uncalibrated",color='r')
-plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Calibrated",color='r',linestyle=':')
-#plt.errorbar(r,bias3,yerr=err3,exerr=None,label="MOF (RGB N0.1)",color='b',linestyle = '--')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="meta-meta",color='r')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="orig",color='r',linestyle=':')
+#plt.errorbar(9,-0.00943641, yerr=0.00299207, xerr=None,label="Using Sep",marker="o",color="c")
 #plt.errorbar(r,bias4,yerr=err4,xerr=None,label="MOF (1 band N10)",color='m',linestyle=':')
 #plt.errorbar(r,bias6,yerr=err6,xerr=None,label="None/Simp+mono",color='m')
 #plt.errorbar(r,bias5,yerr=err5,xerr=None,label="MOF (RGB N10)",color='m',linestyle='--')
@@ -151,7 +151,7 @@ plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Calibrated",color='r',linestyle=
 
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias v radius")
+plt.title("Bias v radius (N=0.1)")
 
 plt.grid(which='minor')
 plt.grid(which='major')

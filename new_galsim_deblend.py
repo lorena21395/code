@@ -359,11 +359,11 @@ class Simulation(dict):
             noises.append(noise)
             ims.append(im)
         ims = np.array(ims)
-
+        """
         sep_im = np.sum(ims,axis=0)
         objects = sep.extract(sep_im, 1.5, err=10.)
         s_coords = [(objects['y'][0],objects['x'][0]),(objects['y'][1],objects['x'][1])]
-
+        """
         """
         #create fits file
         hdu1 = fits.PrimaryHDU()
@@ -376,20 +376,20 @@ class Simulation(dict):
         cen =  (np.array(dims) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-
+        """
         if np.abs(coord1[0]-s_coords[0][0]) < np.abs(coord2[0]-s_coords[0][0]) and np.abs(coord1[1]-s_coords[0][1]) < np.abs(coord2[1]-s_coords[0][1]):
             s_coord1 = s_coords[0]
             s_coord2 = s_coords[1]
         else:
             s_coord1 = s_coords[1]
             s_coord2 = s_coords[0]
-
+        """
         if mode == 'control':
-            #coords = [coord1]
-            coords = [s_coord1]
+            coords = [coord1]
+            #coords = [s_coord1]
         else:
-            #coords = [coord1,coord2]
-            coords = [s_coord1,s_coord2]
+            coords = [coord1,coord2]
+            #coords = [s_coord1,s_coord2]
 
         return ims,psf_im,coords,dims,dx1,dy1,noises
 
@@ -418,7 +418,7 @@ class Model(object):
         #target_psf = scarlet.psf_match.fit_target_psf(psfs, 
         #                                scarlet.psf_match.gaussian)
         #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psfs,
-        #                                target_psf)
+        #                                    target_psf)
         sources = [scarlet.ExtendedSource(coord, im, bg_rms = bg,
                 psf=None,config=config) for coord in coords]
         #config = scarlet.Config(edge_flux_thresh=0.05)
@@ -435,8 +435,9 @@ class Model(object):
         mod2 = blend.get_model(1)
         cen_mod = sources[0].get_model()
         neigh_mod = sources[1].get_model()
-
-        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
+        cen_cen_pos = blend[0][0].center
+        neigh_cen_pos = blend[1][0].center
+        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise,cen_cen_pos,neigh_cen_pos
         #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
 
 
@@ -724,12 +725,13 @@ def norm_test(args, sim):
  
         mod = Model(sim, show=args.show)
         if mode == 'scarlet':
-            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = mod.get_scar_model()
+            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise,cen_cen_pos,neigh_cen_pos = mod.get_scar_model()
             bg_rms = sim['Image']['Bgrms']/np.sqrt(len(im))
+            dims = [np.shape(im)[1],np.shape(im)[2]]
             if sim['Steps'] == 'one':
                 coord1 = coords[0]
                 #isolate central object                                       
-                cen_obj = model[:,:,:] - mod2[:,:,:]
+                cen_obj = im[:,:,:] - mod2[:,:,:]
                 dobs = create_mb(cen_obj,bg_rms,
                                 coord1[0],coord1[1],
                                 sim['Psf']['Bgrms_psf'],psf_im,noise)
@@ -803,7 +805,7 @@ def norm_test(args, sim):
         elif mode=='mof':
             dobs = mod.get_mof_model()
     
-    return dobs
+    return dobs,cen_cen_pos,neigh_cen_pos,dims,coords
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                ntry,metacal_pars,dobs):
@@ -831,6 +833,10 @@ def get_output(n, nband):
         ('pars_1m','f8',npar),
         ('pars_2p','f8',npar),
         ('pars_2m','f8',npar),
+        ('cen_cen','f8',(2)),
+        ('neigh_cen','f8',(2)),
+        ('coords','f8',(2,2)),
+        ('dims','f8',2),
     ]
 
 
@@ -859,9 +865,8 @@ def main(args):
         print(j)
         try:
             tm0=time.time()
-            dobs = norm_test(args, sim)
+            dobs,cen_cen_pos,neigh_cen_pos,dims,coords = norm_test(args, sim)
             tm_deblend += time.time()-tm0
-
             if dobs is None:
                 output['flags'][j] = 2
             else:
@@ -880,7 +885,10 @@ def main(args):
                     output['pars_1m'][j] = res['1m']['pars']
                     output['pars_2p'][j] = res['2p']['pars']
                     output['pars_2m'][j] = res['2m']['pars']
-
+                    output['cen_cen'][j] = np.array([cen_cen_pos[0],cen_cen_pos[1]])
+                    output['neigh_cen'][j] = np.array([neigh_cen_pos[0],neigh_cen_pos[1]])
+                    output['coords'][j] = np.array(coords)
+                    output['dims'][j] = np.array(dims)
         #except (LinAlgError,ValueError,BootGalFailure) as err:
         #except ValueError as err:
         except BootGalFailure as err:
