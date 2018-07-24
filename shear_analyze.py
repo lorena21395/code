@@ -9,29 +9,29 @@ plt.switch_backend('agg')
 #
 parser = argparse.ArgumentParser()
 parser.add_argument("f1",help="filename path")
-parser.add_argument("f2",help="filename path")
-parser.add_argument("f3",help="filename path")
+#parser.add_argument("f2",help="filename path")
+#parser.add_argument("f3",help="filename path")
 #parser.add_argument("outfile",help="outfile name")
 args = parser.parse_args()
 
 f1 = args.f1
-f2 = args.f2
-f3 = args.f3
+#f2 = args.f2
+#f3 = args.f3
 #outfile = args.outfile
 
 # this gets a list of all files that match the pattern
 flist = glob(f1+'*.fits')
 #flist = (glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run198/run198_1-output-*.fits'))
 #flist.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_21-output-007*.fits'))
-flist2 = glob(f2+'*.fits')
+#flist2 = glob(f2+'*.fits')
 #flist2.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_22-output-006*.fits'))
 #flist2.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_22-output-007*.fits'))
-flist3 = glob(f3+'*.fits')
+#flist3 = glob(f3+'*.fits')
 #flist3.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_16-output-002*.fits'))
 #flist3.append(glob('/gpfs01/astro/workarea/lmezini/scarlet-tests/run186/run186_16-output-003*.fits'))
 #flist = glob('/gpfs01/astro/workarea/lmezini/deblender_tests/code/test.fits')
 
-lists = [flist,flist2,flist3]
+lists = [flist]#,flist2,flist3]
 # read each file and combine into one big array
 
 shear1 = []
@@ -78,9 +78,9 @@ for fl in lists:
     #scar_cen_p1_err = scar_cen_p1.std(axis=0)/np.sqrt(w.size)
     #scar_cen_p2_err = scar_cen_p2.std(axis=0)/np.sqrt(w.size)
     
-    scar_neigh_p1 = data['neigh_cen'][:,0]
-    scar_neigh_p2 = data['neigh_cen'][:,1]
-    print(scar_neigh_p1[np.where(scar_neigh_p1>=1e6)],scar_neigh_p2[np.where(scar_neigh_p2>=1e6)])
+    #scar_neigh_p1 = data['neigh_cen'][:,0]
+    #scar_neigh_p2 = data['neigh_cen'][:,1]
+
     #dims = data['dims'][:]
     #center = (dims-1.)/2.
     #scar_cen_p1 -= center[:,0]
@@ -89,8 +89,8 @@ for fl in lists:
     coord_cen_p1 = data['coords'][:,0,0]
     coord_cen_p2 = data['coords'][:,0,1]
     
-    coord_neigh_p1 = data['coords'][:,1,0]
-    coord_neigh_p2 = data['coords'][:,1,1]
+    #coord_neigh_p1 = data['coords'][:,1,0]
+    #coord_neigh_p2 = data['coords'][:,1,1]
 
     #coord_cen_p1_err = coord_cen_p1.std(axis=0)/np.sqrt(w.size)
     #coord_cen_p2_err = coord_cen_p2.std(axis=0)/np.sqrt(w.size)
@@ -107,11 +107,11 @@ for fl in lists:
     scar_diff_p1_err = scar_diff_p1.std(axis=0)/np.sqrt(w.size)
     scar_diff_p2_err = scar_diff_p2.std(axis=0)/np.sqrt(w.size) 
 
-    scar_n_diff_p1 = scar_neigh_p1 - coord_neigh_p1
-    scar_n_diff_p2 = scar_neigh_p2 - coord_neigh_p2
+    #scar_n_diff_p1 = scar_neigh_p1 - coord_neigh_p1
+    #scar_n_diff_p2 = scar_neigh_p2 - coord_neigh_p2
 
-    scar_n_diff_p1_err = scar_n_diff_p1.std(axis=0)/np.sqrt(w.size)
-    scar_n_diff_p2_err = scar_n_diff_p2.std(axis=0)/np.sqrt(w.size)
+    #scar_n_diff_p1_err = scar_n_diff_p1.std(axis=0)/np.sqrt(w.size)
+    #scar_n_diff_p2_err = scar_n_diff_p2.std(axis=0)/np.sqrt(w.size)
 
     g_mean = g.mean(axis=0)
     

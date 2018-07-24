@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #####
-
 import time
 import yaml
 import minimof
@@ -50,7 +49,6 @@ metacal_pars = {
     'use_noise_image': True,
     'types': ['noshear','1p','1m','2p','2m'],
 }
-
 
 
 class Simulation(dict):
@@ -392,6 +390,16 @@ class Simulation(dict):
             #coords = [s_coord1,s_coord2]
 
         return ims,psf_im,coords,dims,dx1,dy1,noises
+
+class NGal_Simulation(dict):
+    def __init__(self,specs, seed):
+        self.update(specs)
+        self.specs = specs
+        self.seed = seed
+    
+    def __call__(self):
+        sim=minimof.moftest.Sim(specs, seed)
+        return(sim)
 
 class Model(object):
     
@@ -844,20 +852,22 @@ def get_output(n, nband):
 
 def main(args):
 
-
     with open(args.config) as fobj:
-        Sim_specs =yaml.load(fobj)
+        Sim_specs = yaml.load(fobj)
 
     nband = Sim_specs.get('Nbands',1)
-
-    output=get_output(args.ntrials, nband)
+    nobj = Sim_specs.get('nobj',2)
+    output = get_output(args.ntrials, nband)
     prior = get_prior(nband)
 
-    np.random.seed(args.seed)
-    rng = np.random.RandomState(seed=np.random.randint(0,2**30))
-
-    sim=Simulation(Sim_specs, rng)
-
+    if nobj == 2:
+        np.random.seed(args.seed)
+        rng = np.random.RandomState(seed=np.random.randint(0,2**30))
+        sim=Simulation(Sim_specs, rng)
+    
+    else:
+        sim = NGal_Simulation(Sim_specs,args.seed)
+        print(sim)
     tm_deblend=0.0
     tm_metacal=0.0
 
@@ -866,6 +876,7 @@ def main(args):
         try:
             tm0=time.time()
             dobs,cen_cen_pos,neigh_cen_pos,dims,coords = norm_test(args, sim)
+            #dobs = norm_test(args,sim)
             tm_deblend += time.time()-tm0
             if dobs is None:
                 output['flags'][j] = 2
@@ -885,10 +896,10 @@ def main(args):
                     output['pars_1m'][j] = res['1m']['pars']
                     output['pars_2p'][j] = res['2p']['pars']
                     output['pars_2m'][j] = res['2m']['pars']
-                    output['cen_cen'][j] = np.array([cen_cen_pos[0],cen_cen_pos[1]])
-                    output['neigh_cen'][j] = np.array([neigh_cen_pos[0],neigh_cen_pos[1]])
-                    output['coords'][j] = np.array(coords)
-                    output['dims'][j] = np.array(dims)
+                    #output['cen_cen'][j] = np.array([cen_cen_pos[0],cen_cen_pos[1]])
+                    #output['neigh_cen'][j] = np.array([neigh_cen_pos[0],neigh_cen_pos[1]])
+                    #output['coords'][j] = np.array(coords)
+                    #output['dims'][j] = np.array(dims)
         #except (LinAlgError,ValueError,BootGalFailure) as err:
         #except ValueError as err:
         except BootGalFailure as err:
