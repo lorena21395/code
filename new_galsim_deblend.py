@@ -391,15 +391,45 @@ class Simulation(dict):
 
         return ims,psf_im,coords,dims,dx1,dy1,noises
 
-class NGal_Simulation(dict):
-    def __init__(self,specs, seed):
-        self.update(specs)
-        self.specs = specs
-        self.seed = seed
+class NGal_Simulation():
+    #def __init__(self):
+    #    self.update(specs)
+    #    self.specs = specs
+    #    self.seed = seed
+
+    def _get_sep_objs(self,sim):
+        objects, segmap = sep.extract(
+            sim.image,
+            1.5,
+            #.5,                                                               
+            err=sim['noise_sigma'],
+            #minarea=2,                                                         
+            deblend_cont=0.0001,
+            segmentation_map=True,
+        )
+        
+        return objects, segmap
     
-    def __call__(self):
-        sim=minimof.moftest.Sim(specs, seed)
-        return(sim)
+    def _get_coord_list(self,objects):
+        coord_list = []
+        for i in range(len(objects)):
+            coord_list.append([objects['y'][i],objects['x'][i]])
+
+        return coord_list
+
+    def __call__(self,specs,seed):
+        sim = minimof.moftest.Sim(specs,seed)
+        sim.make_obs()
+        objects, segmap = self._get_sep_objs(sim)
+        nfail = 0
+        nobj = 0
+        nobj = len(objects)
+        if nobj == 0:
+            print("failed to find any objects")
+            nfail += 1
+        else:
+            coord_list = self._get_coord_list(objects)
+        return sim,nobj,nfail,objects
 
 class Model(object):
     
@@ -505,13 +535,14 @@ class Model(object):
             mb.append(olist)
         return mb, coords
 
-    def _get_mof_guess(self, coord_list,mb):
+    def _get_mof_guess(self, coord_list, mb, jacobian = None):
         rng=self.sim.rng
         nbands = len(mb)
         
         npars_per=6+nbands
         num=len(coord_list)
-        assert num==2,"two objects for now"
+
+        #assert num==2,"two objects for now"
 
         npars_tot = num*npars_per
         guess = np.zeros(npars_tot)
@@ -524,7 +555,7 @@ class Model(object):
             if i==0:
                 F = self.sim['Cen']['Flux']
             else:
-                F = self.sim['Neigh']['Flux']
+                F = self.sim['Neigh']['Flux' ]
 
 
             # always close guess for center
@@ -546,8 +577,7 @@ class Model(object):
 
         return guess
 
-
-    def _get_mof_prior(self, coord_list, nband):
+    def _get_mof_prior(self, coord_list, nband, jacobian = None):
         """
         prior for N objects.  The priors are the same for
         structural parameters, the only difference being the
@@ -562,13 +592,24 @@ class Model(object):
         cen_sigma=1.0 #pixels for now
         for coords in coord_list:
             row,col=coords
-            p=ngmix.priors.CenPrior(
-                row,
-                col,
-                cen_sigma, cen_sigma,
-                rng=rng,
-            )
-            cen_priors.append(p)
+            if jacobian != None:
+                cen_sigma = jacobian.get_scale()
+                v, u = jacobian(row, col)
+                p=ngmix.priors.CenPrior(
+                    v,
+                    u,
+                    cen_sigma, cen_sigma,
+                    rng=rng,
+                )
+                cen_priors.append(p)
+            else:
+                p=ngmix.priors.CenPrior(
+                    row,
+                    col,
+                    cen_sigma, cen_sigma,
+                    rng=rng,
+                )
+                cen_priors.append(p)
 
         g_prior=ngmix.priors.GPriorBA(
             0.2,
@@ -866,8 +907,8 @@ def main(args):
         sim=Simulation(Sim_specs, rng)
     
     else:
-        sim = NGal_Simulation(Sim_specs,args.seed)
-        print(sim)
+        sim = NGal_Simulation()
+        sim,nobj,nfail,objects = sim.__call__(Sim_specs,args.seed)
     tm_deblend=0.0
     tm_metacal=0.0
 

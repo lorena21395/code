@@ -74,7 +74,7 @@ for fl in lists:
 
     scar_cen_p1 = data['cen_cen'][:,0]
     scar_cen_p2 = data['cen_cen'][:,1]
-
+    print(scar_cen_p1,scar_cen_p2)
     #scar_cen_p1_err = scar_cen_p1.std(axis=0)/np.sqrt(w.size)
     #scar_cen_p2_err = scar_cen_p2.std(axis=0)/np.sqrt(w.size)
     
@@ -169,11 +169,11 @@ if len(lists) == 3:
     #print("additive: %g +/- %g" % (shear[1], shear_err[1]))
     print(resp)
     print(shear1,shear2)
-"""
+
 plt.figure(figsize=[7,7])
-binwidth = 0.01
-bins1 = np.arange(sorted(scar_diff_p1)[50], sorted(scar_diff_p1)[-50] + binwidth, binwidth)
-bins2 = np.arange(sorted(scar_diff_p2)[50], sorted(scar_diff_p2)[-50] + binwidth, binwidth)
+binwidth = 0.0001
+bins1 = np.arange(sorted(scar_diff_p1)[0], sorted(scar_diff_p1)[-1] + binwidth, binwidth)
+bins2 = np.arange(sorted(scar_diff_p2)[0], sorted(scar_diff_p2)[-1] + binwidth, binwidth)
 s_range_p1_min = scar_diff_p1.mean()-5.*scar_diff_p1.std(axis=0)
 s_range_p1_max = scar_diff_p1.mean()+5.*scar_diff_p1.std(axis=0)
 s_range_p2_min = scar_diff_p2.mean()-5.*scar_diff_p2.std(axis=0)
@@ -181,7 +181,7 @@ s_range_p2_max = scar_diff_p2.mean()+5.*scar_diff_p2.std(axis=0)
 
 plt.hist(scar_diff_p1,bins1,histtype='step',label=("scar cen p1 mean,std: "+ str(round(scar_diff_p1.mean(),5))+"+/-" +str(round(scar_diff_p1_err,5))+", "+str(round(scar_diff_p1.std(axis=0),5))),range = (s_range_p1_min,s_range_p1_max))
 plt.hist(scar_diff_p2,bins2,histtype='step',label=("scar cen p2 mean,std: "+ str(round(scar_diff_p2.mean(),5))+"+/-" +str(round(scar_diff_p2_err,5))+", "+str(round(scar_diff_p2.std(axis=0),5))),range = (s_range_p2_min,s_range_p2_min))
-
+"""
 #binwidth = 0.001
 bins1 = np.arange(sorted(scar_n_diff_p1)[50], sorted(scar_n_diff_p1)[-50] + binwidth, binwidth)
 bins2 = np.arange(sorted(scar_n_diff_p2)[50], sorted(scar_n_diff_p2)[-50] + binwidth, binwidth)
@@ -248,14 +248,15 @@ range_p2_max = p2.mean()+5.*p2.std(axis=0)
 
 plt.hist(p1,bins1,histtype='step',label=("p1 mean,std: "+ str(round(p1.mean(),5))+"+/-" +str(round(p1_err,5))+", "+str(round(p1.std(axis=0),5))),range = (range_p1_min,range_p1_max))
 plt.hist(p2,bins2,histtype='step',label=("p2 mean,std: "+ str(round(p2.mean(),5))+"+/-" +str(round(p2_err,5))+", "+str(round(p2.std(axis=0),5))),range = (range_p2_min,range_p2_min))
+"""
 plt.legend(loc=0)
 #plt.xlim(s_n_range_p1_min-0.002,s_n_range_p1_max+0.002)
-plt.xlim(-0.5,0.5)
-plt.title("Positions for Gals (r = 13,N=10)")
+plt.xlim(-0.01,0.01)
+plt.title("Position for Single Gal (x,y= 0.25,N=0.1)")
 plt.xlabel("position (pixel distance to center)")
-plt.savefig('scar_met_pos_r13_N10_noPSF.png')
+plt.savefig('scar_met_pos_sing_N0.1_noPSF.png')
 plt.close()
-"""
+
 """
 binwidth = 0.01
 bins11 = np.arange(min(R11vals), max(R11vals) + binwidth, binwidth)
