@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
-majorLocator = MultipleLocator(0.01)
+majorLocator = MultipleLocator(0.0025)
 majorFormatter = FormatStrFormatter('%s')
-minorLocator = MultipleLocator(0.005)
+minorLocator = MultipleLocator(0.001)
 
 r = [7,9,11,13,15]
 
@@ -40,26 +40,27 @@ err = [0.00230481,0.0021461,0.00206198,0.00290171,0.00290287]
 
 bias2 = [-0.00268918,0.00408031,-0.00366705,-0.00062781,7.7428e-05]
 err2 = [0.00230272,0.00214585,0.00206024,0.00290167,0.00290126]
-
+"""
+"""
 ###regular mof bg= 0.1
-bias3 = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
-err3 = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
+bias2 = [-0.000237279,-0.000476259,-0.000621423,-0.00105133,-6.75232e-05]
+err2 = [0.000735791,0.000724539,0.000717248,0.000713775,0.0010105]
 
 ###regular mof bg = 10
-bias4 = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
-err4 = [0.0031733,0.00298901,0.00315932,0.00290509,0.00290543]
-
+bias = [-0.0245964,-0.0129146,-0.00877397,0.000550745,0.00151485]
+err = [0.0031733,0.00298901,0.00315932,0.00290509,0.00290543]
+"""
 
 ############
 #knots only (MOF)
 ###########
 #N = 0.1
-bias = [-0.00906016,0.00320047,0.000231944,0.00544578,-0.00609954]
-err = [0.00364751,0.00333022,0.0030994,0.00296978,0.00291995]
+bias2 = [-0.00906016,0.00320047,0.000231944,0.00544578,-0.00609954]
+err2 = [0.00364751,0.00333022,0.0030994,0.00296978,0.00291995]
 #N = 10
-#bias2 = [-0.00691184,-0.0016747,-0.00334637,3.37054e-05,0.00701863]
-#err2 = [0.00416599,0.00391162,0.00362538,0.00347558,0.00342445]
-
+bias = [-0.00691184,-0.0016747,-0.00334637,3.37054e-05,0.00701863]
+err = [0.00416599,0.00391162,0.00362538,0.00347558,0.00342445]
+"""
 #KNOTS ONLY (SCARLET)
 #N = 0.1
 #1step
@@ -126,7 +127,7 @@ err3 = [0.00102495,0.0010192,0.00101346,0.00100989,0.00101181]
 bias5 = [-0.0309224,-0.0177222,0.000497857,-0.00371945,0.00262282]
 err5 = [0.00467561,0.00450122,0.00446733,0.00449141,0.00450576]
 """
-
+"""
 ####EXTRA SHEAR TESTS w/o PSF for Scarlet
 #no psf for scarlet config-v98 > config_v102
 bias = [-0.161875,-0.0802582,-0.0188059,-0.0583358,-0.0305483]
@@ -134,11 +135,11 @@ err = [0.00125761,0.00110829,0.00104501,0.00103584,0.0010554]
 #meta^2 test
 bias2 = [0.0407646,-0.0176779,0.00146799,-0.00214599,-0.00314854]
 err2 = [0.00156166,0.0011837,0.0010666,0.00109765,0.00108523]
-
+"""
 fig,ax = plt.subplots()
 plt.axhline(y=0,color='black',linewidth=2)
-plt.errorbar(r,bias2,yerr=err2,xerr=None,label="meta-meta",color='r')
-plt.errorbar(r,bias,yerr=err,xerr=None,label="orig",color='r',linestyle=':')
+plt.errorbar(r,bias2,yerr=err2,xerr=None,label="Low Noise",color='r')
+plt.errorbar(r,bias,yerr=err,xerr=None,label="Noisy",color='r',linestyle=':')
 #plt.errorbar(9,-0.00943641, yerr=0.00299207, xerr=None,label="Using Sep",marker="o",color="c")
 #plt.errorbar(r,bias4,yerr=err4,xerr=None,label="MOF (1 band N10)",color='m',linestyle=':')
 #plt.errorbar(r,bias6,yerr=err6,xerr=None,label="None/Simp+mono",color='m')
@@ -151,7 +152,7 @@ plt.errorbar(r,bias,yerr=err,xerr=None,label="orig",color='r',linestyle=':')
 
 plt.xlabel("Distance to Neighbor (pixels)")
 plt.ylabel("Fractional Shear Bias")
-plt.title("Bias v radius (N=0.1)")
+plt.title("Bias v radius (Knots)")
 
 plt.grid(which='minor')
 plt.grid(which='major')
@@ -161,5 +162,6 @@ ax.yaxis.set_minor_locator(minorLocator)
 ax.set_xlim(6,16)
 plt.legend(loc=4)
 
-#plt.savefig('bias_v_rad_MOF_scar_knots_N0.1.png')
-plt.savefig('bias-v-rad-scar_meta2.png')
+#plt.savefi3g('bias_v_rad_MOF_scar_knots_N0.1.png')
+#plt.savefig('bias-v-rad-scar_meta2.png')
+plt.savefig('test.png')

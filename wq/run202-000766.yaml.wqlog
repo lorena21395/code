@@ -1,0 +1,73 @@
+executing on host: astro0004 with pid: 14801
+0
+      fit:      2.8       6.8    -0.046     -0.17     0.628     0.274      1.66 
+1
+      fit:      2.8      6.81    -0.043     -0.17     0.631     0.262      1.66 
+2
+      fit:     2.81       6.8   -0.0441     -0.17     0.628     0.262      1.66 
+3
+      fit:     2.81       6.8   -0.0445    -0.172     0.632     0.273      1.66 
+4
+      fit:     2.81       6.8   -0.0437    -0.173     0.636     0.265      1.66 
+5
+      fit:     2.81       6.8    -0.046    -0.172     0.633     0.273      1.66 
+6
+      fit:     2.81       6.8   -0.0499    -0.169     0.632     0.276      1.66 
+7
+      fit:     2.81       6.8   -0.0413    -0.171     0.637     0.267      1.66 
+8
+      fit:     2.81       6.8   -0.0473    -0.175      0.64     0.263      1.66 
+9
+      fit:      2.8       6.8   -0.0431    -0.174      0.64     0.276      1.66 
+10
+      fit:     2.81       6.8   -0.0448    -0.173     0.633     0.257      1.66 
+11
+      fit:     2.81       6.8   -0.0448    -0.167     0.641     0.276      1.66 
+12
+      fit:     2.81       6.8   -0.0452    -0.173     0.631     0.277      1.66 
+13
+      fit:      2.8      6.81   -0.0405     -0.17     0.633      0.26      1.66 
+14
+      fit:     2.81      6.81   -0.0447    -0.175     0.635     0.275      1.66 
+15
+      fit:     2.81       6.8   -0.0426    -0.166     0.631      0.26      1.66 
+16
+      fit:     2.81       6.8   -0.0442    -0.168     0.632     0.268      1.66 
+17
+      fit:     2.81       6.8   -0.0405    -0.169     0.632     0.263      1.66 
+18
+      fit:      2.8       6.8   -0.0479     -0.17     0.629     0.265      1.66 
+19
+      fit:     2.81       6.8    -0.044    -0.171     0.626     0.251      1.66 
+20
+      fit:     2.81       6.8   -0.0479    -0.163     0.629     0.272      1.66 
+21
+      fit:     2.81       6.8    -0.044    -0.172     0.635     0.261      1.66 
+22
+      fit:     2.81      6.81   -0.0492    -0.173     0.638     0.267      1.66 
+23
+      fit:     2.81       6.8   -0.0475     -0.17     0.639     0.271      1.66 
+24
+      fit:     2.81      6.81   -0.0486    -0.166     0.633     0.271      1.66 
+25
+      fit:     2.81       6.8   -0.0441    -0.174     0.639     0.261      1.66 
+26
+      fit:     2.81       6.8   -0.0439    -0.168     0.632     0.261      1.66 
+27
+      fit:     2.81       6.8   -0.0467    -0.173     0.641     0.276      1.66 
+28
+      fit:     2.81      6.81   -0.0467    -0.172     0.631     0.273      1.66 
+     singular covariance
+    pars at singular: -6.51e-07  3.28e-07  4.01e-09  -2.68e-07     0.318    0.0692 
+    failure: s2n_sum <= 0.0 : 0.0
+Traceback (most recent call last):
+  File "/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py", line 1073, in <module>
+    main(args)
+  File "/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py", line 1036, in main
+    ngal_res['nobj'][-1] = nobj
+IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+Connection to astro0004 closed.
+source ~/.bashrc
+
+/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run202/run202_2-output-000766.fits 400 6435 /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config-1gal-bd-fitbdf.yaml
+

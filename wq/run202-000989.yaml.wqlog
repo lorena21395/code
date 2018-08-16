@@ -1,0 +1,73 @@
+executing on host: astro0002 with pid: 17363
+0
+      fit:     4.34      11.5    0.0156   -0.0896     0.417     -0.29      1.71 
+     singular covariance
+    pars at singular: 2.37e-06  -1.76e-06  -3.27e-10  7.53e-09     0.316    0.0692 
+1
+      fit:     4.29      11.5    0.0234    -0.103     0.476    -0.229      1.72 
+2
+      fit:     4.32      11.5     0.041   -0.0728     0.496    -0.232      1.72 
+3
+      fit:     4.29      11.5     0.034   -0.0483     0.444    -0.147      1.71 
+4
+      fit:     4.32      11.5    0.0186   -0.0977     0.443    -0.274      1.71 
+5
+      fit:     4.26      11.5   -0.0245    -0.138     0.443    -0.217      1.71 
+6
+      fit:     4.27      11.5     0.009    -0.144     0.464    -0.159      1.71 
+7
+      fit:      4.3      11.5   0.00307      -0.1     0.426     -0.31      1.71 
+8
+      fit:     4.32      11.4    0.0118   -0.0407     0.453    -0.231      1.72 
+9
+      fit:     4.31      11.5    0.0364   -0.0809     0.464    -0.322      1.71 
+10
+      fit:     4.29      11.5   0.00814   -0.0774     0.499    -0.286      1.72 
+     singular covariance
+    pars at singular:  9.8e-09  4.07e-07  -2.7e-09  9.49e-07     0.305    0.0692 
+11
+      fit:     4.27      11.4  -0.00241   -0.0927     0.448    -0.138      1.72 
+12
+      fit:     4.28      11.5    0.0259    -0.114      0.44    -0.289      1.71 
+13
+      fit:     4.32      11.5   0.00537    -0.131     0.444    -0.186      1.71 
+14
+      fit:     4.29      11.5    0.0121    -0.105     0.446    -0.282      1.71 
+     bad covariance matrix
+15
+      fit:     4.35      11.5    0.0627    -0.161     0.444    -0.301      1.71 
+16
+      fit:      4.3      11.5    0.0239    -0.082     0.419    -0.249      1.71 
+17
+      fit:     4.33      11.4   0.00918   -0.0738     0.406    -0.295      1.71 
+18
+      fit:     4.31      11.4  -0.00109   -0.0387     0.421    -0.231      1.71 
+19
+      fit:     4.31      11.4   0.00231   -0.0976     0.448     -0.13      1.71 
+     singular covariance
+    pars at singular:  1.7e-06  -1.41e-08  -3.11e-09  -9.98e-08     0.316    0.0692 
+20
+      fit:      4.3      11.5    0.0448    -0.118     0.421     -0.16      1.71 
+21
+      fit:     4.28      11.5   -0.0182   -0.0711     0.469    -0.149      1.72 
+22
+      fit:     4.38      11.4     0.015    -0.122     0.437     -0.23      1.71 
+23
+      fit:     4.28      11.5     0.044    -0.114     0.435    -0.176      1.71 
+24
+      fit:     4.32      11.4   0.00953   -0.0873      0.47    -0.185      1.72 
+     bad covariance matrix
+25
+      fit:     4.37      11.4    0.0108    -0.127     0.443    -0.241      1.71 
+    failure: s2n_sum <= 0.0 : 0.0
+Traceback (most recent call last):
+  File "/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py", line 1073, in <module>
+    main(args)
+  File "/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py", line 1036, in main
+    ngal_res['nobj'][-1] = nobj
+IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+Connection to astro0002 closed.
+source ~/.bashrc
+
+/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run202/run202_2-output-000989.fits 400 7414 /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config-1gal-bd-fitbdf.yaml
+

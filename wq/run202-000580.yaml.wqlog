@@ -1,0 +1,17 @@
+executing on host: astro0011 with pid: 12542
+0
+      fit:     4.55      7.54    0.0718    0.0142     0.616     0.384      1.65 
+1
+      fit:     4.55      7.53    0.0648   0.00416     0.617     0.356      1.65 
+    failure: s2n_sum <= 0.0 : 0.0
+Traceback (most recent call last):
+  File "/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py", line 1073, in <module>
+    main(args)
+  File "/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py", line 1036, in main
+    ngal_res['nobj'][-1] = nobj
+IndexError: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+Connection to astro0011 closed.
+source ~/.bashrc
+
+/gpfs01/astro/workarea/lmezini/deblender_tests/code/new_galsim_deblend.py /gpfs01/astro/workarea/lmezini/scarlet-tests/run202/run202_2-output-000580.fits 400 16549 /gpfs01/astro/workarea/lmezini/deblender_tests/config_files/config-1gal-bd-fitbdf.yaml
+
