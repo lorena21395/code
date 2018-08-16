@@ -37,7 +37,7 @@ Neigh:
 Image:
     Bgrms: 0.1
     Scale: 1
-    dims: [48, 48]
+#    dims: [48, 48]
 
 Psf:
     Psf_hlr: 1.7

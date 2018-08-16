@@ -1,0 +1,53 @@
+Nbands: 2
+
+Cen:
+    Type: Sersic
+
+    g:
+        sigma: 0.02
+
+    n:
+        type: uniform
+        range: [0.5, 4.0]
+
+    hlr: 1.7
+    Flux: 6000.0
+    SED: [0.5,1.0,1.5]
+    Pos: Fixed
+    dx: 0.0
+    dy: 0.0
+    r: 0.0
+
+Neigh:
+    Type: Sersic
+
+    g:
+        sigma: 0.02
+
+    n:
+        type: uniform
+        range: [0.5, 4.0]
+
+    hlr: 3.4
+    Flux: 8000.
+    SED: [1.5,1.0,.5]
+    Pos: Rand_circle
+    dx: 15.
+    dy: 15.
+    r: 11.
+
+Image:
+    Bgrms: 0.1
+    Scale: 1
+    dims: [65,65]
+
+Psf:
+    Psf_hlr: 1.7
+    Scale: 1.
+    Bgrms_psf: 0.0001
+
+Shear:
+    Shear1: 0.02
+    Shear2: 0.00
+
+Mode: mof

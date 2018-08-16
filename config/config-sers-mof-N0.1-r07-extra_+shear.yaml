@@ -1,0 +1,52 @@
+Cen:
+    Type: Sersic
+
+    g:
+        sigma: 0.02
+
+    n:
+        type: uniform
+        range: [0.5, 4.0]
+
+    hlr: 1.7
+    Flux: 6000.0
+    Pos: Fixed
+    dx: 0.0
+    dy: 0.0
+    r: 0.0
+
+Neigh:
+    Type: Sersic
+
+    g:
+        sigma: 0.02
+
+    n:
+        type: uniform
+        range: [0.5, 4.0]
+
+    hlr: 3.4
+    Flux: 8000.
+    Pos: Rand_circle
+    dx: 15.
+    dy: 15.
+    r: 7.
+
+
+Image:
+    Bgrms: 0.1
+    Scale: 1
+
+Psf:
+    Psf_hlr: 1.7
+    Scale: 1.
+    Bgrms_psf: 0.0001
+
+Shear:
+    Shear1: 0.02
+    Shear2: 0.00
+
+Extra_Shear:
+    shear+: 0.01
+
+Mode: mof

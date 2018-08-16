@@ -1,0 +1,32 @@
+Cen:
+    Type: Exponential
+    hlr: 1.7
+    Flux: 6000.0
+    Pos: Fixed
+    dx: 0.0
+    dy: 0.0
+    r: 0.0
+
+Neigh:
+    Type: Exponential
+    hlr: 3.4
+    Flux: 8000.
+    Pos: Rand_circle
+    dx: 15.
+    dy: 15.
+    r: 9.
+
+Image:
+    Bgrms: 10.
+    Scale: 1
+
+Psf:
+    Psf_hlr: 1.7
+    Scale: 1.
+    Bgrms_psf: 0.0001
+
+Shear:
+    Shear1: 0.1
+    Shear2: 0.00
+
+Mode: scarlet

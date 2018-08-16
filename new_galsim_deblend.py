@@ -492,7 +492,7 @@ class Model(object):
         #                                scarlet.psf_match.gaussian)
         #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psfs,
         #                                    target_psf)
-        
+        #if use PSF matching, set psf = diff_kernels below
         sources = [scarlet.ExtendedSource(coord, im, bg_rms = bg,
                 psf=None,config=config) for coord in coords]
         #config = scarlet.Config(edge_flux_thresh=0.05)
