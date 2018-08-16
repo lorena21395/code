@@ -2,16 +2,16 @@
 
 ####
 # Noise analysis
+# single deblend
+# original image-model
 # don't readd noise
-# change source size to 51,51
-# Clipped templates and weights
-
+#increase source sizes
+# clipped weights and templates
 
 import yaml
 #from minimof import minimof
 #from scipy.misc import imsave
 import scarlet.psf_match
-import scarlet.constraint as sc
 import fitsio
 import galsim
 import argparse
@@ -21,10 +21,6 @@ import numpy as np
 import scarlet
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
-from scarlet.constraint import Constraint
-import scarlet.operator
-import proxmin.operators
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("outfile",help="Output file name and path")
@@ -61,22 +57,13 @@ class Simulation(dict):
         psf_im = psf_gsim.array
         noise_psf = np.random.normal(scale=self['Psf']['Bgrms_psf'],size=psf_im.shape)
         psf_im += noise_psf
-        #plt.imshow(psf_im)
-        #plt.savefig('test.png')
+
         return psf,psf_im
 
     def _get_gals(self,mode,dx,dy):
-#        mode = self['Mode']
-        #Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
-        #Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
-
-        n=rng.uniform(low=0.5, high=4)
-        Cen = galsim.Sersic(n,half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
-        n=rng.uniform(low=0.5, high=4)
-        Neigh = galsim.Sersic(n,half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
-
-        Cen = Cen.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
-        Neigh = Neigh.shear(g1=np.random.normal(scale=0.02),g2=np.random.normal(scale=0.02))
+        #mode = self['Mode']
+        Cen = galsim.Gaussian(half_light_radius=self['Cen']['hlr'],flux=self['Cen']['Flux'])
+        Neigh = galsim.Exponential(half_light_radius=self['Neigh']['hlr'],flux=self['Neigh']['Flux'])
 
         #cen position
         if self['Cen']['Pos'] == 'Fixed':
@@ -107,7 +94,7 @@ class Simulation(dict):
         if mode == 'scarlet' or mode == 'minimof':
             Cen = Cen.shift(dx=dx1, dy=dy1)
             Neigh = Neigh.shift(dx=dx2, dy=dy2)
-            gals = [Cen, Neigh]
+            gals = [Cen]#, Neigh]
             objs = galsim.Add(gals)
         elif mode == 'control':
             Cen = Cen.shift(dx=dx, dy=dy)
@@ -116,7 +103,7 @@ class Simulation(dict):
             dx1,dy1 = dx,dy
 
         shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
-        #objs = objs.shear(g1=shear1, g2=shear2)
+        objs = objs.shear(g1=shear1, g2=shear2)
         
         return objs,dx1,dy1,dx2,dy2
 
@@ -127,19 +114,19 @@ class Simulation(dict):
 
     def __call__(self):
         mode = self['Mode']
-        mode = 'control'
         bg_rms = self['Image']['Bgrms']
         psf, psf_im = self._get_psf_img()
         objs,dx1,dy1,dx2,dy2 = self._get_gals(mode,0.,0.)
         objs = galsim.Convolve(objs, psf)
-        gsim = objs.drawImage(nx=25,ny=25,scale=self['Image']['Scale'])
+        gsim = objs.drawImage(scale=self['Image']['Scale'])
         im = gsim.array
         dims = np.shape(im)
+        
         #rewrite coords for galsim
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
-        coords = [coord1]
+        coords = [coord1]#,coord2]
 
         noise = self._get_noise(dims,bg_rms)
         im += noise
@@ -147,7 +134,7 @@ class Simulation(dict):
         mode = 'control'
         sing_objs,sing_dx1,sing_dy1,dx2,dy2 = self._get_gals(mode,dx1,dy1)
         sing_objs = galsim.Convolve(sing_objs, psf)
-        sing_gsim = sing_objs.drawImage(nx = 51,ny=51,scale=self['Image']['Scale'])
+        sing_gsim = sing_objs.drawImage(scale=self['Image']['Scale'])
         sing_im = sing_gsim.array
         sing_dims = np.shape(sing_im)
         cen =  (np.array(sing_im.shape) - 1.0)/2.0
@@ -155,16 +142,8 @@ class Simulation(dict):
         if mode ==  'scarlet' or mode == 'control':
             im = im.reshape( (1, dims[0], dims[1]) )
             sing_im = sing_im.reshape( (1, sing_dims[0], sing_dims[1]) )
-
         mode = 'scarlet'
         return im,psf_im,coords,dims,sing_im,sing_coord
-
-class PSFConstraint(Constraint):
-    def prox_sed(self, shape):
-        return proxmin.operators.prox_unity_plus
-
-    def prox_morph(self, shape):
-        return scarlet.operator.prox_center_on
 
 class Model(Simulation):
     
@@ -175,60 +154,41 @@ class Model(Simulation):
         im,psf_im,coords,dims,sing_im,sing_coord = Simulation.__call__(self)
         bg_rms = self['Image']['Bgrms']
         mode = self['Mode']
-        #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
-        constraint = (sc.SimpleConstraint())
-        #constraint = PSFConstraint()
-        config = (scarlet.Config(source_sizes = [25]))
-        #psf_dims = np.shape(psf_im)
-        #psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
-        #target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
-        #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf,constraints=constraint)
-            
-        #constraint =  (sc.L0Constraint(.5*bg_rms))
-        #& sc.DirectSymmetryConstraint(sigma=0.25))
-        #& sc.MonotonicityConstraint(use_nearest=True))
-        #constraints['l1'] = bg_rms
-        sources = [scarlet.ExtendedSource(coord, im, [bg_rms],psf=None,config=config,shift_center=0.0) for coord in coords]
-        #config = scarlet.Config(edge_flux_thresh=1.25)
-        #scarlet.ExtendedSource.shift_center=0.0
-        blend = scarlet.Blend(sources)
-        blend.set_data(im, bg_rms=[bg_rms],config=config)
-        blend.fit(10000, e_rel=1e-3)
-        model = blend.get_model()
-        mod1 = blend.get_model(0)
-        #mod2 = blend.get_model(1)
-        cen_mod = sources[0].get_model()
-        #cen_pos = sources[0].center
-        #neigh_mod = sources[1].get_model()
-        #print(cen_pos[0]-coords[0][0],cen_pos[1]-coords[0][1])
-        #psf_model = psf_blend.get_model()
-        """
-        masked_mod = np.ma.masked_equal(diff_kernels,0.0)
-        f,ax = plt.subplots(1,2,figsize=(8,4))
-        f1 = ax[0].imshow(psf_im3d[0,:,:])
-        ax[0].set_title("Orig PSF")
-        plt.colorbar(f1,ax=ax[0])
-        f2 = ax[1].imshow(masked_mod[0,:,:])
-        plt.colorbar(f2,ax=ax[1])
-        ax[1].set_title("Diff Kernels")
-        plt.tight_layout()
-        f.savefig('test.png')
-        plt.close()
-        steps_used = blend.it
-        print(steps_used)
-        """
+        if mode == 'scarlet':
+            #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
+            #constraints['l1'] = bg_rms
+            #psf_dims = np.shape(psf_im)
+            #psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
+            #target_psf = scarlet.psf_match.fit_target_psf(psf_im3d, scarlet.psf_match.gaussian)
+            #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)
+            sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]#,psf=diff_kernels) for coord in coords]
+            #config = scarlet.Config(edge_flux_thresh=0.05)
+            config = scarlet.Config(source_sizes=[25])#,edge_flux_thresh=0.05)
+            #scarlet.ExtendedSource.shift_center=0.0
+            blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
+            blend.fit(10000, e_rel=1e-3)
+            model = blend.get_model()
+            mod1 = blend.get_model(m=0)
+            #mod2 = blend.get_model(m=1)
+            cen_mod = sources[0].get_model()
+            #neigh_mod = sources[1].get_model()
+            #steps_used = blend.it
+
         #return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord
-        return im,psf_im,model,mod1,cen_mod,coords,sing_im,sing_coord    
-    def _rob_deblend(self,im,model,mod1,mod2,dims):
-        C = np.zeros((dims[0],dims[1],2))
-        W = np.zeros((dims[0],dims[1],2))
+        return im,psf_im,model,mod1,cen_mod,coords,sing_im,sing_coord
+    
+    def _rob_deblend(self,im,model,mod1,dims):
+        C = np.zeros((dims[0],dims[1],1))
+        W = np.zeros((dims[0],dims[1],1))
         I = im
-        w = np.array([model[0,:,:],model[0,:,:]]).clip(1.0e-15)
-        T = np.array([mod1[0,:,:],mod2[0,:,:]]).clip(1.0e-15)
+        w = np.array([model[0,:,:]]).clip(0.000001)#,model[0,:,:]])
+        T = np.array([mod1[0,:,:]]).clip(0.000001)#,mod2[0,:,:]])
         mod_sum = np.zeros(dims)
-        for r in range(2):
+        for r in range(1):
             mod_sum += w[r]*T[r] 
-        for r in range(2):
+        #zeros = np.where(mod_sum == 0.)
+        #mod_sum[zeros] += 0.000001
+        for r in range(1):
             W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
             C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
         return C,W
@@ -283,31 +243,31 @@ def norm_test():
     if mode == 'scarlet':
         im,psf_im,model,mod1,cen_mod,coords,sing_im,sing_coord = Mod._get_model()
         #im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,sing_im,sing_coord = Mod._get_model()
-        cen_shape = (1,25,25)#cen_mod.shape
+        cen_shape = (1,15,15)#cen_mod.shape
         coord1 = coords[0]
         
-        #dims = [np.shape(im)[1],np.shape(im)[2]]
+        dims = [np.shape(im)[1],np.shape(im)[2]]
         
-        #C,W = Mod._rob_deblend(im,model,mod1,mod2,dims)
+        C,W = Mod._rob_deblend(im,model,mod1,dims)
         #cen_obj = C[:,:,0]
         #neigh_obj = C[:,:,1]
         
-        #half1 = cen_shape[1]/2.
-        #half2 = cen_shape[2]/2.
+        half1 = cen_shape[1]/2.
+        half2 = cen_shape[2]/2.
 
-        #beg1 = int(coord1[0]-half1+1)
-        #end1 = int(coord1[0]+half1+1)
+        beg1 = int(coord1[0]-half1+1)
+        end1 = int(coord1[0]+half1+1)
 
-        #beg2 = int(coord1[1]-half2+1)
-        #end2 = int(coord1[1]+half2+1)
+        beg2 = int(coord1[1]-half2+1)
+        end2 = int(coord1[1]+half2+1)
         
-        #cen_obj = mod1[0,beg1:end1,beg2:end2]
+        #cen_obj_w_noise = mod1[0,beg1:end1,beg2:end2]
 
-        #cen_obj = C[beg1:end1,beg2:end2,0]
-        #weights = W[beg1:end1,beg2:end2,0]
+        
+        cen_obj = C[beg1:end1,beg2:end2,0]
+        weights = W[beg1:end1,beg2:end2,0]
 
         #cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
-
         
 
     elif mode == 'control':
@@ -317,8 +277,7 @@ def norm_test():
         dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     
-    #return cen_obj,coord1,sing_im,sing_coord
-    return im,model
+    return cen_obj,coord1,sing_im,sing_coord,im
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                          ntry,metacal_pars,output,dobs):
@@ -375,33 +334,30 @@ metacal_pars = {
 prior = get_prior()
 #output = np.zeros(ntrial, dtype=dt)
 
-dt = [('std','f8',(25,25)),('mean','f8',(25,25))]
+dt = [('std','f8',(15,15)),('mean','f8',(15,15))]
 output = np.zeros(1, dtype=dt)
 
 pix_vals = []
 for j in range(ntrial):
     print(j)
     try:
-        """
-        cen_obj,coord1,sing_im,sing_coord = norm_test()
-        cen_shape = np.shape(cen_obj)
+        cen_obj_w_noise,coord1,sing_im,sing_coord,im = norm_test()
+        cen_shape = np.shape(cen_obj_w_noise)
+
         half1 = cen_shape[0]/2.
         half2 = cen_shape[1]/2.
-        
         beg1 = int(sing_coord[0]-half1+1)
         end1 = int(sing_coord[0]+half1+1)
 
         beg2 = int(sing_coord[1]-half2+1)
         end2 = int(sing_coord[1]+half2+1)
 
-        diff = sing_im[0,beg1:end1,beg2:end2]-cen_obj
-        """
-        im, model = norm_test()
-        diff = im[0] - model[0]
-        if np.shape(diff) == (25,25):
+
+        diff = im[0,beg1:end1,beg2:end2]-cen_obj_w_noise
+        if np.shape(diff) == (15,15):
             pix_vals.append(diff)
 
-    except(np.linalg.linalg.LinAlgError,ValueError):
+    except (np.linalg.linalg.LinAlgError,ValueError):
         print("error")
         #output['flags'][j] = 2
 

@@ -277,16 +277,15 @@ class Simulation(dict):
             gals = [Cen]
             objs = galsim.Add(gals)
 
-        shear1, shear2 = self['Shear']['Shear1'],self['Shear']['Shear2']
+        shear_spec = self['Shear']
+        shear1, shear2 = shear_spec['Shear1'],shear_spec['Shear2']
         objs = objs.shear(g1=shear1, g2=shear2)
         
-        
-        if 'Extra_Shear':
-            if 'shear+' in self['Extra_Shear']:
-                objs = objs.shear(g1=self['Extra_Shear']['shear+'],g2=0.0)
-            elif 'shear-' in self['Extra_Shear']:
-                objs = objs.shear(g1=self['Extra_Shear']['shear-'],g2=0.0)
-
+        if 'Extra_Shear' in shear_spec:
+            if 'shear+' in shear_spec['Extra_Shear']:
+                objs = objs.shear(g1=shear_spec['Extra_Shear']['shear+'],g2=0.0)
+            elif 'shear-' in shear_spec['Extra_Shear']:
+                objs = objs.shear(g1=shear_spec['Extra_Shear']['shear-'],g2=0.0)
 
         return objs,dx1,dy1,dx2,dy2
 
@@ -313,14 +312,25 @@ class Simulation(dict):
             scale=self['Image']['Scale'],
         )
         im = gsim.array
+        objects = sep.extract(im, 1.5, err=10.)
+        s_coords = [(objects['y'][0],objects['x'][0]),(objects['y'][1],objects['x'][1])]
         dims = np.shape(im)
         
-        #rewrite coords for galsim
+        #rewrite coords for scarlet
         cen =  (np.array(im.shape) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
         coords = [coord1,coord2]
 
+        if np.abs(coord1[0]-s_coords[0][0]) < np.abs(coord2[0]-s_coords[0][0]) and np.abs(coord1[1]-s_coords[0][1]) < np.abs(coord2[1]-s_coords[0][1]):
+            s_coord1 = s_coords[0]
+            s_coord2 = s_coords[1]
+        else:
+            s_coord1 = s_coords[1]
+            s_coord2 = s_coords[0]
+        
+        sep_coords = [s_coord1,s_coord2]
+        #print(coords,sep_coords)
         noise = self._get_noise(dims,bg_rms)
         im += noise
         noise = self._get_noise(dims,bg_rms)
@@ -328,7 +338,7 @@ class Simulation(dict):
         if mode ==  'scarlet' or mode == 'control':
             im = im.reshape( (1, dims[0], dims[1]) )
 
-        return im,psf_im,coords,dims,dx1,dy1,noise
+        return im,psf_im,coords,dims,dx1,dy1,noise,sep_coords
 
 class Model(object):
     
@@ -338,7 +348,7 @@ class Model(object):
     def get_scar_model(self):
         import scarlet
 
-        im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
+        im,psf_im,coords,dims,dx1,dy1,noise,sep_coords = self.sim()
         bg_rms = self.sim['Image']['Bgrms']
         mode = self.sim['Mode']
         #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
@@ -363,7 +373,7 @@ class Model(object):
         neigh_mod = sources[1].get_model()
         #steps_used = blend.it
         
-        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise
+        return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise,sep_coords
         #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
 
 
@@ -373,7 +383,7 @@ class Model(object):
         return am.get_gmix()
 
     def _get_mof_obs(self):
-        im,psf_im,coords,dims,dx1,dy1,noise = self.sim()
+        im,psf_im,coords,dims,dx1,dy1,noise,sep_coords = self.sim()
         #import images
         #images.view(im)
         #if 'q'==input('hit a key'):
@@ -411,7 +421,7 @@ class Model(object):
         )
         obs.noise=noise
 
-        return obs, coords
+        return obs, sep_coords,dims
 
     def _get_mof_guess(self, coord_list):
         rng=self.sim.rng
@@ -500,7 +510,7 @@ class Model(object):
         )
 
     def get_mof_model(self):
-        obs, coords = self._get_mof_obs()
+        obs, coords,dims = self._get_mof_obs()
 
         prior=self._get_mof_prior(coords)
 
@@ -524,7 +534,7 @@ class Model(object):
         else:
             center_obs=None
         
-        return center_obs
+        return center_obs,coords,dims
 
 
     def rob_deblend(self,im,model,mod1,mod2,dims):
@@ -564,13 +574,13 @@ def observation(image,sigma,row,col,psf_sigma,psf_im):
 
     return obs
 
-def get_prior():
+def get_prior(coords):
     """
     metacal prior
     """
     cen_sigma = 1.0
     cen_prior = ngmix.priors.CenPrior(
-        0.0, 0.0,
+        coords[0], coords[1],
         cen_sigma,
         cen_sigma,
     )
@@ -595,7 +605,7 @@ def norm_test(sim):
     mode = sim.get_mode()
 
     if mode == 'control':
-        im,psf_im,coords,dims,dx1,dy1,noise = sim()
+        im,psf_im,coords,dims,dx1,dy1,noise,sep_coords = sim()
         dobs = observation(im[0],sim['Image']['Bgrms'],coords[0][0],
                            coords[0][1],sim['Psf']['Bgrms_psf'],psf_im)
         dobs.noise = noise
@@ -603,7 +613,7 @@ def norm_test(sim):
  
         mod = Model(sim)
         if mode == 'scarlet':
-            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise = \
+            im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise,sep_coords = \
                     mod.get_scar_model()
             bg_rms = sim['Image']['Bgrms']
             if sim['Steps'] == 'one':
@@ -694,11 +704,10 @@ def norm_test(sim):
                 dobs.noise = mod_noise
         
         elif mode=='mof':
-            dobs = mod.get_mof_model()
+            dobs,coords,dims = mod.get_mof_model()
 
-   
         #dobs.noise = noise
-    return dobs#,cen_obj,cen_obj_w_noise
+    return dobs,coords,dims#,cen_obj,cen_obj_w_noise
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                ntry,metacal_pars,dobs):
@@ -720,7 +729,7 @@ def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
 
 def main(args):
 
-    prior = get_prior()
+    #prior = get_prior()
     output = np.zeros(args.ntrials, dtype=dt)
 
     with open(args.config) as fobj:
@@ -738,7 +747,10 @@ def main(args):
         print(j)
         try:
             tm0=time.time()
-            dobs = norm_test(sim)
+            dobs,coords,dim = norm_test(sim)
+            cen =  (np.array(dim) - 1.0)/2.0
+            coord1 = (coords[0][0]-cen[0],coords[0][1]-cen[1])
+            prior = get_prior(coord1)
             tm_deblend += time.time()-tm0
 
             if dobs is None:

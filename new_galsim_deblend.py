@@ -358,6 +358,8 @@ class Simulation(dict):
             noises.append(noise)
             ims.append(im)
         ims = np.array(ims)
+
+        #if using sep
         """
         sep_im = np.sum(ims,axis=0)
         objects = sep.extract(sep_im, 1.5, err=10.)
@@ -375,6 +377,8 @@ class Simulation(dict):
         cen =  (np.array(dims) - 1.0)/2.0
         coord1 = (dy1+cen[1],dx1+cen[0])
         coord2 = (dy2+cen[1],dx2+cen[0])
+        
+        #figure out which sep coord belong to each object
         """
         if np.abs(coord1[0]-s_coords[0][0]) < np.abs(coord2[0]-s_coords[0][0]) and np.abs(coord1[1]-s_coords[0][1]) < np.abs(coord2[1]-s_coords[0][1]):
             s_coord1 = s_coords[0]
@@ -450,9 +454,6 @@ class NGal_Simulation(dict):
             coord_list = []
         else:
             coord_list = self._get_coord_list(objects)
-        
-        #plt.imshow(sim.image)
-        #plt.savefig('test.png')
 
         return sim,nobj,nfail,objects,coord_list,fit_model,noise,dims
 
@@ -469,19 +470,29 @@ class Model(object):
         bg_rms = self.sim['Image']['Bgrms']
         bg_rms = bg_rms/np.sqrt(len(im))
         mode = self.sim['Mode']
+        
+        #create multiband background im
         bg = np.zeros((len(im)))
         bg += bg_rms
+        
+        #choose constraints for PSF and sources (optional)
         #psf_constraints = ()#sc.SimpleConstraint())
         #source_constraints = ()#sc.SimpleConstraint(),sc.DirectSymmetryConstraint()) #sc.DirectMonotonicityConstraint(use_nearest=False)
+        
         config = scarlet.Config(source_sizes = [25])
+        
+        #create multiband PSF image
         #psf_dims = np.shape(psf_im)
         #psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
         #psfs = np.zeros((len(im), psf_dims[0],psf_dims[1]))
         #psfs += psf_im3d
+
+        #PSF Matching
         #target_psf = scarlet.psf_match.fit_target_psf(psfs, 
         #                                scarlet.psf_match.gaussian)
         #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psfs,
         #                                    target_psf)
+        
         sources = [scarlet.ExtendedSource(coord, im, bg_rms = bg,
                 psf=None,config=config) for coord in coords]
         #config = scarlet.Config(edge_flux_thresh=0.05)
@@ -489,23 +500,18 @@ class Model(object):
         blend.set_data(im, bg_rms = bg,config=config)
         blend.fit(10000, e_rel=1e-3)
         
-        #print(blend[1][0].center,blend[1][0].left,blend[1][0].right,blend[1][0].top,blend[1][0].bottom)
-        #print(blend._edge_flux)
-        #print("STEPS",blend.it)
-        
+        #get full sized scarlet models
         model = blend.get_model()
         mod1 = blend.get_model(0)
         mod2 = blend.get_model(1)
+        
+        #get postage stamp models
         cen_mod = sources[0].get_model()
         neigh_mod = sources[1].get_model()
+        
+        #get scarlet coordinates
         cen_cen_pos = blend[0][0].center
         neigh_cen_pos = blend[1][0].center
-
-        newim = np.zeros((45,45,3))
-        newim[:,:,0] = mod2[2,:,:]
-        newim[:,:,1] = mod2[1,:,:]
-        newim[:,:,2] = mod2[0,:,:]
-        newim = newim/newim.max()
 
         return im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise,cen_cen_pos,neigh_cen_pos
         #return im,psf_im,model,mod1,cen_mod,coords,dx1,dy1,noise 
@@ -686,7 +692,10 @@ class Model(object):
         )
 
     def get_mof_ngal_model(self):
+
         sim,nobj,nfail,objects,coord_list,fit_model,noise,dims = self.sim()
+
+        ####Created simple simulation for testing
         scale = 0.263
         psf = galsim.Gaussian(fwhm = 0.9)
         psf_gsim = psf.drawImage(nx = 25, ny=25, scale = scale)
@@ -752,6 +761,7 @@ class Model(object):
         sim.obs.jacobian=jac
         return [sim.obs], coord_list
         
+        ###Orginal start of get ngal model
         prior = self._get_mof_prior(coord_list,1,sim.obs.jacobian,objects)
         fitter = minimof.MOF(
             sim.obs,
@@ -827,6 +837,7 @@ class Model(object):
 
 
     def rob_deblend(self,im,model,mod1,mod2,dims,i):
+        #SDSS style second step for deblending
         C = np.zeros((dims[0],dims[1],2))
         W = np.zeros((dims[0],dims[1],2))
         I = im[i]
@@ -891,6 +902,7 @@ def get_prior(nband, row, col):
     return prior
 
 def create_mb(mb_mod,bg_rms,coord1,coord2,psf_bg_rms,psf_im,noise):
+    #creats multiband object
     mb = MultiBandObsList()
     for i in range(len(mb_mod[:])):
         o = observation(mb_mod[i],bg_rms,coord1,coord2,
@@ -920,6 +932,14 @@ def norm_test(args, sim):
             im,psf_im,model,mod1,mod2,cen_mod,neigh_mod,coords,dx1,dy1,noise,cen_cen_pos,neigh_cen_pos = mod.get_scar_model()
             bg_rms = sim['Image']['Bgrms']/np.sqrt(len(im))
             dims = [np.shape(im)[1],np.shape(im)[2]]
+            #create coord list including scarlet and true coords
+            #can later calculate how scarlet coordinates deviate from true
+            coord_list = []
+            coord_list.append(np.array(coords)[0])
+            coord_list.append(np.array(coords)[1])
+            coord_list.append(cen_cen_pos)
+            coord_list.append(neigh_cen_pos)
+
             if sim['Steps'] == 'one':
                 coord1 = coords[0]
                 #isolate central object                                       
@@ -927,10 +947,6 @@ def norm_test(args, sim):
                 dobs = create_mb(cen_obj,bg_rms,
                                 coord1[0],coord1[1],
                                 sim['Psf']['Bgrms_psf'],psf_im,noise)
-
-                #dobs = observation(cen_obj,bg_rms,coord1[0],coord1[1],sim['Psf']['Bgrms_psf'],psf_im)
-                #dobs.noise = noise
-
 
             if sim['Steps'] == 'two':
                 cen_shape = cen_mod.shape

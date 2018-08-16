@@ -4,9 +4,8 @@ import fitsio
 import numpy as np
 import esutil as eu
 
-import matplotlib.pyplot as plt
-plt.switch_backend('agg')
-#
+#import matplotlib.pyplot as plt
+#plt.switch_backend('agg')
 parser = argparse.ArgumentParser()
 parser.add_argument("f1",help="filename path")
 #parser.add_argument("f2",help="filename path")
@@ -74,7 +73,8 @@ for fl in lists:
     p2_err = p2.std(axis=0)/np.sqrt(w.size)
     print("position: %g +/- %g" % (p1.mean(), p1_err))
     print("position: %g +/- %g" % (p2.mean(), p2_err))
-    
+ 
+    """
     scar_cen_p1 = data['cen_cen'][:,0]
     scar_cen_p2 = data['cen_cen'][:,1]
     scar_cen_p1_err = scar_cen_p1.std(axis=0)/np.sqrt(w.size)
@@ -114,7 +114,7 @@ for fl in lists:
 
     scar_n_diff_p1_err = scar_n_diff_p1.std(axis=0)/np.sqrt(w.size)
     scar_n_diff_p2_err = scar_n_diff_p2.std(axis=0)/np.sqrt(w.size)
-    
+    """
     g_mean = g.mean(axis=0)
     
     # this is used to calibrate the shear, I will explain this
@@ -179,6 +179,7 @@ if len(lists) == 3:
     print(resp)
     print(shear1,shear2)
 
+"""
 plt.figure(figsize=[9,9])
 binwidth = 0.01
 bins1 = np.arange(sorted(scar_diff_p1)[50], sorted(scar_diff_p1)[-50] + binwidth, binwidth)
@@ -221,6 +222,7 @@ plt.legend(loc=0)
 #plt.savefig('scar_mod_pos_r15_N10.png')
 #plt.close()
 """
+"""
 binwidth = 0.01
 bins1 = np.arange(min(coord_cen_p1), max(coord_cen_p1) + binwidth, binwidth)
 bins2 = np.arange(min(coord_cen_p2), max(coord_cen_p2) + binwidth, binwidth)
@@ -259,6 +261,7 @@ range_p2_max = p2.mean()+5.*p2.std(axis=0)
 plt.hist(p1,bins1,histtype='step',label=("p1 mean,std: "+ str(round(p1.mean(),5))+"+/-" +str(round(p1_err,5))+", "+str(round(p1.std(axis=0),5))),range = (range_p1_min,range_p1_max))
 plt.hist(p2,bins2,histtype='step',label=("p2 mean,std: "+ str(round(p2.mean(),5))+"+/-" +str(round(p2_err,5))+", "+str(round(p2.std(axis=0),5))),range = (range_p2_min,range_p2_min))
 """
+"""
 plt.legend(loc=0)
 #plt.xlim(range_p1_min-0.002,range_p1_max+0.002)
 plt.xlim(-0.4,0.4)
@@ -267,7 +270,7 @@ plt.xlabel("position (pixel distance to center)")
 plt.savefig('test.png')
 #plt.savefig('1-gal-positions.png')
 plt.close()
-
+"""
 """
 binwidth = 0.001
 bins11 = np.arange(min(R11vals), max(R11vals) + binwidth, binwidth)

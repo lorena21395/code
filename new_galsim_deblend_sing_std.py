@@ -2,7 +2,11 @@
 
 ####
 # Noise analysis
-# ONE STEP DEBLEND
+# single deblend
+# original image-model
+# don't readd noise
+#increase source sizes
+# clipped weights and templates
 
 import yaml
 #from minimof import minimof
@@ -151,7 +155,7 @@ class Model(Simulation):
         bg_rms = self['Image']['Bgrms']
         mode = self['Mode']
         if mode == 'scarlet':
-            constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
+            #constraints = {"S": None, "m": {'use_nearest': False}, "+": None}
             #constraints['l1'] = bg_rms
             #psf_dims = np.shape(psf_im)
             #psf_im3d = psf_im.reshape( (1, psf_dims[0], psf_dims[1]) )
@@ -159,8 +163,9 @@ class Model(Simulation):
             #diff_kernels, psf_blend = scarlet.psf_match.build_diff_kernels(psf_im3d, target_psf)
             sources = [scarlet.ExtendedSource(coord, im, [bg_rms]) for coord in coords]#,psf=diff_kernels) for coord in coords]
             #config = scarlet.Config(edge_flux_thresh=0.05)
+            config = scarlet.Config(source_sizes=[25])#,edge_flux_thresh=0.05)
             #scarlet.ExtendedSource.shift_center=0.0
-            blend = scarlet.Blend(sources, im, bg_rms=[bg_rms])#,config=config)
+            blend = scarlet.Blend(sources, im, bg_rms=[bg_rms],config=config)
             blend.fit(10000, e_rel=1e-3)
             model = blend.get_model()
             mod1 = blend.get_model(m=0)
@@ -176,13 +181,13 @@ class Model(Simulation):
         C = np.zeros((dims[0],dims[1],1))
         W = np.zeros((dims[0],dims[1],1))
         I = im
-        w = np.array([model[0,:,:]])#,model[0,:,:]])
-        T = np.array([mod1[0,:,:]])#,mod2[0,:,:]])
+        w = np.array([model[0,:,:]]).clip(1.e-15)#,model[0,:,:]])
+        T = np.array([mod1[0,:,:]]).clip(1.e-15)#,mod2[0,:,:]])
         mod_sum = np.zeros(dims)
         for r in range(1):
             mod_sum += w[r]*T[r] 
-        zeros = np.where(mod_sum == 0.)
-        mod_sum[zeros] += 0.000001
+        #zeros = np.where(mod_sum == 0.)
+        #mod_sum[zeros] += 0.000001
         for r in range(1):
             W[:,:,r] = np.divide(w[r]*T[r],mod_sum)
             C[:,:,r] = I*np.divide(w[r]*T[r],mod_sum)
@@ -241,7 +246,6 @@ def norm_test():
         cen_shape = (1,15,15)#cen_mod.shape
         coord1 = coords[0]
         
-        
         dims = [np.shape(im)[1],np.shape(im)[2]]
         
         C,W = Mod._rob_deblend(im,model,mod1,dims)
@@ -263,7 +267,7 @@ def norm_test():
         cen_obj = C[beg1:end1,beg2:end2,0]
         weights = W[beg1:end1,beg2:end2,0]
 
-        cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
+        #cen_obj_w_noise = Mod._readd_noise(cen_obj,weights)
         
 
     elif mode == 'control':
@@ -273,7 +277,7 @@ def norm_test():
         dobs = observation(im[0],Mod['Image']['Bgrms'],coords[0][1],
                        coords[0][0],Mod['Psf']['Bgrms_psf'],psf_im)
     
-    return cen_obj_w_noise,coord1,sing_im,sing_coord,im
+    return cen_obj,coord1,sing_im,sing_coord,im
 
 def do_metacal(psf_model,gal_model,max_pars,psf_Tguess,prior,
                          ntry,metacal_pars,output,dobs):
@@ -348,15 +352,8 @@ for j in range(ntrial):
         beg2 = int(sing_coord[1]-half2+1)
         end2 = int(sing_coord[1]+half2+1)
 
-        diff = im[0,beg1:end1,beg2:end2]-cen_obj_w_noise
-        plt.imshow(im[0,beg1:end1,beg2:end2])
-        plt.savefig('test.png')
-        plt.close()
-        plt.imshow(cen_obj_w_noise)
-        plt.savefig('test2.png')
-        plt.close()
 
-        print(diff)
+        diff = im[0,beg1:end1,beg2:end2]-cen_obj_w_noise
         if np.shape(diff) == (15,15):
             pix_vals.append(diff)
 
